@@ -1,0 +1,4 @@
+interface:
+  display_name: "Web Spec"
+  short_description: "Draft web flow and frontend specs"
+  default_prompt: "Use $web-spec to draft the page flow and frontend specification for an HR web app."
