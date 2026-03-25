@@ -454,6 +454,7 @@ function getInitialEventDraft() {
     title: "",
     start: formatDateTimeLocalValue(initialDate),
     end: formatDateTimeLocalValue(endDate),
+    isAllDay: false,
     participantQuery: "",
     participants: [],
     isParticipantPopupOpen: false,
@@ -1637,156 +1638,72 @@ function createEventDrawer(state, closeDrawer, onSave, isOpen = false) {
 
   const scheduleGroup = createElement("div", "drawer-form__group");
   const scheduleLabel = createSectionLabel("calendar", "Date & Time");
-  const scheduleRow = createElement("div", "drawer-form__row drawer-form__row--time");
-  const dateField = createElement("div", "drawer-form__date-field");
-  const dateButton = createElement("button", "drawer-form__date-trigger", formatDrawerDateLabel(state.eventDraft.start));
-  dateButton.type = "button";
-  const startInputWrap = createElement("div", "drawer-form__time-select");
-  const arrow = createElement("span", "drawer-form__arrow");
-  arrow.append(createIcon("arrow-right"));
-  const endInputWrap = createElement("div", "drawer-form__time-select");
-  dateButton.addEventListener("click", () => {
-    state.eventDraft.isDatePickerOpen = !state.eventDraft.isDatePickerOpen;
-    state.eventDraft.openTimeField = null;
+
+  const allDayRow = createElement("div", "drawer-form__all-day-row");
+  const allDayLabel = createElement("span", "drawer-form__all-day-label", "All day");
+  const allDayToggleLabel = createElement("label", "switch");
+  const allDayToggleInput = document.createElement("input");
+  allDayToggleInput.type = "checkbox";
+  allDayToggleInput.checked = state.eventDraft.isAllDay;
+  allDayToggleInput.addEventListener("change", () => {
+    state.eventDraft.isAllDay = allDayToggleInput.checked;
     renderDrawer();
   });
-  dateField.append(dateButton);
+  const allDayToggleSpan = createElement("span", "slider");
+  allDayToggleLabel.append(allDayToggleInput, allDayToggleSpan);
+  allDayRow.append(allDayLabel, allDayToggleLabel);
 
-  function createTimeField(field, wrap, value) {
-    const input = document.createElement("input");
-    input.className = "drawer-form__time-input";
-    input.type = "time";
-    input.step = "900";
-    input.value = value;
-
+  function createDateTimeField(field, labelText) {
+    const fieldWrap = createElement("div", "drawer-form__datetime-field");
+    const label = createElement("span", "drawer-form__date-label", labelText);
+    
+    const inputRow = createElement("div", "drawer-form__datetime-inputs");
+    
+    const dateInput = document.createElement("input");
+    dateInput.type = "date";
+    dateInput.className = "drawer-form__date-input";
+    dateInput.value = getDraftDatePart(state.eventDraft[field]);
+    
+    const timeInput = document.createElement("input");
+    timeInput.type = "time";
+    timeInput.className = `drawer-form__time-input${state.eventDraft.isAllDay ? " is-hidden" : ""}`;
+    timeInput.step = "900";
+    timeInput.value = getDraftTimePart(state.eventDraft[field]);
+    
     if (field === "start") {
-      input.max = getDraftTimePart(addMinutesToDateTimeValue(state.eventDraft.end, -15));
+      timeInput.max = getDraftTimePart(addMinutesToDateTimeValue(state.eventDraft.end, -15));
     } else {
-      input.min = getDraftTimePart(addMinutesToDateTimeValue(state.eventDraft.start, 15));
+      timeInput.min = getDraftTimePart(addMinutesToDateTimeValue(state.eventDraft.start, 15));
     }
-
-    input.addEventListener("input", (event) => {
-      const nextValue = event.target.value;
-
-      if (!nextValue) {
-        return;
-      }
-
-      updateDraftDateTime(
-        state,
-        field,
-        getDraftDatePart(state.eventDraft[field]),
-        nextValue
-      );
-
+    
+    const handleDateTimeChange = () => {
+      updateDraftDateTime(state, field, dateInput.value, timeInput.value);
+      
       if (field === "start" && !isDraftDateRangeValid(state.eventDraft.start, state.eventDraft.end)) {
         state.eventDraft.end = addMinutesToDateTimeValue(state.eventDraft.start, 60);
       }
-
       if (field === "end" && !isDraftDateRangeValid(state.eventDraft.start, state.eventDraft.end)) {
         state.eventDraft.start = addMinutesToDateTimeValue(state.eventDraft.end, -60);
       }
-
       renderDrawer();
-    });
-
-    wrap.className = "drawer-form__time-select";
-    wrap.append(input);
+    };
+    
+    dateInput.addEventListener("change", handleDateTimeChange);
+    timeInput.addEventListener("input", handleDateTimeChange);
+    
+    inputRow.append(dateInput, timeInput);
+    fieldWrap.append(label, inputRow);
+    
+    return { fieldWrap };
   }
 
-  createTimeField("start", startInputWrap, getDraftTimePart(state.eventDraft.start));
-  createTimeField("end", endInputWrap, getDraftTimePart(state.eventDraft.end));
+  const startField = createDateTimeField("start", "From");
+  const endField = createDateTimeField("end", "To");
 
-  if (state.eventDraft.isDatePickerOpen) {
-    const picker = createElement("div", "drawer-form__date-picker");
-    const pickerHeader = createElement("div", "drawer-form__date-picker-head");
-    const pickerLabel = createElement(
-      "h4",
-      "drawer-form__date-picker-title",
-      `${MONTH_NAMES[state.eventDraft.pickerMonth]} ${state.eventDraft.pickerYear}`
-    );
-    const pickerActions = createElement("div", "drawer-form__date-picker-actions");
-    const pickerPrev = createElement("button", "drawer-form__date-picker-button");
-    const pickerNext = createElement("button", "drawer-form__date-picker-button");
-    const pickerWeekdays = createElement("div", "drawer-form__date-picker-grid drawer-form__date-picker-grid--weekdays");
-    const pickerDays = createElement("div", "drawer-form__date-picker-grid drawer-form__date-picker-grid--days");
+  const dateTimeRow = createElement("div", "drawer-form__row drawer-form__row--datetime");
+  dateTimeRow.append(startField.fieldWrap, endField.fieldWrap);
 
-    pickerPrev.type = "button";
-    pickerNext.type = "button";
-    pickerPrev.append(createIcon("chevron-left"));
-    pickerNext.append(createIcon("chevron-right"));
-
-    pickerPrev.addEventListener("click", () => {
-      if (state.eventDraft.pickerMonth === 0) {
-        state.eventDraft.pickerMonth = 11;
-        state.eventDraft.pickerYear -= 1;
-      } else {
-        state.eventDraft.pickerMonth -= 1;
-      }
-
-      renderDrawer();
-    });
-    pickerNext.addEventListener("click", () => {
-      if (state.eventDraft.pickerMonth === 11) {
-        state.eventDraft.pickerMonth = 0;
-        state.eventDraft.pickerYear += 1;
-      } else {
-        state.eventDraft.pickerMonth += 1;
-      }
-
-      renderDrawer();
-    });
-
-    ["S", "M", "T", "W", "T", "F", "S"].forEach((dayName) => {
-      pickerWeekdays.append(createElement("span", "drawer-form__date-picker-weekday", dayName));
-    });
-
-    buildCalendarDays(
-      state.eventDraft.pickerYear,
-      state.eventDraft.pickerMonth,
-      new Date(state.eventDraft.start)
-    ).forEach((dayItem) => {
-      const dayButton = createElement(
-        "button",
-        `drawer-form__date-picker-day${dayItem.active && dayItem.isCurrentMonth ? " is-active" : ""}${dayItem.muted ? " is-muted" : ""}`,
-        String(dayItem.value)
-      );
-
-      dayButton.type = "button";
-      dayButton.disabled = !dayItem.isCurrentMonth;
-
-      if (dayItem.isCurrentMonth) {
-        dayButton.addEventListener("click", () => {
-          const selectedDate = `${state.eventDraft.pickerYear}-${String(state.eventDraft.pickerMonth + 1).padStart(2, "0")}-${String(dayItem.value).padStart(2, "0")}`;
-
-          updateDraftDateTime(
-            state,
-            "start",
-            selectedDate,
-            getDraftTimePart(state.eventDraft.start)
-          );
-          updateDraftDateTime(
-            state,
-            "end",
-            selectedDate,
-            getDraftTimePart(state.eventDraft.end)
-          );
-          state.eventDraft.isDatePickerOpen = false;
-          renderDrawer();
-        });
-      }
-
-      pickerDays.append(dayButton);
-    });
-
-    pickerActions.append(pickerPrev, pickerNext);
-    pickerHeader.append(pickerLabel, pickerActions);
-    picker.append(pickerHeader, pickerWeekdays, pickerDays);
-    dateField.append(picker);
-  }
-
-  scheduleRow.append(dateField, startInputWrap, arrow, endInputWrap);
-  scheduleGroup.append(scheduleLabel, scheduleRow);
+  scheduleGroup.append(scheduleLabel, dateTimeRow, allDayRow);
 
   const participantsGroup = createElement("div", "drawer-form__group");
   const participantsLabel = createSectionLabel("users", "Participants");
@@ -3179,93 +3096,127 @@ export function createAppShell() {
     function createMonthBoard() {
       const weekHeader = createElement("div", "calendar-surface__weekdays");
       const board = createElement("div", "calendar-surface__board");
-      const boardDays = buildCalendarDays(
-        state.calendar.displayYear,
-        state.calendar.displayMonth,
-        new Date(state.calendar.displayYear, state.calendar.displayMonth, state.calendar.selectedDay)
-      );
+      const year = state.calendar.displayYear;
+      const month = state.calendar.displayMonth;
+      const firstDayOfMonth = new Date(year, month, 1).getDay();
+      const daysInMonth = getDaysInMonth(year, month);
+      const totalRows = Math.ceil((firstDayOfMonth + daysInMonth) / 7);
+      
+      board.style.gridTemplateRows = `repeat(${totalRows}, minmax(0, 1fr))`;
+      
       ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].forEach((dayName) => {
         const weekday = createElement("div", "calendar-surface__weekday", dayName);
         weekHeader.append(weekday);
       });
 
-      boardDays.forEach((dayItem, index) => {
-      const cell = createElement(
-        "article",
-        `calendar-surface__cell${dayItem.isCurrentMonth ? "" : " is-muted"}${dayItem.isToday ? " is-today" : ""}${
-          dayItem.year === state.calendar.displayYear &&
-          dayItem.monthIndex === state.calendar.displayMonth &&
-          dayItem.value === state.calendar.selectedDay
-            ? " is-selected"
-            : ""
-        }`
-      );
-      const dateNumber = createElement(
-        "button",
-        `calendar-surface__date${dayItem.isToday ? " is-today" : ""}`,
-        String(dayItem.value)
-      );
-      const dayEvents = activeApp.events.filter((event) => {
-        return (
-          event.year === dayItem.year &&
-          event.monthIndex === dayItem.monthIndex &&
-          Number(event.day) === dayItem.value
+      const today = getTodayDate();
+
+      for (let index = 0; index < totalRows * 7; index++) {
+        const row = Math.floor(index / 7);
+        const col = index % 7;
+        const dayIndex = index - firstDayOfMonth + 1;
+        const isCurrentMonth = dayIndex >= 1 && dayIndex <= daysInMonth;
+        
+        const cell = createElement(
+          "article",
+          `calendar-surface__cell${isCurrentMonth ? "" : " is-muted"}`
         );
-      });
+        cell.style.gridColumn = String(col + 1);
+        cell.style.gridRow = String(row + 1);
 
-        cell.style.gridColumn = String((index % 7) + 1);
-        cell.style.gridRow = String(Math.floor(index / 7) + 1);
-      dateNumber.type = "button";
-      if (dayItem.isToday) {
-        dateNumber.setAttribute("aria-current", "date");
-        dateNumber.title = "Today";
-      }
-      dateNumber.addEventListener("click", () => {
-        state.calendar.displayYear = dayItem.year;
-        state.calendar.displayMonth = dayItem.monthIndex;
-        state.calendar.selectedDay = dayItem.value;
-        state.calendar.selectedEventId = dayEvents[0]?.id ?? null;
-        state.activeItem = "Monthly View";
-        render();
-      });
+        if (isCurrentMonth) {
+          const isToday = isSameCalendarDate(today, new Date(year, month, dayIndex));
+          const isSelected = dayIndex === state.calendar.selectedDay;
+          
+          if (isToday) cell.classList.add("is-today");
+          if (isSelected) cell.classList.add("is-selected");
 
-      cell.append(dateNumber);
+          const dateNumber = createElement(
+            "button",
+            `calendar-surface__date${isToday ? " is-today" : ""}`,
+            String(dayIndex)
+          );
+          const dayEvents = activeApp.events.filter((event) => {
+            return (
+              event.year === year &&
+              event.monthIndex === month &&
+              Number(event.day) === dayIndex
+            );
+          });
 
-      const useCompactMonthEvents = dayEvents.length > 1;
+          dateNumber.type = "button";
+          if (isToday) {
+            dateNumber.setAttribute("aria-current", "date");
+            dateNumber.title = "Today";
+          }
+          dateNumber.addEventListener("click", () => {
+            state.calendar.displayYear = year;
+            state.calendar.displayMonth = month;
+            state.calendar.selectedDay = dayIndex;
+            state.calendar.selectedEventId = dayEvents[0]?.id ?? null;
+            state.activeItem = "Monthly View";
+            render();
+          });
 
-      dayEvents.slice(0, 2).forEach((event) => {
-        const eventCard = createElement(
-          "button",
-          `calendar-surface__event${useCompactMonthEvents ? " calendar-surface__event--month" : ""}${
-            event.id === state.calendar.selectedEventId ? " is-active" : ""
-          }`
-        );
-        const schedule = parseEventSchedule(event.meta);
-        const eventTitle = createElement("strong", "calendar-surface__event-title", event.title);
-        const eventMeta = createElement("span", "calendar-surface__event-meta", schedule.label);
+          cell.append(dateNumber);
 
-        eventCard.type = "button";
-        eventCard.style.setProperty("--event-bg", getEventSurfaceColor(event));
-        eventCard.title = `${event.title} • ${schedule.label}`;
-        eventCard.setAttribute("aria-label", `${event.title}, ${schedule.label}`);
-        eventCard.addEventListener("click", (eventClick) => {
-          eventClick.stopPropagation();
-          openEventDetailDrawer(event);
-          render();
-        });
+          const useCompactMonthEvents = dayEvents.length > 1;
+          const maxVisibleEvents = 2;
+          const visibleEvents = dayEvents.slice(0, maxVisibleEvents);
+          const overflowCount = dayEvents.length - maxVisibleEvents;
 
-        if (useCompactMonthEvents) {
-          eventTitle.classList.add("calendar-surface__event-title--month");
-          eventCard.append(eventTitle);
-        } else {
-          eventCard.append(eventTitle, eventMeta);
+          visibleEvents.forEach((event) => {
+            const eventCard = createElement(
+              "button",
+              `calendar-surface__event${useCompactMonthEvents ? " calendar-surface__event--month" : ""}${
+                event.id === state.calendar.selectedEventId ? " is-active" : ""
+              }`
+            );
+            const schedule = parseEventSchedule(event.meta);
+            const eventTitle = createElement("strong", "calendar-surface__event-title", event.title);
+            const eventMeta = createElement("span", "calendar-surface__event-meta", schedule.label);
+
+            eventCard.type = "button";
+            eventCard.style.setProperty("--event-bg", getEventSurfaceColor(event));
+            eventCard.title = `${event.title} • ${schedule.label}`;
+            eventCard.addEventListener("click", (eventClick) => {
+              eventClick.stopPropagation();
+              openEventDetailDrawer(event);
+              render();
+            });
+
+            if (useCompactMonthEvents) {
+              eventTitle.classList.add("calendar-surface__event-title--month");
+              eventCard.append(eventTitle);
+            } else {
+              eventCard.append(eventTitle, eventMeta);
+            }
+
+            cell.append(eventCard);
+          });
+
+          if (overflowCount > 0) {
+            const overflowIndicator = createElement(
+              "button",
+              "calendar-surface__event-overflow",
+              `+${overflowCount} more`
+            );
+            overflowIndicator.type = "button";
+            overflowIndicator.title = `${overflowCount} more events on this day`;
+            overflowIndicator.addEventListener("click", (eventClick) => {
+              eventClick.stopPropagation();
+              state.calendar.displayYear = year;
+              state.calendar.displayMonth = month;
+              state.calendar.selectedDay = dayIndex;
+              state.activeItem = "Monthly View";
+              render();
+            });
+            cell.append(overflowIndicator);
+          }
         }
 
-        cell.append(eventCard);
-      });
-
-      board.append(cell);
-      });
+        board.append(cell);
+      }
 
       return [weekHeader, board];
     }

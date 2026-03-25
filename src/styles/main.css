@@ -647,28 +647,28 @@ button {
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  gap: 20px;
-  padding: 0 8px;
+  gap: 14px;
+  padding: 0 6px;
 }
 
 .calendar-workspace__tabs {
   display: inline-flex;
   align-items: center;
   border: 1px solid oklch(0.88 0.01 255);
-  border-radius: 14px;
+  border-radius: 12px;
   background: oklch(0.97 0.004 255 / 0.85);
   overflow: hidden;
-  box-shadow: 0 10px 24px oklch(0.16 0.02 255 / 0.06);
+  box-shadow: 0 8px 20px oklch(0.16 0.02 255 / 0.06);
 }
 
 .calendar-workspace__tab {
-  min-width: 76px;
-  padding: 12px 20px;
+  min-width: 68px;
+  padding: 10px 16px;
   border: 0;
   border-right: 1px solid oklch(0.9 0.01 255);
   background: transparent;
   color: oklch(0.39 0.02 255);
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 500;
   cursor: pointer;
 }
@@ -686,7 +686,7 @@ button {
   min-height: 0;
   height: 100%;
   border: 1px solid oklch(0.88 0.01 255);
-  border-radius: 22px;
+  border-radius: 16px;
   background:
     linear-gradient(
       180deg,
@@ -694,7 +694,7 @@ button {
       oklch(0.985 0.003 255 / 0.96)
     ),
     linear-gradient(135deg, oklch(0.975 0.006 255), oklch(0.95 0.008 255));
-  box-shadow: 0 22px 40px oklch(0.16 0.02 255 / 0.08);
+  box-shadow: 0 18px 36px oklch(0.16 0.02 255 / 0.08);
   overflow: hidden;
   display: grid;
   grid-template-rows: auto auto 1fr;
@@ -704,19 +704,19 @@ button {
   display: grid;
   grid-template-columns: 1fr auto;
   align-items: center;
-  gap: 18px;
-  padding: 22px 28px;
+  gap: 14px;
+  padding: 16px 20px;
   border-bottom: 1px solid oklch(0.9 0.01 255);
 }
 
 .calendar-surface__title {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   margin: 0;
   color: oklch(0.24 0.02 255);
   font-family: "Outfit", sans-serif;
-  font-size: 22px;
+  font-size: 18px;
   font-weight: 500;
 }
 
@@ -724,15 +724,15 @@ button {
   display: inline-flex;
   align-items: center;
   border: 1px solid oklch(0.88 0.01 255);
-  border-radius: 12px;
+  border-radius: 10px;
   overflow: hidden;
   background: #ffffff;
 }
 
 .calendar-surface__nav-button {
-  min-width: 44px;
-  height: 36px;
-  padding: 0 14px;
+  min-width: 36px;
+  height: 30px;
+  padding: 0 10px;
   border: 0;
   border-right: 1px solid oklch(0.9 0.01 255);
   background: transparent;
@@ -763,10 +763,10 @@ button {
 }
 
 .calendar-surface__weekday {
-  padding: 12px 10px;
+  padding: 8px 6px;
   border-left: 1px solid oklch(0.92 0.01 255);
   color: oklch(0.42 0.02 255);
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 500;
   text-align: center;
 }
@@ -787,12 +787,8 @@ button {
 .calendar-surface__board {
   display: grid;
   grid-template-columns: repeat(7, minmax(0, 1fr));
-  grid-template-rows: repeat(6, minmax(0, 1fr));
-  background: linear-gradient(
-    180deg,
-    oklch(0.992 0.003 255 / 0.88),
-    oklch(0.985 0.003 255 / 0.96)
-  );
+  background: oklch(0.99 0.004 255 / 0.96);
+  align-items: stretch;
 }
 
 .calendar-surface__board--week {
@@ -803,7 +799,6 @@ button {
 .calendar-surface__time-marker,
 .calendar-surface__cell {
   border-left: 1px solid oklch(0.92 0.01 255);
-  border-bottom: 1px solid oklch(0.92 0.01 255);
 }
 
 .calendar-surface__time-marker {
@@ -820,17 +815,22 @@ button {
   position: relative;
   display: grid;
   align-content: start;
-  gap: 4px;
+  gap: 3px;
   min-width: 0;
-  min-height: 0;
-  padding: 42px 6px 6px;
+  min-height: 60px;
+  padding: 34px 4px 4px;
   overflow: hidden;
-  background: linear-gradient(
-    180deg,
-    transparent 0 72%,
-    oklch(0.92 0.008 255 / 0.34) 72% 73%,
-    transparent 73% 100%
-  );
+  background: oklch(0.99 0.004 255 / 0.92);
+  border-right: 1px solid oklch(0.92 0.01 255);
+  border-bottom: 1px solid oklch(0.92 0.01 255);
+}
+
+.calendar-surface__cell:nth-child(7n) {
+  border-right: 0;
+}
+
+.calendar-surface__cell.is-muted {
+  background: oklch(0.96 0.004 255 / 0.5);
 }
 
 .calendar-surface__cell--week {
@@ -839,17 +839,6 @@ button {
   gap: 8px;
   padding: 44px 8px 10px;
   background: oklch(0.992 0.003 255 / 0.88);
-}
-
-.calendar-surface__cell.is-muted {
-  background:
-    linear-gradient(
-      180deg,
-      transparent 0 72%,
-      oklch(0.92 0.008 255 / 0.3) 72% 73%,
-      transparent 73% 100%
-    ),
-    oklch(0.99 0.002 255 / 0.35);
 }
 
 .calendar-surface__cell.is-selected {
@@ -862,16 +851,16 @@ button {
 
 .calendar-surface__date {
   position: absolute;
-  top: 10px;
-  left: 10px;
+  top: 6px;
+  left: 6px;
   border: 0;
-  min-width: 28px;
-  min-height: 28px;
-  padding: 0 8px;
+  min-width: 22px;
+  min-height: 22px;
+  padding: 0 6px;
   border-radius: 999px;
   background: oklch(0.98 0.006 255 / 0.92);
   color: oklch(0.34 0.02 255);
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 600;
   line-height: 1;
   cursor: pointer;
@@ -884,7 +873,7 @@ button {
 .calendar-surface__date.is-today {
   background: #3168f4;
   color: #ffffff;
-  box-shadow: 0 10px 20px oklch(0.55 0.17 264 / 0.18);
+  box-shadow: 0 4px 10px oklch(0.55 0.17 264 / 0.18);
 }
 
 .calendar-surface__cell.is-muted .calendar-surface__date {
@@ -910,15 +899,15 @@ button {
   right: auto;
   min-height: 0;
   border: 0;
-  border-radius: 9px;
+  border-radius: 6px;
   background: var(--event-bg, #6f74d8);
   color: #ffffff;
-  padding: 7px 8px;
+  padding: 4px 6px;
   text-align: left;
   display: grid;
-  gap: 2px;
+  gap: 1px;
   align-content: start;
-  box-shadow: 0 8px 14px oklch(0.18 0.04 255 / 0.1);
+  box-shadow: 0 4px 8px oklch(0.18 0.04 255 / 0.08);
   cursor: pointer;
 }
 
@@ -937,9 +926,9 @@ button {
 }
 
 .calendar-surface__event--month {
-  min-height: 22px;
-  padding: 4px 6px;
-  border-radius: 5px;
+  min-height: 18px;
+  padding: 2px 5px;
+  border-radius: 4px;
   box-shadow: none;
 }
 
@@ -948,11 +937,30 @@ button {
 }
 
 .calendar-surface__event-title--month {
-  font-size: 8px;
-  line-height: 1.1;
+  font-size: 7px;
+  line-height: 1.2;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.calendar-surface__event-overflow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 18px;
+  padding: 2px 5px;
+  border-radius: 4px;
+  background: oklch(0.86 0.02 255);
+  color: oklch(0.42 0.02 255);
+  font-size: 7px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 160ms ease;
+}
+
+.calendar-surface__event-overflow:hover {
+  background: oklch(0.82 0.03 255);
 }
 
 .calendar-surface__event-title {
@@ -2181,6 +2189,66 @@ button {
   font-weight: 650;
 }
 
+.drawer-form__all-day-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid oklch(0.92 0.01 255);
+}
+
+.drawer-form__all-day-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: oklch(0.4 0.02 255);
+}
+
+.switch {
+  --sizeVar: 1.1em;
+  --color-primary: #dedede;
+  --color-secondary: #aaaaaa;
+  --color-primary-on: #1d9bf0;
+  --color-secondary-on: #ffffff;
+  position: relative;
+  width: calc(var(--sizeVar) * 2);
+  height: var(--sizeVar);
+  background-color: var(--color-primary);
+  border-radius: var(--sizeVar);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.05) inset;
+  cursor: pointer;
+  transition: background-color 150ms ease-out;
+}
+
+.switch::after {
+  content: "";
+  position: absolute;
+  margin: calc(var(--sizeVar) / 10);
+  height: calc(var(--sizeVar) - calc(var(--sizeVar) / 5));
+  width: calc(var(--sizeVar) - calc(var(--sizeVar) / 5));
+  background-color: var(--color-secondary);
+  border-radius: var(--sizeVar);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.05) inset, 0 2px 4px rgba(0, 0, 0, 0.3);
+  transition: transform 150ms ease-out, background-color 150ms ease-out;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.switch:has(input:checked)::after {
+  transform: translateX(var(--sizeVar)) translateY(-50%);
+  background-color: var(--color-secondary-on);
+}
+
+.switch:has(input:checked) {
+  background-color: var(--color-primary-on);
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
 .drawer-form__section-icon {
   width: 15px;
   height: 15px;
@@ -2244,25 +2312,78 @@ button {
 }
 
 .drawer-form__row--time {
+  display: flex;
   align-items: stretch;
+  gap: 12px;
+  margin-top: 10px;
 }
 
-.drawer-form__row--time .drawer-form__input {
+.drawer-form__row--time.is-hidden {
+  display: none;
+}
+
+.drawer-form__row--datetime {
+  display: flex;
+  align-items: stretch;
+  gap: 16px;
+}
+
+.drawer-form__datetime-field {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.drawer-form__date-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  color: oklch(0.45 0.02 255);
+}
+
+.drawer-form__datetime-inputs {
+  display: flex;
+  gap: 8px;
+}
+
+.drawer-form__datetime-inputs .drawer-form__date-input,
+.drawer-form__datetime-inputs .drawer-form__time-input {
+  flex: 1;
+  min-height: 40px;
+  border: 1px solid oklch(0.88 0.01 255);
+  border-radius: 9px;
+  background: #ffffff;
+  color: oklch(0.36 0.02 255);
+  padding: 9px 11px;
+  font-size: 12.5px;
+  font-family: inherit;
+}
+
+.drawer-form__datetime-inputs .drawer-form__date-input:focus,
+.drawer-form__datetime-inputs .drawer-form__time-input:focus {
+  outline: none;
+  border-color: #3168f4;
+  box-shadow: 0 0 0 3px oklch(0.92 0.08 255 / 0.15);
+}
+
+.drawer-form__datetime-inputs .drawer-form__time-input.is-hidden {
+  display: none;
+}
+
+.drawer-form__datetime-inputs .drawer-form__date-input {
   flex: 1;
 }
 
-.drawer-form__row--time .drawer-form__input[type="date"] {
-  flex: 1.25;
-}
-
-.drawer-form__row--time .drawer-form__date-field {
-  flex: 1.2;
-  min-width: 0;
-}
-
 .drawer-form__row--time .drawer-form__time-select {
-  flex: 0.72;
-  min-width: 0;
+  flex: 1;
+}
+
+.drawer-form__row--time .drawer-form__arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: oklch(0.52 0.02 255);
 }
 
 .drawer-form__date-field {
@@ -2270,7 +2391,7 @@ button {
   z-index: 6;
 }
 
-.drawer-form__date-trigger {
+.drawer-form__date-wrap .drawer-form__date-trigger {
   width: 100%;
   min-height: 40px;
   border: 1px solid oklch(0.88 0.01 255);
@@ -2292,6 +2413,10 @@ button {
   max-width: 296px;
   padding: 14px;
   border: 1px solid oklch(0.88 0.01 255);
+  background: #ffffff;
+  z-index: 100;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px oklch(0.16 0.02 255 / 0.12);
   border-radius: 14px;
   background: #ffffff;
   box-shadow: 0 20px 36px oklch(0.18 0.02 255 / 0.16);
