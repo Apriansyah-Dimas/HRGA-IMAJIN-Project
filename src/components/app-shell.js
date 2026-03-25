@@ -1297,6 +1297,13 @@ function addMinutesToDateTimeValue(dateTimeValue, minutesToAdd) {
   return formatDateTimeLocalValue(nextDate);
 }
 
+function formatTime(date) {
+  const d = new Date(date);
+  const hours = String(d.getHours()).padStart(2, "0");
+  const minutes = String(d.getMinutes()).padStart(2, "0");
+  return `${hours}:${minutes}`;
+}
+
 function updateDraftDateTime(state, field, dateValue, timeValue) {
   state.eventDraft[field] = `${dateValue}T${timeValue}`;
 }
@@ -1351,6 +1358,17 @@ function formatMinutesAsTime(totalMinutes) {
 
 function parseEventSchedule(meta = "") {
   const [timeRange = "", location = ""] = meta.split("|").map((value) => value.trim());
+  
+  if (timeRange.toLowerCase() === "all day") {
+    return {
+      startMinutes: 0,
+      endMinutes: 1440,
+      label: "All day",
+      location,
+      isAllDay: true,
+    };
+  }
+  
   const [rawStart = "", rawEnd = ""] = timeRange.split("-").map((value) => value.trim());
   const start = parseTimeToken(rawStart);
   const end = parseTimeToken(rawEnd);
@@ -1362,6 +1380,7 @@ function parseEventSchedule(meta = "") {
     endMinutes,
     label: `${formatMinutesAsTime(startMinutes)} – ${formatMinutesAsTime(endMinutes)}`,
     location,
+    isAllDay: false,
   };
 }
 
@@ -1481,6 +1500,7 @@ function buildEventFromDraft(state) {
   const endTime = formatTime(state.eventDraft.end);
   const locationLabel = state.eventDraft.location.trim() || "No location set";
   const primaryTag = state.eventDraft.tag || "Event";
+  const isAllDay = state.eventDraft.isAllDay;
 
   // Create events for each day in the range
   const events = [];
@@ -1499,7 +1519,10 @@ function buildEventFromDraft(state) {
     let displayStartTime = startTime;
     let displayEndTime = endTime;
 
-    if (!isStartDay && !isEndDay) {
+    if (isAllDay) {
+      displayStartTime = "All day";
+      displayEndTime = "";
+    } else if (!isStartDay && !isEndDay) {
       displayStartTime = "00:00";
       displayEndTime = "23:59";
     } else if (isStartDay && !isEndDay) {
@@ -1507,6 +1530,10 @@ function buildEventFromDraft(state) {
     } else if (!isStartDay && isEndDay) {
       displayStartTime = "00:00";
     }
+
+    const metaLabel = isAllDay 
+      ? `All day | ${locationLabel}`
+      : `${displayStartTime} - ${displayEndTime} | ${locationLabel}`;
 
     events.push({
       id: `calendar-event-${baseId}-${events.length}`,
@@ -1516,9 +1543,10 @@ function buildEventFromDraft(state) {
       monthLabel: MONTH_NAMES[currentDate.getMonth()].slice(0, 3).toUpperCase(),
       title: state.eventDraft.title.trim(),
       color: getEventTagStyle(primaryTag).color,
-      meta: `${displayStartTime} - ${displayEndTime} | ${locationLabel}`,
+      meta: metaLabel,
       start: state.eventDraft.start,
       end: state.eventDraft.end,
+      isAllDay: isAllDay,
       location: state.eventDraft.location.trim(),
       description: state.eventDraft.description,
       participants: [...state.eventDraft.participants],
@@ -2398,7 +2426,7 @@ function createEventDetailDrawer(activeApp, state, closeDrawer, openAttachmentVi
     const dateValue = createElement(
       "span",
       "drawer-detail__meta-value",
-      new Date(event.start ?? `${event.year}-${String(event.monthIndex + 1).padStart(2, "0")}-${event.day}T09:00`).toLocaleDateString("en-US", {
+      new Date(event.year, event.monthIndex, Number(event.day)).toLocaleDateString("en-US", {
         month: "long",
         day: "numeric",
         year: "numeric",
