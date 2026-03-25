@@ -1797,22 +1797,19 @@ button {
 }
 
 .attachment-viewer {
-  position: absolute;
-  inset: clamp(12px, 2vw, 24px);
+  position: relative;
+  width: 100vw;
+  height: 100vh;
   display: grid;
   grid-template-rows: auto minmax(0, 1fr);
-  border: 1px solid oklch(0.36 0.02 255 / 0.24);
-  border-radius: 28px;
-  background: linear-gradient(
-    180deg,
-    oklch(0.18 0.02 255 / 0.96),
-    oklch(0.14 0.02 255 / 0.94)
-  );
-  color: oklch(0.96 0.004 255);
-  box-shadow: 0 32px 80px oklch(0.08 0.03 255 / 0.38);
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  color: oklch(0.24 0.02 250);
+  box-shadow: none;
   overflow: hidden;
   opacity: 0;
-  transform: translateY(28px) scale(0.98);
+  transform: scale(0.98);
   transition:
     opacity 260ms ease,
     transform 360ms cubic-bezier(0.22, 1, 0.36, 1);
@@ -1824,7 +1821,7 @@ button {
 
 .attachment-viewer-overlay.is-open .attachment-viewer {
   opacity: 1;
-  transform: translateY(0) scale(1);
+  transform: scale(1);
 }
 
 .attachment-viewer__header {
@@ -2192,50 +2189,49 @@ button {
 .drawer-form__all-day-row {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  margin-top: 12px;
-  padding-top: 12px;
-  border-top: 1px solid oklch(0.92 0.01 255);
+  gap: 12px;
+  margin-top: 8px;
 }
 
 .drawer-form__all-day-label {
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 500;
-  color: oklch(0.4 0.02 255);
+  color: oklch(0.3 0.02 255);
 }
 
 .switch {
-  --sizeVar: 1.1em;
-  --color-primary: #dedede;
-  --color-secondary: #aaaaaa;
-  --color-primary-on: #1d9bf0;
+  --sizeVar: 1.2em;
+  --color-primary: oklch(0.85 0.01 255);
+  --color-secondary: oklch(0.5 0.02 255);
+  --color-primary-on: #6365b9;
   --color-secondary-on: #ffffff;
   position: relative;
   width: calc(var(--sizeVar) * 2);
   height: var(--sizeVar);
   background-color: var(--color-primary);
-  border-radius: var(--sizeVar);
-  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.05) inset;
+  border-radius: 999px;
   cursor: pointer;
-  transition: background-color 150ms ease-out;
+  transition: background-color 200ms ease, box-shadow 200ms ease;
+  box-shadow: 0 1px 3px oklch(0.1 0.02 255 / 0.2);
+  flex-shrink: 0;
 }
 
 .switch::after {
   content: "";
   position: absolute;
-  margin: calc(var(--sizeVar) / 10);
-  height: calc(var(--sizeVar) - calc(var(--sizeVar) / 5));
-  width: calc(var(--sizeVar) - calc(var(--sizeVar) / 5));
+  top: 2px;
+  left: 2px;
+  height: calc(var(--sizeVar) - 4px);
+  width: calc(var(--sizeVar) - 4px);
   background-color: var(--color-secondary);
-  border-radius: var(--sizeVar);
-  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.05) inset, 0 2px 4px rgba(0, 0, 0, 0.3);
-  transition: transform 150ms ease-out, background-color 150ms ease-out;
-  top: 50%;
-  transform: translateY(-50%);
+  border-radius: 999px;
+  box-shadow: 0 2px 4px oklch(0 0 0 / 0.15);
+  transition: transform 250ms cubic-bezier(0.34, 1.56, 0.64, 1), background-color 250ms ease;
+  will-change: transform, background-color;
 }
 
 .switch:has(input:checked)::after {
-  transform: translateX(var(--sizeVar)) translateY(-50%);
+  transform: translateX(calc(var(--sizeVar)));
   background-color: var(--color-secondary-on);
 }
 
@@ -2332,7 +2328,7 @@ button {
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
 }
 
 .drawer-form__date-label {
@@ -2340,31 +2336,98 @@ button {
   font-size: 11px;
   font-weight: 600;
   color: oklch(0.45 0.02 255);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .drawer-form__datetime-inputs {
   display: flex;
+  gap: 10px;
+}
+
+.drawer-form__input-wrap {
+  position: relative;
+  flex: 0 1 auto;
+  min-height: 40px;
+  display: flex;
+  align-items: center;
   gap: 8px;
+  padding: 0 12px;
+  border: 1px solid oklch(0.8 0.01 255);
+  border-radius: 10px;
+  background: #ffffff;
+  transition: border-color 180ms ease, box-shadow 180ms ease, background-color 180ms ease;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.drawer-form__input-wrap:hover {
+  border-color: oklch(0.7 0.02 255);
+}
+
+.drawer-form__input-wrap:focus-within {
+  border-color: #6365b9;
+  box-shadow: 0 0 0 3px oklch(0.55 0.12 281 / 0.1);
+}
+
+.drawer-form__input-wrap.is-hidden {
+  display: none;
+}
+
+.drawer-form__input-wrap .ui-icon {
+  color: oklch(0.55 0.02 255);
+  font-size: 14px;
+  pointer-events: none;
+  flex-shrink: 0;
+}
+
+.drawer-form__datetime-display {
+  flex: 0 0 auto;
+  color: oklch(0.32 0.02 255);
+  font-size: 13px;
+  font-weight: 500;
+  white-space: nowrap;
+  cursor: pointer;
+  padding: 2px 4px;
+  border-radius: 4px;
+  transition: background-color 150ms ease, color 150ms ease;
+}
+
+.drawer-form__datetime-display:hover {
+  background-color: oklch(0.92 0.01 255);
+  color: oklch(0.25 0.02 255);
+}
+
+.drawer-form__datetime-separator {
+  color: oklch(0.6 0.02 255);
+  font-size: 13px;
+  flex-shrink: 0;
+  padding: 0 2px;
 }
 
 .drawer-form__datetime-inputs .drawer-form__date-input,
 .drawer-form__datetime-inputs .drawer-form__time-input {
-  flex: 1;
-  min-height: 40px;
-  border: 1px solid oklch(0.88 0.01 255);
-  border-radius: 9px;
-  background: #ffffff;
-  color: oklch(0.36 0.02 255);
-  padding: 9px 11px;
-  font-size: 12.5px;
-  font-family: inherit;
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+  inset: 0;
+}
+
+.drawer-form__datetime-inputs.is-hidden {
+  display: none;
+}
+
+.drawer-form__datetime-inputs .drawer-form__date-input::-webkit-calendar-picker-indicator,
+.drawer-form__datetime-inputs .drawer-form__time-input::-webkit-calendar-picker-indicator {
+  opacity: 0;
+  position: absolute;
+  inset: 0;
+  cursor: pointer;
 }
 
 .drawer-form__datetime-inputs .drawer-form__date-input:focus,
 .drawer-form__datetime-inputs .drawer-form__time-input:focus {
   outline: none;
-  border-color: #3168f4;
-  box-shadow: 0 0 0 3px oklch(0.92 0.08 255 / 0.15);
 }
 
 .drawer-form__datetime-inputs .drawer-form__time-input.is-hidden {
@@ -3560,23 +3623,24 @@ button {
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  padding: 10px 12px;
-  border: 1px solid oklch(0.32 0.01 255 / 0.5);
+  padding: 10px 16px;
+  border: none;
   border-radius: 999px;
-  background: oklch(0.17 0.01 255 / 0.9);
-  box-shadow: 0 18px 42px oklch(0.02 0.01 255 / 0.34);
+  background: oklch(0.2 0.01 255 / 0.85);
+  backdrop-filter: blur(16px);
+  box-shadow: 0 8px 32px oklch(0 0 0 / 0.4);
   transform: translateX(-50%);
 }
 
 .attachment-viewer__icon-button {
-  width: 46px;
-  height: 46px;
+  width: 40px;
+  height: 40px;
   display: inline-grid;
   place-items: center;
   border: 0;
   border-radius: 999px;
-  background: oklch(0.24 0.01 255 / 0.96);
-  color: oklch(0.96 0.004 255);
+  background: transparent;
+  color: oklch(0.95 0.004 255);
   cursor: pointer;
   transition:
     transform 160ms ease,
@@ -3584,20 +3648,10 @@ button {
     opacity 160ms ease;
 }
 
-.attachment-viewer__top-actions {
-  position: absolute;
-  top: clamp(16px, 3vw, 28px);
-  right: clamp(16px, 3vw, 28px);
-  z-index: 2;
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-}
-
 .attachment-viewer__icon-button:hover,
 .attachment-viewer__icon-button:focus-visible {
-  transform: translateY(-1px);
-  background: oklch(0.3 0.01 255 / 1);
+  transform: scale(1.1);
+  background: oklch(1 0 0 / 0.15);
 }
 
 .attachment-viewer__icon-button .ui-icon {
@@ -4925,18 +4979,13 @@ button {
   min-height: 124px;
 }
 
-.calendar-events-modal-overlay,
 .attachment-viewer-overlay {
   position: fixed;
   inset: 0;
-  display: flex;
-  justify-content: flex-end;
-  align-items: stretch;
-  padding: 0;
+  display: block;
   pointer-events: none;
 }
 
-.calendar-events-modal-overlay.is-open,
 .attachment-viewer-overlay.is-open {
   pointer-events: auto;
 }
@@ -4945,33 +4994,12 @@ button {
 .attachment-viewer-overlay__backdrop {
   position: absolute;
   inset: 0;
-  background: oklch(0.17 0.01 250 / 0.34);
+  background: oklch(0.12 0.01 255 / 0.85);
+  backdrop-filter: blur(12px);
   opacity: 0;
   transition: opacity 220ms ease;
 }
 
-.calendar-events-modal,
-.attachment-viewer {
-  position: relative;
-  inset: auto;
-  z-index: 1;
-  margin-left: auto;
-  height: 100vh;
-  max-height: 100vh;
-  border: 0;
-  border-left: 1px solid oklch(0.86 0.01 250);
-  border-radius: 0;
-  box-shadow: -24px 0 48px oklch(0.14 0.01 250 / 0.18);
-  transform: translateX(100%);
-  transition: transform 260ms cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.calendar-events-modal-overlay.is-open .calendar-events-modal,
-.attachment-viewer-overlay.is-open .attachment-viewer {
-  transform: translateX(0);
-}
-
-.calendar-events-modal-overlay.is-open .calendar-events-modal-overlay__backdrop,
 .attachment-viewer-overlay.is-open .attachment-viewer-overlay__backdrop {
   opacity: 1;
 }
@@ -5034,24 +5062,19 @@ button {
   z-index: 42;
 }
 
-.attachment-viewer {
-  width: min(56rem, 100vw);
-  display: grid;
-  grid-template-rows: auto minmax(0, 1fr) auto;
-  background: linear-gradient(180deg, oklch(0.955 0.004 255), oklch(0.93 0.006 250));
-  color: oklch(0.24 0.02 250);
-  overflow: hidden;
-}
-
 .attachment-viewer__top-actions {
-  position: relative;
-  top: auto;
-  right: auto;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 10;
+  display: flex;
+  gap: 8px;
   justify-content: flex-end;
-  padding: 14px 18px;
-  border-bottom: 1px solid oklch(0.88 0.01 250);
-  background: rgb(255 255 255 / 0.74);
-  backdrop-filter: blur(12px);
+  padding: 8px;
+  border-radius: 999px;
+  background: oklch(0.2 0.01 255 / 0.8);
+  backdrop-filter: blur(16px);
+  box-shadow: 0 8px 32px oklch(0 0 0 / 0.3);
 }
 
 .attachment-viewer__viewport {
@@ -5059,21 +5082,67 @@ button {
   inset: auto;
   min-height: 0;
   overflow: auto;
-  padding: 18px;
+  padding: 0;
   background: transparent;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.attachment-viewer__viewport::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+.attachment-viewer__viewport::-webkit-scrollbar-track {
+  background: oklch(0.94 0.004 255);
+  border-radius: 0;
+}
+
+.attachment-viewer__viewport::-webkit-scrollbar-thumb {
+  background: oklch(0.65 0.02 255);
+  border: 2px solid oklch(0.98 0.004 255);
+  border-radius: 5px;
+}
+
+.attachment-viewer__viewport::-webkit-scrollbar-thumb:hover {
+  background: oklch(0.55 0.02 255);
 }
 
 .attachment-viewer__viewport--document {
-  padding-bottom: 18px;
+  padding: 80px 20px 20px;
 }
 
 .attachment-viewer__stage {
+  transform: translate(var(--viewer-offset-x, 0), var(--viewer-offset-y, 0))
+    scale(var(--viewer-scale, 1));
+  transform-origin: center center;
+  transition: transform 160ms ease;
+  will-change: transform;
   min-height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 5px 30px 5px;
+}
+
+.attachment-viewer__viewport.is-dragging .attachment-viewer__stage {
+  transition: none;
 }
 
 .attachment-viewer__media {
-  max-width: min(100%, 780px);
-  max-height: calc(100vh - 190px);
+  max-width: 90vw;
+  max-height: 85vh;
+  object-fit: contain;
+  display: block;
+  margin: 0 auto;
+  border-radius: 8px;
+  box-shadow: 0 20px 60px oklch(0.1 0.02 255 / 0.3);
+}
+
+.attachment-viewer__media--image {
+  max-height: 85vh;
+  width: auto;
 }
 
 .attachment-viewer__dock {

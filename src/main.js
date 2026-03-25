@@ -1,7 +1,7 @@
-import { createAppShell } from "./components/app-shell.js";
+  import { createAppShell } from "./components/app-shell.js";
 
-const root = document.querySelector("#app");
+  const root = document.querySelector("#app");
 
-if (root) {
-  root.append(createAppShell());
-}
+  if (root) {
+    root.append(createAppShell());
+  }

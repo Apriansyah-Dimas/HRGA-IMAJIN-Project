@@ -1,5 +1,4 @@
 import { defaultAppId, defaultItemByApp, workspaceApps } from "../data/navigation.js";
-import { createAssetsWorkspaceView } from "./assets-workspace.js";
 
 const MONTH_NAMES = [
   "January",
@@ -14,6 +13,16 @@ const MONTH_NAMES = [
   "October",
   "November",
   "December",
+];
+
+const DAY_NAMES = [
+  "Sunday",
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
 ];
 
 const EVENT_TAG_STYLES = {
@@ -1468,29 +1477,60 @@ function formatDrawerDateLabel(value) {
 function buildEventFromDraft(state) {
   const startDate = new Date(state.eventDraft.start);
   const endDate = new Date(state.eventDraft.end);
-  const startTime = formatDateInput(state.eventDraft.start).split(" - ")[1];
-  const endTime = formatDateInput(state.eventDraft.end).split(" - ")[1];
+  const startTime = formatTime(state.eventDraft.start);
+  const endTime = formatTime(state.eventDraft.end);
   const locationLabel = state.eventDraft.location.trim() || "No location set";
   const primaryTag = state.eventDraft.tag || "Event";
 
-  return {
-    id: `calendar-event-${Date.now()}`,
-    day: String(startDate.getDate()).padStart(2, "0"),
-    monthIndex: startDate.getMonth(),
-    year: startDate.getFullYear(),
-    monthLabel: MONTH_NAMES[startDate.getMonth()].slice(0, 3).toUpperCase(),
-    title: state.eventDraft.title.trim(),
-    color: getEventTagStyle(primaryTag).color,
-    meta: `${startTime} - ${endTime} | ${locationLabel}`,
-    start: state.eventDraft.start,
-    end: state.eventDraft.end,
-    location: state.eventDraft.location.trim(),
-    description: state.eventDraft.description,
-    participants: [...state.eventDraft.participants],
-    reminders: state.eventDraft.reminders.map((reminder) => ({ ...reminder })),
-    attachments: state.eventDraft.attachments.map((attachment) => ({ ...attachment })),
-    tag: primaryTag,
-  };
+  // Create events for each day in the range
+  const events = [];
+  const currentDate = new Date(startDate);
+  currentDate.setHours(0, 0, 0, 0);
+
+  const endDateTime = new Date(endDate);
+  endDateTime.setHours(23, 59, 59, 999);
+
+  const baseId = Date.now();
+
+  while (currentDate <= endDateTime) {
+    const isStartDay = currentDate.toDateString() === startDate.toDateString();
+    const isEndDay = currentDate.toDateString() === endDate.toDateString();
+
+    let displayStartTime = startTime;
+    let displayEndTime = endTime;
+
+    if (!isStartDay && !isEndDay) {
+      displayStartTime = "00:00";
+      displayEndTime = "23:59";
+    } else if (isStartDay && !isEndDay) {
+      displayEndTime = "23:59";
+    } else if (!isStartDay && isEndDay) {
+      displayStartTime = "00:00";
+    }
+
+    events.push({
+      id: `calendar-event-${baseId}-${events.length}`,
+      day: String(currentDate.getDate()).padStart(2, "0"),
+      monthIndex: currentDate.getMonth(),
+      year: currentDate.getFullYear(),
+      monthLabel: MONTH_NAMES[currentDate.getMonth()].slice(0, 3).toUpperCase(),
+      title: state.eventDraft.title.trim(),
+      color: getEventTagStyle(primaryTag).color,
+      meta: `${displayStartTime} - ${displayEndTime} | ${locationLabel}`,
+      start: state.eventDraft.start,
+      end: state.eventDraft.end,
+      location: state.eventDraft.location.trim(),
+      description: state.eventDraft.description,
+      participants: [...state.eventDraft.participants],
+      reminders: state.eventDraft.reminders.map((reminder) => ({ ...reminder })),
+      attachments: state.eventDraft.attachments.map((attachment) => ({ ...attachment })),
+      tag: primaryTag,
+    });
+
+    currentDate.setDate(currentDate.getDate() + 1);
+  }
+
+  return events;
 }
 
 function isDraftValid(draft) {
@@ -1640,6 +1680,24 @@ function createEventDrawer(state, closeDrawer, onSave, isOpen = false) {
   const scheduleLabel = createSectionLabel("calendar", "Date & Time");
 
   const allDayRow = createElement("div", "drawer-form__all-day-row");
+
+  // Format date as DD/MM/YYYY
+  const formatDate = (date) => {
+    const d = new Date(date);
+    const day = String(d.getDate()).padStart(2, '0');
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const year = d.getFullYear();
+    return `${day}/${month}/${year}`;
+  };
+
+  // Format time as HH:MM
+  const formatTime = (date) => {
+    const d = new Date(date);
+    const hours = String(d.getHours()).padStart(2, '0');
+    const minutes = String(d.getMinutes()).padStart(2, '0');
+    return `${hours}:${minutes}`;
+  };
+
   const allDayLabel = createElement("span", "drawer-form__all-day-label", "All day");
   const allDayToggleLabel = createElement("label", "switch");
   const allDayToggleInput = document.createElement("input");
@@ -1651,59 +1709,83 @@ function createEventDrawer(state, closeDrawer, onSave, isOpen = false) {
   });
   const allDayToggleSpan = createElement("span", "slider");
   allDayToggleLabel.append(allDayToggleInput, allDayToggleSpan);
-  allDayRow.append(allDayLabel, allDayToggleLabel);
+  allDayRow.append(allDayToggleLabel, allDayLabel);
 
-  function createDateTimeField(field, labelText) {
-    const fieldWrap = createElement("div", "drawer-form__datetime-field");
-    const label = createElement("span", "drawer-form__date-label", labelText);
-    
-    const inputRow = createElement("div", "drawer-form__datetime-inputs");
-    
-    const dateInput = document.createElement("input");
-    dateInput.type = "date";
-    dateInput.className = "drawer-form__date-input";
-    dateInput.value = getDraftDatePart(state.eventDraft[field]);
-    
-    const timeInput = document.createElement("input");
-    timeInput.type = "time";
-    timeInput.className = `drawer-form__time-input${state.eventDraft.isAllDay ? " is-hidden" : ""}`;
-    timeInput.step = "900";
-    timeInput.value = getDraftTimePart(state.eventDraft[field]);
-    
-    if (field === "start") {
-      timeInput.max = getDraftTimePart(addMinutesToDateTimeValue(state.eventDraft.end, -15));
-    } else {
-      timeInput.min = getDraftTimePart(addMinutesToDateTimeValue(state.eventDraft.start, 15));
+  // Date input row
+  const dateRow = createElement("div", "drawer-form__datetime-inputs");
+  const dateWrap = createElement("div", "drawer-form__input-wrap");
+  const dateIcon = createIcon("calendar");
+
+  const startDateDisplay = createElement("span", "drawer-form__datetime-display", formatDate(state.eventDraft.start));
+  const endDateDisplay = createElement("span", "drawer-form__datetime-display", formatDate(state.eventDraft.end));
+  const dateSeparator = createElement("span", "drawer-form__datetime-separator", " - ");
+
+  const startDateInput = document.createElement("input");
+  startDateInput.type = "date";
+  startDateInput.className = "drawer-form__date-input";
+  startDateInput.value = getDraftDatePart(state.eventDraft.start);
+  const endDateInput = document.createElement("input");
+  endDateInput.type = "date";
+  endDateInput.className = "drawer-form__date-input";
+  endDateInput.value = getDraftDatePart(state.eventDraft.end);
+
+  const handleDateChange = () => {
+    updateDraftDateTime(state, "start", startDateInput.value, getDraftTimePart(state.eventDraft.start));
+    updateDraftDateTime(state, "end", endDateInput.value, getDraftTimePart(state.eventDraft.end));
+
+    if (!isDraftDateRangeValid(state.eventDraft.start, state.eventDraft.end)) {
+      state.eventDraft.end = addMinutesToDateTimeValue(state.eventDraft.start, 60);
     }
-    
-    const handleDateTimeChange = () => {
-      updateDraftDateTime(state, field, dateInput.value, timeInput.value);
-      
-      if (field === "start" && !isDraftDateRangeValid(state.eventDraft.start, state.eventDraft.end)) {
-        state.eventDraft.end = addMinutesToDateTimeValue(state.eventDraft.start, 60);
-      }
-      if (field === "end" && !isDraftDateRangeValid(state.eventDraft.start, state.eventDraft.end)) {
-        state.eventDraft.start = addMinutesToDateTimeValue(state.eventDraft.end, -60);
-      }
-      renderDrawer();
-    };
-    
-    dateInput.addEventListener("change", handleDateTimeChange);
-    timeInput.addEventListener("input", handleDateTimeChange);
-    
-    inputRow.append(dateInput, timeInput);
-    fieldWrap.append(label, inputRow);
-    
-    return { fieldWrap };
-  }
+    renderDrawer();
+  };
 
-  const startField = createDateTimeField("start", "From");
-  const endField = createDateTimeField("end", "To");
+  startDateInput.addEventListener("change", handleDateChange);
+  endDateInput.addEventListener("change", handleDateChange);
 
-  const dateTimeRow = createElement("div", "drawer-form__row drawer-form__row--datetime");
-  dateTimeRow.append(startField.fieldWrap, endField.fieldWrap);
+  startDateDisplay.addEventListener("click", () => startDateInput.showPicker());
+  endDateDisplay.addEventListener("click", () => endDateInput.showPicker());
 
-  scheduleGroup.append(scheduleLabel, dateTimeRow, allDayRow);
+  dateWrap.append(dateIcon, startDateDisplay, dateSeparator, endDateDisplay, startDateInput, endDateInput);
+  dateRow.append(dateWrap);
+
+  // Time input row
+  const timeRow = createElement("div", `drawer-form__datetime-inputs${state.eventDraft.isAllDay ? " is-hidden" : ""}`);
+  const timeWrap = createElement("div", "drawer-form__input-wrap");
+  const timeIcon = createIcon("clock");
+
+  const startTimeDisplay = createElement("span", "drawer-form__datetime-display", formatTime(state.eventDraft.start));
+  const endTimeDisplay = createElement("span", "drawer-form__datetime-display", formatTime(state.eventDraft.end));
+  const timeSeparator = createElement("span", "drawer-form__datetime-separator", " - ");
+
+  const startTimeInput = document.createElement("input");
+  startTimeInput.type = "time";
+  startTimeInput.className = "drawer-form__time-input";
+  startTimeInput.step = "900";
+  startTimeInput.value = getDraftTimePart(state.eventDraft.start);
+  startTimeInput.max = getDraftTimePart(addMinutesToDateTimeValue(state.eventDraft.end, -15));
+  const endTimeInput = document.createElement("input");
+  endTimeInput.type = "time";
+  endTimeInput.className = "drawer-form__time-input";
+  endTimeInput.step = "900";
+  endTimeInput.value = getDraftTimePart(state.eventDraft.end);
+  endTimeInput.min = getDraftTimePart(addMinutesToDateTimeValue(state.eventDraft.start, 15));
+
+  const handleTimeChange = () => {
+    updateDraftDateTime(state, "start", getDraftDatePart(state.eventDraft.start), startTimeInput.value);
+    updateDraftDateTime(state, "end", getDraftDatePart(state.eventDraft.end), endTimeInput.value);
+    renderDrawer();
+  };
+
+  startTimeInput.addEventListener("input", handleTimeChange);
+  endTimeInput.addEventListener("input", handleTimeChange);
+
+  startTimeDisplay.addEventListener("click", () => startTimeInput.showPicker());
+  endTimeDisplay.addEventListener("click", () => endTimeInput.showPicker());
+
+  timeWrap.append(timeIcon, startTimeDisplay, timeSeparator, endTimeDisplay, startTimeInput, endTimeInput);
+  timeRow.append(timeWrap);
+
+  scheduleGroup.append(scheduleLabel, allDayRow, dateRow, timeRow);
 
   const participantsGroup = createElement("div", "drawer-form__group");
   const participantsLabel = createSectionLabel("users", "Participants");
@@ -2539,21 +2621,7 @@ export function createAppShell() {
   }
 
   function createAssetsWorkspace(activeApp) {
-    return createAssetsWorkspaceView({
-      activeApp,
-      state,
-      render,
-      createElement,
-      createIcon,
-      getInitialAssetDraft,
-      formatAssetDateLabel,
-      formatAssetDateTimeLabel,
-      getAssetStatusTone,
-      ensureSelectedId,
-      assetPageMeta: ASSET_PAGE_META,
-      inventoryFilters: ASSET_INVENTORY_FILTERS,
-      requestFilters: ASSET_REQUEST_FILTERS,
-    });
+    return null;
   }
 
   function animateCloseEventDrawer(onClosed) {
@@ -2732,11 +2800,13 @@ export function createAppShell() {
 
   function saveEventDraft() {
     const calendarApp = getCalendarApp();
-    const newEvent = buildEventFromDraft(state);
+    const newEvents = buildEventFromDraft(state);
 
-    calendarApp.events.push(newEvent);
+    newEvents.forEach((event) => {
+      calendarApp.events.push(event);
+    });
     sortCalendarEvents(calendarApp.events);
-    syncCalendarToEvent(state, newEvent);
+    syncCalendarToEvent(state, newEvents[0]);
     state.activeAppId = "calendar";
     state.activeItem = "Upcoming Events";
     state.lastAction = "event-created";
