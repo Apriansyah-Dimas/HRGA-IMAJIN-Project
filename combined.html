@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>IMAJIN Workspace</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <style>
+/* Combined CSS from src/styles/main.css */
+:root {
+  color-scheme: dark light;
+  --sidebar-rail-width: 84px;
+  --sidebar-panel-width: 230px;
+  --sidebar-width: calc(var(--sidebar-rail-width) + var(--sidebar-panel-width));
+  --bg-sidebar: #242933;
+  --bg-sidebar-deep: #242933;
+  --bg-content: oklch(0.93 0.006 255);
+  --text-strong: oklch(0.95 0.01 260);
+  --text-soft: oklch(0.77 0.02 260);
+  --text-muted: oklch(0.63 0.02 260);
+  --sidebar-heading: oklch(78.523% 0.11129 296.703);
+  --sidebar-heading-soft: oklch(90.135% 0.02765 297.192);
+  --accent: oklch(0.59 0.16 281);
+  --accent-soft: color-mix(in oklch, var(--accent) 50%, transparent);
+  --line-soft: oklch(0.34 0.02 260 / 0.7);
+  --shadow-soft: 0 24px 48px oklch(0.12 0.03 260 / 0.24);
+  --drawer-width: min(50vw, 48rem);
+}
+
+* { box-sizing: border-box; }
+
+html, body { height: 100%; margin: 0; }
+
+body {
+  background: linear-gradient(135deg, oklch(0.93 0.005 255), oklch(0.9 0.008 255));
+  color: var(--text-strong);
+  font-family: "Plus Jakarta Sans", sans-serif;
+  overflow: hidden;
+  scrollbar-color: #6365b9 rgba(36, 41, 51, 0.16);
+  scrollbar-width: thin;
+}
+
+*::-webkit-scrollbar { width: 12px; height: 12px; }
+*::-webkit-scrollbar-track { background: rgba(36, 41, 51, 0.14); border-radius: 999px; }
+*::-webkit-scrollbar-thumb { background: #6365b9; border: 3px solid rgba(255, 255, 255, 0.92); border-radius: 999px; }
+*::-webkit-scrollbar-thumb:hover { background: #5759a8; }
+*::-webkit-scrollbar-corner { background: transparent; }
+
+button { font: inherit; }
+
+.ui-icon { display: inline-grid; place-items: center; flex: none; }
+.ui-icon svg { width: 1em; height: 1em; display: block; }
+
+.workspace-shell { height: 100vh; display: grid; grid-template-columns: var(--sidebar-width) minmax(0, 1fr); position: relative; }
+.sidebar { position: relative; display: grid; grid-template-columns: var(--sidebar-rail-width) var(--sidebar-panel-width); background: var(--bg-sidebar); box-shadow: inset -1px 0 0 var(--line-soft); min-width: 0; padding-top: 126px; }
+.sidebar__rail { position: relative; display: flex; flex-direction: column; align-items: center; padding: 18px 10px 18px; background: var(--bg-sidebar-deep); box-shadow: inset -1px 0 0 oklch(0.36 0.02 260 / 0.36); }
+.sidebar__panel { padding: 30px 20px 28px 16px; min-width: 0; overflow: hidden; }
+.sidebar__active-marker { position: absolute; left: 0; top: 0; width: 3px; height: 64px; border-radius: 0 999px 999px 0; background: linear-gradient(180deg, oklch(0.78 0.18 283), oklch(0.62 0.15 276)); transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1); }
+.brand { position: absolute; top: 34px; left: 50%; z-index: 1; display: flex; justify-content: center; width: calc(var(--sidebar-width) - 56px); margin: 0; transform: translateX(-50%); pointer-events: none; }
+.brand__image { display: block; width: min(100%, 136px); height: auto; object-fit: contain; }
+.rail-nav { display: flex; flex-direction: column; gap: 10px; align-items: center; width: 100%; }
+.rail-nav__item { display: grid; justify-items: center; gap: 7px; width: 100%; min-height: 56px; padding: 4px 0; background: transparent; border: 0; color: var(--text-soft); cursor: pointer; position: relative; }
+.rail-nav__icon { width: 42px; height: 42px; display: grid; place-items: center; border-radius: 10px; background: #6365b9; color: oklch(0.98 0.01 280); box-shadow: 0 12px 18px oklch(0.16 0.05 270 / 0.32); transition: transform 180ms ease, box-shadow 180ms ease, filter 180ms ease; }
+.rail-nav__icon .ui-icon { font-size: 18px; }
+.rail-nav__icon .ui-icon svg { width: 18px; height: 18px; }
+.rail-nav__label { width: 100%; max-width: 64px; color: inherit; text-align: center; text-wrap: balance; line-height: 1.08; font-size: 8px; font-weight: 600; letter-spacing: -0.01em; }
+.rail-nav__item.is-active .rail-nav__label, .rail-nav__item:hover .rail-nav__label { color: var(--text-strong); }
+.rail-nav__item.is-active .rail-nav__icon, .rail-nav__item:hover .rail-nav__icon { transform: translateY(-1px); box-shadow: 0 14px 22px oklch(0.16 0.05 270 / 0.4); filter: saturate(1.08); }
+
+.panel__eyebrow { margin: 0 0 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.18em; font-size: 9px; font-weight: 700; }
+.panel__title { margin: 0 0 12px; max-width: 220px; color: var(--sidebar-heading); font-family: "Outfit", sans-serif; font-size: 17px; font-weight: 600; line-height: 1.2; }
+.panel__body { min-height: 0; min-width: 0; overflow-x: hidden; }
+
+.subnav { display: flex; flex-direction: column; gap: 6px; }
+.subnav__item { width: calc(100% - 8px); justify-self: start; box-sizing: border-box; padding: 9px 14px; border: 0; border-radius: 6px; background: transparent; color: var(--sidebar-heading-soft); text-align: left; font-size: 12.5px; font-weight: 600; line-height: 1.35; cursor: pointer; transition: background-color 180ms ease, transform 180ms ease, color 180ms ease; }
+.subnav__item.is-active { background: color-mix(in oklch, var(--accent) 38%, var(--bg-sidebar)); box-shadow: inset 0 0 0 1px oklch(0.54 0.07 278 / 0.2); color: var(--sidebar-heading); }
+.subnav__item:hover { background: color-mix(in oklch, var(--accent-soft) 55%, transparent); transform: translateX(2px); color: var(--sidebar-heading); }
+
+.calendar-panel { display: grid; gap: 14px; min-width: 0; }
+.calendar-panel__primary-action { width: calc(100% - 8px); justify-self: start; box-sizing: border-box; padding: 11px 16px; border: 0; border-radius: 6px; background: #7175d2; color: #ffffff; font-family: "Outfit", sans-serif; font-size: 14px; font-weight: 600; line-height: 1.2; cursor: pointer; margin: 2px 0 6px; transition: transform 160ms ease, background-color 160ms ease, box-shadow 160ms ease; }
+.calendar-panel__primary-action:hover, .calendar-panel__primary-action:focus-visible { transform: translateY(-1px); background: #7b80e8; box-shadow: 0 12px 20px oklch(0.17 0.06 270 / 0.28); }
+.calendar-panel__primary-action.is-active { background: #6268d7; }
+
+.event-card { display: grid; grid-template-columns: 40px 1fr; gap: 8px; align-items: center; padding: 8px; border-radius: 12px; background: #444777; min-width: 0; cursor: pointer; outline: none; transition: transform 160ms ease, background-color 160ms ease, box-shadow 160ms ease; }
+.event-card:hover, .event-card:focus-visible { transform: translateY(-1px); box-shadow: 0 10px 18px oklch(0.12 0.03 260 / 0.22); }
+.event-card.is-active { background: #5055a0; }
+.event-card__date { display: grid; justify-items: center; align-content: center; gap: 1px; border-radius: 10px; background: #7175d2; min-height: 38px; padding: 4px 0; text-align: center; }
+.event-card__day { font-size: 11px; line-height: 1; }
+.event-card__month { font-size: 8px; font-weight: 700; line-height: 0.95; }
+.event-card__title { min-width: 0; flex: 0 1 auto; color: var(--text-strong); font-size: 10px; font-weight: 600; line-height: 1.25; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.event-card__tag { display: inline-flex; align-items: center; min-height: 16px; padding: 0 6px; border-radius: 999px; background: var(--tag-color, #5c73d8); color: var(--tag-text-color, #ffffff); font-size: 7px; font-weight: 700; letter-spacing: 0.02em; white-space: nowrap; }
+.event-card__meta { margin-top: 2px; color: oklch(0.87 0.01 260 / 0.9); font-size: 7px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.calendar-grid { display: grid; width: 100%; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; min-width: 0; }
+.calendar-grid.is-hidden { display: none; }
+.calendar-grid__weekday { display: grid; min-width: 0; place-items: center; color: #efe8db; font-size: 10px; font-weight: 600; }
+.calendar-grid__day { min-width: 0; width: 100%; aspect-ratio: 1; border: 0; border-radius: 12px; background: transparent; color: #efe8db; font-size: 10px; font-weight: 600; cursor: pointer; transition: background-color 160ms ease, color 160ms ease, transform 160ms ease; }
+.calendar-grid__day:hover:not(:disabled) { background: oklch(0.37 0.07 264 / 0.7); transform: translateY(-1px); }
+.calendar-grid__day.is-active { background: #3168f4; color: #ffffff; }
+.calendar-grid__day.is-today:not(.is-active) { background: color-mix(in oklch, #3168f4 22%, transparent); box-shadow: inset 0 0 0 1px color-mix(in oklch, #89a8ff 68%, white); color: #ffffff; }
+.calendar-grid__day.is-muted { color: oklch(0.56 0.02 260); }
+.calendar-grid__day:disabled { cursor: default; }
+
+.content-stage { height: 100vh; min-width: 0; overflow: hidden; background: radial-gradient(circle at top left, oklch(0.96 0.008 255), transparent 28%), linear-gradient(180deg, oklch(0.94 0.005 255), var(--bg-content)); }
+.content-stage__empty { margin: 36px; min-height: calc(100vh - 72px); border-radius: 24px; border: 1px dashed oklch(0.8 0.01 255); background: oklch(0.96 0.004 255 / 0.78); box-shadow: var(--shadow-soft); opacity: 0.22; padding: 28px; }
+.content-stage__label, .content-stage__title, .content-stage__meta { margin: 0; color: oklch(0.44 0.02 255); }
+.content-stage__label { text-transform: uppercase; letter-spacing: 0.16em; font-size: 11px; font-weight: 700; }
+.content-stage__title { margin-top: 8px; font-family: "Outfit", sans-serif; font-size: 32px; font-weight: 600; }
+.content-stage__meta { margin-top: 10px; max-width: 480px; font-size: 14px; line-height: 1.6; }
+
+.calendar-workspace { height: 100%; min-height: 0; padding: 10px 12px 10px; display: grid; grid-template-rows: auto minmax(0, 1fr); gap: 10px; overflow: hidden; }
+.calendar-workspace__toolbar { display: flex; align-items: center; justify-content: flex-start; gap: 14px; padding: 0 6px; }
+.calendar-workspace__tabs { display: inline-flex; align-items: center; border: 1px solid oklch(0.88 0.01 255); border-radius: 12px; background: oklch(0.97 0.004 255 / 0.85); overflow: hidden; box-shadow: 0 8px 20px oklch(0.16 0.02 255 / 0.06); }
+.calendar-workspace__tab { min-width: 68px; padding: 10px 16px; border: 0; border-right: 1px solid oklch(0.9 0.01 255); background: transparent; color: oklch(0.39 0.02 255); font-size: 12px; font-weight: 500; cursor: pointer; }
+.calendar-workspace__tab:last-child { border-right: 0; }
+.calendar-workspace__tab.is-active { background: #7a6fd9; color: #ffffff; }
+
+.calendar-surface { min-height: 0; height: 100%; border: 1px solid oklch(0.88 0.01 255); border-radius: 16px; background: linear-gradient(180deg, oklch(0.99 0.004 255 / 0.92), oklch(0.985 0.003 255 / 0.96)), linear-gradient(135deg, oklch(0.975 0.006 255), oklch(0.95 0.008 255)); box-shadow: 0 18px 36px oklch(0.16 0.02 255 / 0.08); overflow: hidden; display: grid; grid-template-rows: auto auto 1fr; }
+.calendar-surface__header { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 14px; padding: 16px 20px; border-bottom: 1px solid oklch(0.9 0.01 255); }
+.calendar-surface__title { display: inline-flex; align-items: center; gap: 8px; margin: 0; color: oklch(0.24 0.02 255); font-family: "Outfit", sans-serif; font-size: 18px; font-weight: 500; }
+.calendar-surface__nav { display: inline-flex; align-items: center; border: 1px solid oklch(0.88 0.01 255); border-radius: 10px; overflow: hidden; background: #ffffff; }
+.calendar-surface__nav-button { min-width: 36px; height: 30px; padding: 0 10px; border: 0; border-right: 1px solid oklch(0.9 0.01 255); background: transparent; color: oklch(0.38 0.02 255); display: inline-grid; place-items: center; cursor: pointer; }
+.calendar-surface__nav-button.is-active { background: color-mix(in oklch, #3168f4 12%, white); color: #3168f4; }
+.calendar-surface__nav-button:last-child { border-right: 0; }
+.calendar-surface__weekdays { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); border-bottom: 1px solid oklch(0.9 0.01 255); background: oklch(0.99 0.003 255 / 0.82); }
+.calendar-surface__weekday { padding: 8px 6px; border-left: 1px solid oklch(0.92 0.01 255); color: oklch(0.42 0.02 255); font-size: 11px; font-weight: 500; text-align: center; }
+.calendar-surface__board { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); background: oklch(0.99 0.004 255 / 0.96); align-items: stretch; }
+.calendar-surface__cell { position: relative; display: grid; align-content: start; gap: 3px; min-width: 0; min-height: 60px; padding: 34px 4px 4px; overflow: hidden; background: oklch(0.99 0.004 255 / 0.92); border-right: 1px solid oklch(0.92 0.01 255); border-bottom: 1px solid oklch(0.92 0.01 255); }
+.calendar-surface__cell:nth-child(7n) { border-right: 0; }
+.calendar-surface__cell.is-muted { background: oklch(0.96 0.004 255 / 0.5); }
+.calendar-surface__cell.is-selected { box-shadow: inset 0 0 0 2px oklch(0.83 0.06 280 / 0.32); }
+.calendar-surface__cell.is-today:not(.is-selected) { box-shadow: inset 0 0 0 2px color-mix(in oklch, #3168f4 35%, white); }
+.calendar-surface__date { position: absolute; top: 6px; left: 6px; border: 0; min-width: 22px; min-height: 22px; padding: 0 6px; border-radius: 999px; background: oklch(0.98 0.006 255 / 0.92); color: oklch(0.34 0.02 255); font-size: 10px; font-weight: 600; line-height: 1; cursor: pointer; display: inline-grid; place-items: center; z-index: 2; box-shadow: 0 1px 0 oklch(0.9 0.01 255 / 0.7); }
+.calendar-surface__date.is-today { background: #3168f4; color: #ffffff; box-shadow: 0 4px 10px oklch(0.55 0.17 264 / 0.18); }
+.calendar-surface__event { position: relative; top: auto; left: auto; right: auto; min-height: 0; border: 0; border-radius: 6px; background: var(--event-bg, #6f74d8); color: #ffffff; padding: 4px 6px; text-align: left; display: grid; gap: 1px; align-content: start; box-shadow: 0 4px 8px oklch(0.18 0.04 255 / 0.08); cursor: pointer; }
+.calendar-surface__event.is-active { box-shadow: 0 8px 14px oklch(0.18 0.04 255 / 0.1), 0 0 0 2px oklch(0.96 0.01 255 / 0.9); }
+.calendar-surface__event--month { min-height: 18px; padding: 2px 5px; border-radius: 4px; box-shadow: none; }
+.calendar-surface__event-title--month { font-size: 7px; line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.calendar-surface__event-overflow { display: inline-flex; align-items: center; justify-content: center; min-height: 18px; padding: 2px 5px; border-radius: 4px; background: oklch(0.86 0.02 255); color: oklch(0.42 0.02 255); font-size: 7px; font-weight: 600; cursor: pointer; }
+.calendar-surface__event-title { display: block; min-width: 0; font-size: 10px; font-weight: 600; line-height: 1.15; overflow-wrap: anywhere; }
+.calendar-surface__event-meta { min-width: 0; font-size: 8px; line-height: 1.15; opacity: 0.95; overflow-wrap: anywhere; }
+.calendar-surface__day-list { min-height: 0; overflow: auto; display: grid; gap: 12px; padding: 20px 28px 24px; }
+.calendar-surface__day-event { border: 0; border-radius: 14px; background: var(--event-bg, #6f74d8); color: #ffffff; padding: 16px 18px; text-align: left; cursor: pointer; box-shadow: 0 16px 24px oklch(0.18 0.04 255 / 0.12); }
+.calendar-surface__day-event.is-active { box-shadow: 0 16px 24px oklch(0.18 0.04 255 / 0.12), 0 0 0 2px oklch(0.9 0.01 255 / 0.86); }
+.calendar-surface__day-event-title { font-size: 15px; line-height: 1.25; }
+.calendar-surface__day-event-time, .calendar-surface__day-event-meta { font-size: 11px; opacity: 0.92; }
+.event-drawer-overlay { position: fixed; inset: 0; display: block; pointer-events: none; z-index: 30; }
+.event-drawer-overlay.is-open { pointer-events: auto; }
+.event-drawer-overlay__backdrop { position: absolute; inset: 0; border: 0; background: oklch(0.2 0.02 255 / 0.24); backdrop-filter: blur(10px); cursor: pointer; opacity: 0; transition: opacity 220ms ease, backdrop-filter 260ms ease; }
+.event-drawer { width: var(--drawer-width); max-width: calc(100vw - 16px); position: absolute; top: 0; right: 0; height: 100vh; display: grid; grid-template-rows: auto 1fr auto; background: oklch(0.985 0.002 255); color: oklch(0.28 0.02 255); border-left: 1px solid oklch(0.84 0.01 255); box-shadow: -24px 0 48px oklch(0.2 0.03 255 / 0.12); transform: translateX(100%); opacity: 1; will-change: transform, opacity; transition: transform 360ms cubic-bezier(0.22, 1, 0.36, 1); }
+.event-drawer-overlay.is-open .event-drawer { transform: translateX(0); }
+.event-drawer-overlay.is-open .event-drawer-overlay__backdrop { opacity: 1; }
+.event-drawer__header { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 16px; border-bottom: 1px solid oklch(0.9 0.01 255); }
+.event-drawer__title { margin: 0; font-family: "Outfit", sans-serif; font-size: 20px; font-weight: 600; }
+.event-drawer__close { width: 36px; height: 36px; border: 1px solid oklch(0.88 0.01 255); border-radius: 999px; background: #ffffff; color: oklch(0.42 0.02 255); display: inline-grid; place-items: center; cursor: pointer; }
+.event-drawer__body { min-height: 0; overflow: auto; display: grid; gap: 16px; padding: 20px 20px 28px; }
+.drawer-form__group { display: grid; gap: 8px; }
+.drawer-form__section-label { display: inline-flex; align-items: center; gap: 7px; color: oklch(0.3 0.02 255); font-size: 12px; font-weight: 650; }
+.drawer-form__section-icon { width: 15px; height: 15px; display: inline-grid; place-items: center; background: transparent; color: oklch(0.45 0.02 255); flex: none; }
+.drawer-form__section-icon .ui-icon { font-size: 14px; }
+.drawer-form__input, .drawer-form__select, .drawer-form__textarea { width: 100%; min-height: 44px; padding: 10px 14px; border: 1px solid oklch(0.88 0.01 255); border-radius: 10px; background: #ffffff; color: oklch(0.28 0.02 255); font-size: 14px; box-shadow: inset 0 1px 3px oklch(0.93 0.01 255); }
+.drawer-form__input:focus, .drawer-form__select:focus, .drawer-form__textarea:focus { outline: 0; border-color: #3168f4; box-shadow: 0 0 0 3px oklch(0.92 0.08 255 / 0.15); }
+.drawer-form__textarea { min-height: 100px; resize: vertical; }
+.drawer-form__row { display: flex; align-items: center; gap: 6px; }
+.drawer-form__row--time { display: flex; align-items: stretch; gap: 12px; margin-top: 10px; }
+.drawer-form__row--time.is-hidden { display: none; }
+.drawer-form__row--datetime { display: flex; align-items: stretch; gap: 16px; }
+.drawer-form__datetime-field { flex: 1; display: flex; flex-direction: column; gap: 6px; }
+.drawer-form__date-label { display: block; font-size: 11px; font-weight: 600; color: oklch(0.45 0.02 255); }
+.drawer-form__datetime-inputs { display: flex; gap: 8px; }
+.drawer-form__datetime-inputs .drawer-form__date-input, .drawer-form__datetime-inputs .drawer-form__time-input { flex: 1; min-height: 40px; border: 1px solid oklch(0.88 0.01 255); border-radius: 9px; background: #ffffff; color: oklch(0.36 0.02 255); padding: 9px 11px; font-size: 12.5px; font-family: inherit; }
+.drawer-form__datetime-inputs .drawer-form__date-input:focus, .drawer-form__datetime-inputs .drawer-form__time-input:focus { outline: none; border-color: #3168f4; box-shadow: 0 0 0 3px oklch(0.92 0.08 255 / 0.15); }
+.drawer-form__datetime-inputs .drawer-form__time-input.is-hidden { display: none; }
+.drawer-form__datetime-inputs .drawer-form__date-input { flex: 1; }
+.drawer-form__date-picker { position: absolute; top: calc(100% + 6px); left: 0; width: 296px; max-width: 296px; padding: 14px; border: 1px solid oklch(0.88 0.01 255); background: #ffffff; z-index: 100; border-radius: 14px; box-shadow: 0 20px 36px oklch(0.18 0.02 255 / 0.16); overflow: visible; }
+.drawer-form__date-picker-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 8px; }
+.drawer-form__date-picker-title { margin: 0; color: oklch(0.28 0.02 255); font-family: "Outfit", sans-serif; font-size: 15px; font-weight: 600; }
+.drawer-form__date-picker-actions { display: flex; gap: 6px; }
+.drawer-form__date-picker-button { width: 26px; height: 26px; border: 0; border-radius: 8px; background: transparent; color: oklch(0.4 0.02 255); display: inline-grid; place-items: center; cursor: pointer; }
+.drawer-form__date-picker-button:hover, .drawer-form__date-picker-button:focus-visible { background: #f3f4f8; }
+.drawer-form__date-picker-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; }
+.drawer-form__date-picker-grid--weekdays { margin-bottom: 5px; }
+.drawer-form__date-picker-weekday { display: grid; place-items: center; min-height: 22px; color: oklch(0.5 0.02 255); font-size: 10.5px; font-weight: 700; }
+.drawer-form__date-picker-day { width: 100%; min-height: 36px; aspect-ratio: 1 / 1; border: 0; border-radius: 999px; background: transparent; color: oklch(0.28 0.02 255); font-size: 12px; cursor: pointer; }
+.drawer-form__date-picker-day:hover:not(:disabled), .drawer-form__date-picker-day:focus-visible:not(:disabled) { background: #eef3ff; }
+.drawer-form__date-picker-day.is-active { background: #3168f4; color: #ffffff; }
+.drawer-form__date-picker-day.is-muted { color: oklch(0.62 0.02 255); }
+.drawer-form__date-picker-day:disabled { cursor: default; }
+.drawer-form__time-select { position: relative; }
+.drawer-form__time-input { width: 100%; min-height: 40px; border: 1px solid oklch(0.88 0.01 255); border-radius: 9px; background: #ffffff; color: oklch(0.36 0.02 255); padding: 9px 11px; text-align: left; box-shadow: inset 0 1px 3px oklch(0.93 0.01 255); font-size: 12.5px; }
+.drawer-form__time-input:focus-visible { outline: 0; border-color: #3168f4; box-shadow: 0 0 0 3px oklch(0.92 0.08 255 / 0.15); }
+.drawer-form__all-day-row { display: flex; align-items: center; justify-content: space-between; margin-top: 12px; padding-top: 12px; border-top: 1px solid oklch(0.92 0.01 255); }
+.drawer-form__all-day-label { font-size: 13px; font-weight: 500; color: oklch(0.4 0.02 255); }
+.switch { --sizeVar: 1.1em; --color-primary: #dedede; --color-secondary: #aaaaaa; --color-primary-on: #1d9bf0; --color-secondary-on: #ffffff; position: relative; width: calc(var(--sizeVar) * 2); height: var(--sizeVar); background-color: var(--color-primary); border-radius: var(--sizeVar); box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.05) inset; cursor: pointer; transition: background-color 150ms ease-out; }
+.switch::after { content: ""; position: absolute; margin: calc(var(--sizeVar) / 10); height: calc(var(--sizeVar) - calc(var(--sizeVar) / 5)); width: calc(var(--sizeVar) - calc(var(--sizeVar) / 5)); background-color: var(--color-secondary); border-radius: var(--sizeVar); box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.05) inset, 0 2px 4px rgba(0, 0, 0, 0.3); transition: transform 150ms ease-out, background-color 150ms ease-out; top: 50%; transform: translateY(-50%); }
+.switch:has(input:checked)::after { transform: translateX(var(--sizeVar)) translateY(-50%); background-color: var(--color-secondary-on); }
+.switch:has(input:checked) { background-color: var(--color-primary-on); }
+.switch input { opacity: 0; width: 0; height: 0; }
+.drawer-form__actions { display: flex; gap: 10px; padding: 16px 20px; border-top: 1px solid oklch(0.9 0.01 255); }
+.drawer-form__button { flex: 1; min-height: 44px; border: 0; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer; }
+.drawer-form__button--primary { background: #3168f4; color: #ffffff; }
+.drawer-form__button--secondary { background: oklch(0.94 0.01 255); color: oklch(0.3 0.02 255); }
+.drawer-form__arrow { color: oklch(0.62 0.02 255); font-size: 13px; display: inline-grid; place-items: center; }
+.drawer-form__date-wrap .drawer-form__date-trigger { width: 100%; min-height: 40px; border: 1px solid oklch(0.88 0.01 255); border-radius: 9px; background: #ffffff; color: oklch(0.36 0.02 255); padding: 9px 11px; text-align: left; box-shadow: inset 0 1px 3px oklch(0.93 0.01 255); cursor: pointer; font-size: 12.5px; }
+.calendar-events-modal-overlay { position: fixed; inset: 0; display: grid; place-items: center; padding: clamp(16px, 3vw, 28px); pointer-events: none; z-index: 40; }
+.calendar-events-modal-overlay.is-open { pointer-events: auto; }
+.calendar-events-modal-overlay__backdrop { position: absolute; inset: 0; border: 0; background: radial-gradient(circle at top, oklch(0.58 0.08 275 / 0.12), transparent 30%), oklch(0.14 0.02 255 / 0.42); backdrop-filter: blur(10px); opacity: 0; transition: opacity 220ms ease; }
+.calendar-events-modal { position: relative; width: min(520px, calc(100vw - 32px)); max-height: min(68vh, 640px); display: grid; grid-template-rows: auto minmax(0, 1fr); border: 1px solid oklch(0.88 0.01 255 / 0.9); border-radius: 22px; background: linear-gradient(180deg, oklch(0.99 0.004 255 / 0.98), oklch(0.982 0.004 255 / 0.98)); box-shadow: 0 24px 56px oklch(0.12 0.03 255 / 0.18); overflow: hidden; opacity: 0; transform: translateY(16px) scale(0.985); transition: opacity 260ms ease, transform 360ms cubic-bezier(0.22, 1, 0.36, 1); }
+.calendar-events-modal-overlay.is-open .calendar-events-modal-overlay__backdrop { opacity: 1; }
+.calendar-events-modal-overlay.is-open .calendar-events-modal { opacity: 1; transform: translateY(0) scale(1); }
+.calendar-events-modal__header { display: flex; align-items: start; justify-content: space-between; gap: 14px; padding: 16px 18px 14px; border-bottom: 1px solid oklch(0.9 0.01 255); }
+.calendar-events-modal__title { margin: 0; color: oklch(0.22 0.02 255); font-family: "Outfit", sans-serif; font-size: clamp(21px, 3vw, 28px); font-weight: 600; line-height: 1; }
+.calendar-events-modal__close { width: 34px; height: 34px; border: 1px solid oklch(0.88 0.01 255); border-radius: 999px; background: #ffffff; color: oklch(0.42 0.02 255); display: inline-grid; place-items: center; cursor: pointer; }
+.calendar-events-modal__list { display: grid; gap: 10px; padding: 14px 16px 16px; overflow: auto; align-content: start; }
+.calendar-events-modal__card { position: relative; display: grid; grid-template-columns: auto auto minmax(0, 1fr); align-items: center; gap: 12px; padding: 12px 13px; border: 1px solid oklch(0.9 0.01 255); border-radius: 16px; background: oklch(0.995 0.002 255); cursor: pointer; }
+.calendar-events-modal__card:hover, .calendar-events-modal__card.is-active { transform: translateY(-1px); border-color: oklch(0.82 0.04 255); box-shadow: 0 12px 24px oklch(0.14 0.02 255 / 0.1); }
+.calendar-events-modal__accent { width: 6px; align-self: stretch; border-radius: 999px; background: var(--event-accent, #6f74d8); }
+.calendar-events-modal__date { display: grid; justify-items: center; gap: 2px; min-width: 48px; padding: 7px 8px; border-radius: 12px; background: oklch(0.97 0.004 255); }
+.calendar-events-modal__day { color: oklch(0.24 0.02 255); font-family: "Outfit", sans-serif; font-size: 19px; font-weight: 600; line-height: 1; }
+.calendar-events-modal__month { color: oklch(0.52 0.02 255); font-size: 9px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; }
+.calendar-events-modal__card-title { color: oklch(0.22 0.02 255); font-size: 14px; font-weight: 700; line-height: 1.2; }
+.calendar-events-modal__card-meta { color: oklch(0.46 0.02 255); font-size: 11px; line-height: 1.4; }
+.calendar-events-modal__chip { width: fit-content; min-height: 20px; padding: 0 8px; border-radius: 999px; background: var(--tag-color, #5c73d8); color: var(--tag-text-color, #ffffff); display: inline-flex; align-items: center; font-size: 10px; font-weight: 700; }
+    </style>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module">
+// Combined JavaScript
+const workspaceApps = [
+  {
+    id: "home",
+    label: "Home",
+    title: "Home Workspace",
+    icon: "home-app",
+    items: ["Overview", "Announcements", "Highlights", "Quick Actions"],
+  },
+  {
+    id: "calendar",
+    label: "Calendar",
+    title: "Company Calendar",
+    icon: "calendar-app",
+    panelType: "calendar",
+    items: ["Upcoming Events", "Monthly View"],
+    events: [
+      { id: "calendar-event-1", day: "09", monthIndex: 2, year: 2026, monthLabel: "MAR", title: "Weekly Marketing meeting", meta: "09:00 - 10:00 | Imajineering 2", color: "#78ab8d", tag: "Meeting" },
+      { id: "calendar-event-2", day: "07", monthIndex: 3, year: 2026, monthLabel: "APR", title: "Training ISO 9001:2015", meta: "09:00 - 10:00 | Imajineering 1", color: "#6e67c8", tag: "Training" },
+      { id: "calendar-event-4", day: "01", monthIndex: 2, year: 2026, monthLabel: "MAR", title: "Project Kickoff Meeting", meta: "09:00 - 12:00 | Boardroom", color: "#78ab8d", tag: "Meeting" },
+      { id: "calendar-event-3", day: "25", monthIndex: 3, year: 2026, monthLabel: "APR", title: "Townhall Meeting April", meta: "09:00 - 10:00 | Amphitheatre", color: "#d29b46", tag: "Townhall" },
+    ],
+    calendar: { weekdays: ["S", "M", "T", "W", "T", "F", "S"] },
+  },
+  {
+    id: "employee-journey",
+    label: "Employee Journey",
+    title: "Employee Journey",
+    icon: "journey-app",
+    items: ["Onboarding", "Handbook", "Milestones", "Learning Path"],
+  },
+  {
+    id: "assets",
+    label: "Assets",
+    title: "Assets Management",
+    icon: "assets-app",
+    items: ["Dashboard", "Assets", "Maintenance Asset Request", "Asset Request", "Asset Check Out", "Asset Check In", "Asset Mutation", "Stock Opname", "Access Control"],
+    records: [
+      { id: "asset-001", code: "AST-001", name: 'MacBook Pro 16"', category: "Laptop", assignedTo: "Raka Mahendra", department: "Product Design", location: "Jakarta HQ", status: "In Use", statusTone: "in-use", dueLabel: "21 Apr 2026", condition: "Excellent", serialNumber: "MBP-16-M4-0321", purchaseDate: "18 Jan 2025", valueLabel: "Rp 48.500.000" },
+      { id: "asset-002", code: "AST-002", name: 'Dell Monitor 24"', category: "Monitor", department: "Warehouse", assignedTo: "-", location: "Warehouse", status: "Stored", statusTone: "stored", dueLabel: "-", condition: "Ready Stock", serialNumber: "DEL-24-4401", purchaseDate: "03 Sep 2024", valueLabel: "Rp 3.250.000" },
+    ],
+    maintenanceRequests: [],
+    assetRequests: [],
+    checkOuts: [],
+    checkIns: [],
+    mutations: [],
+    stockOpnames: [],
+    accessControls: [],
+  },
+  {
+    id: "user-management",
+    label: "User Management",
+    title: "User Management",
+    icon: "users-app",
+    items: ["All Users", "Roles", "Permissions", "Invitations"],
+    users: [
+      { id: "usr-001", name: "Nadia Putri", email: "nadia.putri@imajin.id", role: "HR Admin", status: "Active" },
+      { id: "usr-002", name: "Rifqi Ramadhan", email: "rifqi.ramadhan@imajin.id", role: "Finance Staff", status: "Active" },
+    ],
+  },
+  { id: "profile", label: "Profile", title: "Profile Center", icon: "profile-app", items: ["My Profile", "Security", "Notifications", "Preferences"] },
+];
+
+const defaultAppId = "assets";
+const defaultItemByApp = { assets: "Dashboard", "employee-journey": "Onboarding", "user-management": "All Users", calendar: "Upcoming Events" };
+
+const MONTH_NAMES = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+const EVENT_TAG_STYLES = { Event: { color: "#5c73d8", textColor: "#ffffff" }, Meeting: { color: "#78ab8d", textColor: "#ffffff" }, Training: { color: "#6e67c8", textColor: "#ffffff" }, Townhall: { color: "#d29b46", textColor: "#ffffff" }, Workshop: { color: "#cf6f58", textColor: "#ffffff" }, Holiday: { color: "#d45454", textColor: "#ffffff" } };
+const EVENT_TAG_OPTIONS = Object.keys(EVENT_TAG_STYLES).filter((tag) => tag !== "Event");
+
+function getCalendarApp() { return workspaceApps.find((app) => app.id === "calendar"); }
+function getTodayDate() { const now = new Date(); return new Date(now.getFullYear(), now.getMonth(), now.getDate()); }
+function isSameCalendarDate(leftDate, rightDate) { return leftDate instanceof Date && rightDate instanceof Date && leftDate.getFullYear() === rightDate.getFullYear() && leftDate.getMonth() === rightDate.getMonth() && leftDate.getDate() === rightDate.getDate(); }
+
+function createElement(tag, className, text) {
+  const element = document.createElement(tag);
+  if (className) element.className = className;
+  if (text) element.textContent = text;
+  return element;
+}
+
+function createIcon(name, label = "") {
+  const icon = createElement("span", `ui-icon ui-icon--${name}`);
+  icon.setAttribute("aria-hidden", "true");
+  const icons = {
+    close: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>',
+    "chevron-left": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg>',
+    "chevron-right": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 18l6-6-6-6"/></svg>',
+    "chevron-down": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>',
+    plus: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg>',
+    minus: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 12h14"/></svg>',
+    reset: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 12a8 8 0 108-8"/><path d="M4 4v5h5"/></svg>',
+    "arrow-right": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg>',
+    search: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4 4"/></svg>',
+    filter: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 6h16l-6.3 7.1v5.1l-3.4 1.8v-6.9z"/></svg>',
+    import: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3v11"/><path d="M8.5 10.5L12 14l3.5-3.5"/><path d="M5 16.5V19a2 2 0 002 2h10a2 2 0 002-2v-2.5"/></svg>',
+    export: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21V10"/><path d="M8.5 13.5L12 10l3.5 3.5"/><path d="M5 7.5V5a2 2 0 012-2h10a2 2 0 012 2v2.5"/></svg>',
+    more: '<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="6" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="18" cy="12" r="1.6"/></svg>',
+    eye: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="2.7"/><path d="M2.5 12s3.4-5.5 9.5-5.5S21.5 12 21.5 12"/></svg>',
+    edit: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 20h4l10.5-10.5a2.1 2.1 0 00-3-3L5 17v3z"/></svg>',
+    circle: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="7"/></svg>',
+    calendar: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M7 3.5v3M17 3.5v3M3.5 9.5h17"/></svg>',
+    users: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="10" cy="8" r="3.2"/><path d="M16 21v-1.2a3.8 3.8 0 00-3.8-3.8H7.8A3.8 3.8 0 004 19.8V21"/></svg>',
+    location: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="10" r="2.5"/><path d="M12 21s6-5.4 6-11a6 6 0 10-12 0c0 5.6 6 11 6 11z"/></svg>',
+    description: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 4.5h9l3 3V19a1.5 1.5 0 01-1.5 1.5h-10A1.5 1.5 0 015 19V6A1.5 1.5 0 016.5 4.5z"/></svg>',
+    reminder: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="13" r="7"/><path d="M12 6v6l3 2"/></svg>',
+    attachment: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 3.5h-5a3.5 3.5 0 00-3.5 3.5v10a3.5 3.5 0 003.5 3.5h6a3.5 3.5 0 003.5-3.5V9z"/></svg>',
+    trash: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16M9 7V4.5h6V7M7.5 7l1 12.5h7"/></svg>',
+    bold: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M7 5h6a4 4 0 010 8H7zM7 13h7a4 4 0 010 8H7z"/></svg>',
+    sparkle: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3l1.8 4.2L18 9l-4.2 1.8L12 15l-1.8-4.2L6 9l4.2-1.8z"/></svg>',
+    check: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 12.5l4.2 4.2L19 7"/></svg>',
+    clock: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="8"/><path d="M12 8v4.5l3 2"/></svg>',
+    "home-app": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 10.5L12 4l8 6.5"/><path d="M6.5 9.5V20h11V9.5"/></svg>',
+    "calendar-app": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M7 3.5v3M17 3.5v3"/></svg>',
+    "journey-app": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="6" cy="18" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="18" cy="6" r="1.5"/></svg>',
+    "assets-app": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3l7 3.8v10.4L12 21 5 17.2V6.8z"/></svg>',
+    "users-app": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="10" cy="8" r="3.2"/><path d="M16 21v-1.2a3.8 3.8 0 00-3.8-3.8H7.8A3.8 3.8 0 004 18.8V21"/></svg>',
+    "profile-app": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="3.5"/><path d="M5 20a7 7 0 0114 0"/><circle cx="12" cy="12" r="9"/></svg>',
+  };
+  icon.innerHTML = icons[name] ?? "";
+  if (label) icon.setAttribute("data-label", label);
+  return icon;
+}
+
+function formatDateTimeLocalValue(date) {
+  return [date.getFullYear(), String(date.getMonth() + 1).padStart(2, "0"), String(date.getDate()).padStart(2, "0")].join("-") + `T${String(date.getHours()).padStart(2, "0")}:${String(date.getMinutes()).padStart(2, "0")}`;
+}
+
+function getInitialEventDraft() {
+  const initialDate = new Date();
+  initialDate.setSeconds(0, 0);
+  initialDate.setMinutes(Math.ceil(initialDate.getMinutes() / 15) * 15);
+  if (initialDate.getMinutes() === 60) initialDate.setHours(initialDate.getHours() + 1, 0, 0, 0);
+  const endDate = new Date(initialDate);
+  endDate.setHours(endDate.getHours() + 1);
+  return {
+    title: "", start: formatDateTimeLocalValue(initialDate), end: formatDateTimeLocalValue(endDate), isAllDay: false,
+    participantQuery: "", participants: [], isParticipantPopupOpen: false, isDatePickerOpen: false, openTimeField: null,
+    pickerMonth: initialDate.getMonth(), pickerYear: initialDate.getFullYear(), location: "", attachments: [], description: "", reminders: [], tag: "Event"
+  };
+}
+
+function getInitialCalendarState() {
+  const calendarApp = getCalendarApp();
+  const today = getTodayDate();
+  const todayEvent = calendarApp?.events?.find((event) => event.year === today.getFullYear() && event.monthIndex === today.getMonth() && Number(event.day) === today.getDate());
+  return { viewMode: "month", displayYear: today.getFullYear(), displayMonth: today.getMonth(), selectedDay: today.getDate(), selectedEventId: todayEvent?.id ?? null, showAllEvents: false, isMonthOpen: true };
+}
+
+function getInitialState() {
+  const activeApp = workspaceApps.find((app) => app.id === defaultAppId) ?? workspaceApps[0];
+  return { activeAppId: activeApp.id, activeItem: defaultItemByApp[activeApp.id] ?? activeApp.items?.[0], calendar: getInitialCalendarState(), lastAction: "", isEventDrawerOpen: false, attachmentViewer: { isOpen: false, attachment: null }, eventDrawerMode: "create", activeDrawerEventId: null, eventDraft: getInitialEventDraft() };
+}
+
+function getDaysInMonth(year, month) { return new Date(year, month + 1, 0).getDate(); }
+function buildCalendarDays(year, month, selectedDate) {
+  const today = getTodayDate();
+  const firstDay = new Date(year, month, 1).getDay();
+  const daysInMonth = getDaysInMonth(year, month);
+  const daysInPrevMonth = getDaysInMonth(year, month - 1 < 0 ? year - 1 : year, month - 1 < 0 ? 11 : month - 1);
+  const cells = [];
+  for (let index = 0; index < firstDay; index++) {
+    const dayValue = daysInPrevMonth - firstDay + index + 1;
+    const itemYear = month === 0 ? year - 1 : year;
+    const itemMonth = month === 0 ? 11 : month - 1;
+    cells.push({ value: dayValue, muted: true, isCurrentMonth: false, year: itemYear, monthIndex: itemMonth, isToday: isSameCalendarDate(today, new Date(itemYear, itemMonth, dayValue)) });
+  }
+  for (let day = 1; day <= daysInMonth; day++) {
+    cells.push({ value: day, active: selectedDate?.getDate() === day, isCurrentMonth: true, year, monthIndex: month, isToday: isSameCalendarDate(today, new Date(year, month, day)) });
+  }
+  while (cells.length < 42) {
+    const dayValue = cells.length - (firstDay + daysInMonth) + 1;
+    const itemYear = month === 11 ? year + 1 : year;
+    const itemMonth = month === 11 ? 0 : month + 1;
+    cells.push({ value: dayValue, muted: true, isCurrentMonth: false, year: itemYear, monthIndex: itemMonth, isToday: isSameCalendarDate(today, new Date(itemYear, itemMonth, dayValue)) });
+  }
+  return cells;
+}
+
+function getEventsForDisplayedMonth(activeApp, state) { return activeApp.events.filter((event) => event.year === state.calendar.displayYear && event.monthIndex === state.calendar.displayMonth); }
+function getEventsForDate(activeApp, date) { return activeApp.events.filter((event) => event.year === date.getFullYear() && event.monthIndex === date.getMonth() && Number(event.day) === date.getDate()); }
+function getEventTagStyle(tag) { return EVENT_TAG_STYLES[tag] ?? EVENT_TAG_STYLES.Event; }
+function getEventSurfaceColor(event) { return getEventTagStyle(event.tag || "Event").color; }
+
+function getDraftDatePart(value) { return value.split("T")[0]; }
+function getDraftTimePart(value) { return value.split("T")[1] ?? "00:00"; }
+function addMinutesToDateTimeValue(dateTimeValue, minutesToAdd) { const nextDate = new Date(dateTimeValue); nextDate.setMinutes(nextDate.getMinutes() + minutesToAdd); return formatDateTimeLocalValue(nextDate); }
+function isDraftDateRangeValid(startValue, endValue) { return new Date(endValue) > new Date(startValue); }
+function updateDraftDateTime(state, field, dateValue, timeValue) { state.eventDraft[field] = `${dateValue}T${timeValue}`; }
+function formatDrawerDateLabel(value) { const date = new Date(value); const weekday = date.toLocaleDateString("en-US", { weekday: "long" }); const month = MONTH_NAMES[date.getMonth()]; return `${weekday}, ${month} ${date.getDate()}`; }
+
+function createSectionLabel(iconName, text) {
+  const label = createElement("div", "drawer-form__section-label");
+  const icon = createElement("span", "drawer-form__section-icon");
+  const copy = createElement("span", null, text);
+  icon.append(createIcon(iconName));
+  label.append(icon, copy);
+  return label;
+}
+
+export function createAppShell() {
+  const state = getInitialState();
+  const shell = createElement("div", "workspace-shell");
+  const sidebar = createElement("aside", "sidebar");
+  const rail = createElement("nav", "sidebar__rail");
+  const panel = createElement("div", "sidebar__panel");
+  const panelHeading = createElement("h1", "panel__title");
+  const panelBody = createElement("div", "panel__body");
+  const content = createElement("section", "content-stage");
+  const contentPlaceholder = createElement("div", "content-stage__empty");
+  const contentLabel = createElement("p", "content-stage__label", "Selected module");
+  const contentHeading = createElement("h2", "content-stage__title");
+  const contentMeta = createElement("p", "content-stage__meta");
+  const marker = createElement("span", "sidebar__active-marker");
+  
+  rail.append(marker);
+  const logo = createElement("div", "brand");
+  const logoImage = createElement("img", "brand__image");
+  logoImage.src = new URL("../img/imajin.png", import.meta.url).href;
+  logoImage.alt = "Imajin";
+  logo.append(logoImage);
+  const railNav = createElement("nav", "rail-nav");
+  railNav.setAttribute("aria-label", "Applications");
+  contentPlaceholder.append(contentLabel, contentHeading, contentMeta);
+  content.append(contentPlaceholder);
+  panel.append(panelHeading, panelBody);
+  sidebar.append(logo, rail, panel);
+  shell.append(sidebar, content);
+
+  function openEventDrawer() {
+    state.lastAction = "new-event";
+    state.activeItem = "New Event";
+    state.eventDrawerMode = "create";
+    state.activeDrawerEventId = null;
+    state.eventDraft.isDatePickerOpen = false;
+    state.eventDraft.openTimeField = null;
+    state.eventDraft.isParticipantPopupOpen = false;
+    state.isEventDrawerOpen = true;
+  }
+
+  function animateCloseEventDrawer(onClosed) {
+    const overlay = shell.querySelector(".event-drawer-overlay");
+    if (!overlay) { onClosed(); return; }
+    if (overlay.dataset.closing === "true") return;
+    overlay.dataset.closing = "true";
+    overlay.classList.remove("is-open");
+    window.setTimeout(() => { if (overlay.isConnected) overlay.remove(); onClosed(); }, 360);
+  }
+
+  function closeEventDrawer() {
+    animateCloseEventDrawer(() => {
+      state.eventDraft.isDatePickerOpen = false;
+      state.eventDraft.openTimeField = null;
+      state.eventDraft.isParticipantPopupOpen = false;
+      state.attachmentViewer.isOpen = false;
+      state.attachmentViewer.attachment = null;
+      state.eventDrawerMode = "create";
+      state.activeDrawerEventId = null;
+      state.isEventDrawerOpen = false;
+      render();
+    });
+  }
+
+  function renderRail() {
+    railNav.innerHTML = "";
+    workspaceApps.forEach((app) => {
+      const button = createElement("button", "rail-nav__item");
+      const icon = createElement("span", "rail-nav__icon");
+      const label = createElement("span", "rail-nav__label", app.label);
+      icon.append(createIcon(app.icon ?? "circle", app.label));
+      button.type = "button";
+      button.dataset.appId = app.id;
+      button.setAttribute("aria-pressed", String(app.id === state.activeAppId));
+      if (app.id === state.activeAppId) button.classList.add("is-active");
+      button.addEventListener("click", () => { state.activeAppId = app.id; state.activeItem = defaultItemByApp[app.id] ?? app.items?.[0]; render(); });
+      button.append(icon, label);
+      railNav.append(button);
+    });
+    const offset = railNav.querySelector(`[data-app-id="${state.activeAppId}"]`)?.offsetTop ?? 0;
+    marker.style.transform = `translateY(${offset}px)`;
+  }
+
+  function createCalendarPanel(activeApp) {
+    const wrapper = createElement("section", "calendar-panel");
+    const newEventButton = createElement("button", "calendar-panel__primary-action", "New Event");
+    newEventButton.type = "button";
+    newEventButton.addEventListener("click", openEventDrawer);
+    const subNav = createElement("div", "subnav");
+    activeApp.items.forEach((item) => {
+      const button = createElement("button", `subnav__item${state.activeItem === item ? " is-active" : ""}`, item);
+      button.type = "button";
+      button.addEventListener("click", () => { state.activeItem = item; render(); });
+      subNav.append(button);
+    });
+    wrapper.append(newEventButton, subNav);
+    return wrapper;
+  }
+
+  function renderPanel(activeApp) {
+    panelHeading.textContent = activeApp.title;
+    panelBody.innerHTML = "";
+    if (activeApp.panelType === "calendar") { panelBody.append(createCalendarPanel(activeApp)); return; }
+    panelBody.append(createElement("div", "subnav"));
+  }
+
+  function createCalendarWorkspace(activeApp) {
+    const wrapper = createElement("section", "calendar-workspace");
+    const toolbar = createElement("div", "calendar-workspace__toolbar");
+    const viewTabs = createElement("div", "calendar-workspace__tabs");
+    const surface = createElement("div", "calendar-surface");
+    const header = createElement("div", "calendar-surface__header");
+    const todayDate = getTodayDate();
+    const title = createElement("h2", "calendar-surface__title", `${MONTH_NAMES[state.calendar.displayMonth]} ${state.calendar.displayYear}`);
+    const nav = createElement("div", "calendar-surface__nav");
+    const prev = createElement("button", "calendar-surface__nav-button");
+    const today = createElement("button", "calendar-surface__nav-button", "Today");
+    const next = createElement("button", "calendar-surface__nav-button");
+    prev.append(createIcon("chevron-left"));
+    next.append(createIcon("chevron-right"));
+    prev.addEventListener("click", () => { state.calendar.displayMonth--; if (state.calendar.displayMonth < 0) { state.calendar.displayMonth = 11; state.calendar.displayYear--; } render(); });
+    next.addEventListener("click", () => { state.calendar.displayMonth++; if (state.calendar.displayMonth > 11) { state.calendar.displayMonth = 0; state.calendar.displayYear++; } render(); });
+    today.addEventListener("click", () => { state.calendar.displayMonth = todayDate.getMonth(); state.calendar.displayYear = todayDate.getFullYear(); state.calendar.selectedDay = todayDate.getDate(); render(); });
+    nav.append(prev, today, next);
+    header.append(title, nav);
+    const weekdays = createElement("div", "calendar-surface__weekdays");
+    activeApp.calendar.weekdays.forEach((dayName) => weekdays.append(createElement("span", "calendar-surface__weekday", dayName)));
+    const board = createElement("div", "calendar-surface__board");
+    const days = buildCalendarDays(state.calendar.displayYear, state.calendar.displayMonth, new Date(state.calendar.displayYear, state.calendar.displayMonth, state.calendar.selectedDay));
+    const monthEvents = getEventsForDisplayedMonth(activeApp, state);
+    days.forEach((dayItem) => {
+      const cell = createElement("div", `calendar-surface__cell${dayItem.muted ? " is-muted" : ""}${dayItem.isToday ? " is-today" : ""}${!dayItem.muted && dayItem.value === state.calendar.selectedDay ? " is-selected" : ""}`);
+      if (dayItem.isCurrentMonth) {
+        const dateBtn = createElement("button", `calendar-surface__date${dayItem.isToday ? " is-today" : ""}`, String(dayItem.value));
+        dateBtn.addEventListener("click", () => { state.calendar.selectedDay = dayItem.value; render(); });
+        cell.append(dateBtn);
+        const dayEvents = monthEvents.filter((e) => Number(e.day) === dayItem.value);
+        dayEvents.forEach((event) => {
+          const eventEl = createElement("button", "calendar-surface__event--month");
+          eventEl.style.setProperty("--event-bg", event.color);
+          const titleEl = createElement("span", "calendar-surface__event-title--month", event.title);
+          eventEl.append(titleEl);
+          cell.append(eventEl);
+        });
+      }
+      board.append(cell);
+    });
+    surface.append(header, weekdays, board);
+    wrapper.append(toolbar, surface);
+    return wrapper;
+  }
+
+  function renderContent(activeApp) {
+    content.innerHTML = "";
+    if (activeApp.id === "calendar") { content.append(createCalendarWorkspace(activeApp)); return; }
+    const placeholder = createElement("div", "content-stage__empty");
+    placeholder.append(createElement("p", "content-stage__label", "Selected module"));
+    placeholder.append(createElement("h2", "content-stage__title", `${activeApp.title} / ${state.activeItem}`));
+    placeholder.append(createElement("p", "content-stage__meta", "Konten halaman belum diisi."));
+    content.append(placeholder);
+  }
+
+  function render() {
+    const activeApp = workspaceApps.find((app) => app.id === state.activeAppId) ?? workspaceApps[0];
+    shell.querySelector(".event-drawer-overlay")?.remove();
+    renderRail();
+    renderPanel(activeApp);
+    renderContent(activeApp);
+    if (state.isEventDrawerOpen) { shell.append(createEventDrawer(activeApp)); }
+  }
+
+  function createEventDrawer(activeApp) {
+    const overlay = createElement("div", "event-drawer-overlay is-open");
+    const backdrop = createElement("button", "event-drawer-overlay__backdrop");
+    const drawer = createElement("div", "event-drawer");
+    const header = createElement("div", "event-drawer__header");
+    const title = createElement("h3", "event-drawer__title", "New Event");
+    const closeBtn = createElement("button", "event-drawer__close");
+    closeBtn.append(createIcon("close"));
+    closeBtn.addEventListener("click", closeEventDrawer);
+    header.append(title, closeBtn);
+    const body = createElement("div", "event-drawer__body");
+
+    const scheduleLabel = createSectionLabel("calendar", "Date & Time");
+    const allDayRow = createElement("div", "drawer-form__all-day-row");
+    const allDayLabel = createElement("span", "drawer-form__all-day-label", "All day");
+    const allDayToggleLabel = createElement("label", "switch");
+    const allDayToggleInput = document.createElement("input");
+    allDayToggleInput.type = "checkbox";
+    allDayToggleInput.checked = state.eventDraft.isAllDay;
+    allDayToggleInput.addEventListener("change", () => { state.eventDraft.isAllDay = allDayToggleInput.checked; render(); });
+    const allDayToggleSpan = createElement("span", "slider");
+    allDayToggleLabel.append(allDayToggleInput, allDayToggleSpan);
+    allDayRow.append(allDayLabel, allDayToggleLabel);
+
+    function createDateTimeField(field, labelText) {
+      const fieldWrap = createElement("div", "drawer-form__datetime-field");
+      const label = createElement("span", "drawer-form__date-label", labelText);
+      const inputRow = createElement("div", "drawer-form__datetime-inputs");
+      const dateInput = document.createElement("input");
+      dateInput.type = "date";
+      dateInput.className = "drawer-form__date-input";
+      dateInput.value = getDraftDatePart(state.eventDraft[field]);
+      const timeInput = document.createElement("input");
+      timeInput.type = "time";
+      timeInput.className = `drawer-form__time-input${state.eventDraft.isAllDay ? " is-hidden" : ""}`;
+      timeInput.step = "900";
+      timeInput.value = getDraftTimePart(state.eventDraft[field]);
+      const handleDateTimeChange = () => {
+        updateDraftDateTime(state, field, dateInput.value, timeInput.value);
+        if (field === "start" && !isDraftDateRangeValid(state.eventDraft.start, state.eventDraft.end)) state.eventDraft.end = addMinutesToDateTimeValue(state.eventDraft.start, 60);
+        if (field === "end" && !isDraftDateRangeValid(state.eventDraft.start, state.eventDraft.end)) state.eventDraft.start = addMinutesToDateTimeValue(state.eventDraft.end, -60);
+        render();
+      };
+      dateInput.addEventListener("change", handleDateTimeChange);
+      timeInput.addEventListener("input", handleDateTimeChange);
+      inputRow.append(dateInput, timeInput);
+      fieldWrap.append(label, inputRow);
+      return { fieldWrap };
+    }
+
+    const startField = createDateTimeField("start", "From");
+    const endField = createDateTimeField("end", "To");
+    const dateTimeRow = createElement("div", "drawer-form__row drawer-form__row--datetime");
+    dateTimeRow.append(startField.fieldWrap, endField.fieldWrap);
+
+    const titleGroup = createElement("div", "drawer-form__group");
+    const titleLabel = createSectionLabel("edit", "Event Details");
+    const titleInput = createElement("input", "drawer-form__input");
+    titleInput.type = "text";
+    titleInput.placeholder = "Event title";
+    titleInput.value = state.eventDraft.title;
+    titleInput.addEventListener("input", (e) => { state.eventDraft.title = e.target.value; });
+    titleGroup.append(titleLabel, titleInput);
+
+    const locationGroup = createElement("div", "drawer-form__group");
+    const locationLabel = createSectionLabel("location", "Location");
+    const locationInput = createElement("input", "drawer-form__input");
+    locationInput.type = "text";
+    locationInput.placeholder = "Add location";
+    locationInput.value = state.eventDraft.location;
+    locationInput.addEventListener("input", (e) => { state.eventDraft.location = e.target.value; });
+    locationGroup.append(locationLabel, locationInput);
+
+    const descGroup = createElement("div", "drawer-form__group");
+    const descLabel = createSectionLabel("description", "Description");
+    const descInput = createElement("textarea", "drawer-form__textarea");
+    descInput.placeholder = "Add description";
+    descInput.value = state.eventDraft.description;
+    descInput.addEventListener("input", (e) => { state.eventDraft.description = e.target.value; });
+    descGroup.append(descLabel, descInput);
+
+    body.append(scheduleLabel, dateTimeRow, allDayRow, titleGroup, locationGroup, descGroup);
+
+    const actions = createElement("div", "drawer-form__actions");
+    const cancelBtn = createElement("button", "drawer-form__button drawer-form__button--secondary", "Cancel");
+    cancelBtn.addEventListener("click", closeEventDrawer);
+    const saveBtn = createElement("button", "drawer-form__button drawer-form__button--primary", "Save");
+    saveBtn.addEventListener("click", () => {
+      const newEvent = {
+        id: `event-${Date.now()}`,
+        day: String(state.calendar.selectedDay).padStart(2, "0"),
+        monthIndex: state.calendar.displayMonth,
+        year: state.calendar.displayYear,
+        monthLabel: MONTH_NAMES[state.calendar.displayMonth].slice(0, 3).toUpperCase(),
+        title: state.eventDraft.title || "New Event",
+        meta: `${getDraftTimePart(state.eventDraft.start)} - ${getDraftTimePart(state.eventDraft.end)} | ${state.eventDraft.location || "No location"}`,
+        color: "#5c73d8",
+        tag: state.eventDraft.tag || "Event"
+      };
+      activeApp.events.push(newEvent);
+      closeEventDrawer();
+    });
+    actions.append(cancelBtn, saveBtn);
+    drawer.append(header, body, actions);
+    overlay.append(backdrop, drawer);
+    backdrop.addEventListener("click", closeEventDrawer);
+    overlay.__cleanupOutsideHandler = () => { backdrop.removeEventListener("click", closeEventDrawer); };
+    return overlay;
+  }
+
+  rail.appendChild(railNav);
+  render();
+  return shell;
+}
+
+const root = document.querySelector("#app");
+if (root) root.append(createAppShell());
+    </script>
+  </body>
+</html>
