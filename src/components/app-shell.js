@@ -1,4 +1,8 @@
-import { defaultAppId, defaultItemByApp, workspaceApps } from "../data/navigation.js";
+import {
+  defaultAppId,
+  defaultItemByApp,
+  workspaceApps,
+} from "../data/navigation.js";
 
 const MONTH_NAMES = [
   "January",
@@ -34,7 +38,9 @@ const EVENT_TAG_STYLES = {
   Holiday: { color: "#d45454", textColor: "#ffffff" },
 };
 
-const EVENT_TAG_OPTIONS = Object.keys(EVENT_TAG_STYLES).filter((tag) => tag !== "Event");
+const EVENT_TAG_OPTIONS = Object.keys(EVENT_TAG_STYLES).filter(
+  (tag) => tag !== "Event",
+);
 const PDFJS_VERSION = "5.5.207";
 const PDFJS_MODULE_URL = `https://cdn.jsdelivr.net/npm/pdfjs-dist@${PDFJS_VERSION}/build/pdf.mjs`;
 const PDFJS_WORKER_URL = `https://cdn.jsdelivr.net/npm/pdfjs-dist@${PDFJS_VERSION}/build/pdf.worker.mjs`;
@@ -68,14 +74,17 @@ function createIcon(name, label = "") {
       '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>',
     "chevron-down":
       '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>',
-    plus:
-      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg>',
+    plus: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg>',
     minus:
       '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M5 12h14"/></svg>',
     reset:
       '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12a8 8 0 108-8"/><path d="M4 4v5h5"/></svg>',
     "arrow-right":
       '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg>',
+    "arrow-left-right":
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 16V4"/><path d="M7 4L3 8"/><path d="M7 4l4 4"/><path d="M17 8v12"/><path d="M17 20l4-4"/><path d="M17 20l-4-4"/></svg>',
+    "log-out":
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>',
     search:
       '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4 4"/></svg>',
     filter:
@@ -84,12 +93,12 @@ function createIcon(name, label = "") {
       '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v11"/><path d="M8.5 10.5L12 14l3.5-3.5"/><path d="M5 16.5V19a2 2 0 002 2h10a2 2 0 002-2v-2.5"/></svg>',
     export:
       '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21V10"/><path d="M8.5 13.5L12 10l3.5 3.5"/><path d="M5 7.5V5a2 2 0 012-2h10a2 2 0 012 2v2.5"/></svg>',
-    more:
-      '<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="6" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="18" cy="12" r="1.6"/></svg>',
-    eye:
-      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 12s3.4-5.5 9.5-5.5S21.5 12 21.5 12 18.1 17.5 12 17.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="2.7"/></svg>',
-    edit:
-      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4l10.5-10.5a2.1 2.1 0 10-3-3L5 17v3z"/><path d="M13.5 6.5l4 4"/></svg>',
+    more: '<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="6" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="18" cy="12" r="1.6"/></svg>',
+    "more-vertical":
+      '<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="12" cy="19" r="1.6"/></svg>',
+    eye: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 12s3.4-5.5 9.5-5.5S21.5 12 21.5 12 18.1 17.5 12 17.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="2.7"/></svg>',
+    "eye-off": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 12s3.4-5.5 9.5-5.5S21.5 12 21.5 12 18.1 17.5 12 17.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="2.7"/><path d="M4 4l16 16"/></svg>',
+    edit: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4l10.5-10.5a2.1 2.1 0 10-3-3L5 17v3z"/><path d="M13.5 6.5l4 4"/></svg>',
     circle:
       '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="7"/></svg>',
     calendar:
@@ -106,8 +115,7 @@ function createIcon(name, label = "") {
       '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3.5h-5a3.5 3.5 0 00-3.5 3.5v10A3.5 3.5 0 009 20.5h6a3.5 3.5 0 003.5-3.5V9z"/><path d="M14 3.5V9h5.5"/><path d="M9 12.5l3 3 4-4"/></svg>',
     trash:
       '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16"/><path d="M9 7V4.5h6V7"/><path d="M7.5 7l1 12.5h7L16.5 7"/><path d="M10 11v5"/><path d="M14 11v5"/></svg>',
-    bold:
-      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 5h6a4 4 0 010 8H7z"/><path d="M7 13h7a4 4 0 010 8H7z"/></svg>',
+    bold: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 5h6a4 4 0 010 8H7z"/><path d="M7 13h7a4 4 0 010 8H7z"/></svg>',
     italic:
       '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M14 4h6"/><path d="M4 20h6"/><path d="M14 4L10 20"/></svg>',
     underline:
@@ -126,12 +134,14 @@ function createIcon(name, label = "") {
       '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.2 4.2L19 7"/></svg>',
     clock:
       '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><path d="M12 8v4.5l3 2"/></svg>',
+    user:
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.5"/><path d="M5 20a7 7 0 0114 0"/></svg>',
+    briefcase:
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="7.5" width="17" height="12" rx="1.5"/><path d="M9 7.5V5a2.5 2.5 0 015 0v2.5"/></svg>',
     shield:
       '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 5-3.4 8.8-7 10-3.6-1.2-7-5-7-10V6z"/></svg>',
-    tool:
-      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 6a4 4 0 005.5 5.5L12 19l-3 1 1-3z"/><path d="M5 5l4 4"/></svg>',
-    swap:
-      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h13"/><path d="M13 4l4 3-4 3"/><path d="M20 17H7"/><path d="M11 14l-4 3 4 3"/></svg>',
+    tool: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 6a4 4 0 005.5 5.5L12 19l-3 1 1-3z"/><path d="M5 5l4 4"/></svg>',
+    swap: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h13"/><path d="M13 4l4 3-4 3"/><path d="M20 17H7"/><path d="M11 14l-4 3 4 3"/></svg>',
     alert:
       '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4l8 14H4z"/><path d="M12 9v4"/><circle cx="12" cy="16.5" r="0.8" fill="currentColor" stroke="none"/></svg>',
     "home-app":
@@ -192,8 +202,8 @@ const ASSET_PAGE_META = {
       "Pantau utilisasi, pergerakan, dan request operasional dalam satu workspace yang lebih tajam dan siap dipakai harian.",
   },
   Assets: {
-    eyebrow: "Inventory registry",
-    title: "Live inventory with operational context",
+    eyebrow: "Asset registry",
+    title: "LIST OF ASSETS",
     description:
       "Cari, filter, dan kelola status asset sambil melihat detail penempatan, kondisi, dan agenda tindak lanjut pada saat yang sama.",
   },
@@ -254,6 +264,36 @@ const ASSET_INVENTORY_FILTERS = [
   ["stored", "Stored"],
   ["maintenance", "Maintenance"],
   ["reserved", "Reserved"],
+];
+
+const USER_PAGE_META = {
+  "All Users": {
+    eyebrow: "Team management",
+    title: "USERS",
+    description: "Manage user accounts, roles, and permissions across the organization.",
+  },
+  Roles: {
+    eyebrow: "Access control",
+    title: "USER ROLES",
+    description: "Define and customize user roles with specific permission sets.",
+  },
+  Permissions: {
+    eyebrow: "Access rights",
+    title: "PERMISSIONS",
+    description: "Configure granular permissions for different system features.",
+  },
+  Invitations: {
+    eyebrow: "Onboarding",
+    title: "PENDING INVITATIONS",
+    description: "View and manage pending user invitations and their status.",
+  },
+};
+
+const USERS_FILTERS = [
+  ["all", "All"],
+  ["active", "Active"],
+  ["pending", "Pending"],
+  ["suspended", "Suspended"],
 ];
 
 const ASSET_REQUEST_FILTERS = {
@@ -416,8 +456,19 @@ function getInitialCalendarState() {
   };
 }
 
+function getInitialUsersState() {
+  const userApp = getUserManagementApp();
+
+  return {
+    selectedUserId: userApp?.users?.[0]?.id ?? null,
+    search: "",
+    filter: "all",
+  };
+}
+
 function getInitialState() {
-  const activeApp = workspaceApps.find((app) => app.id === defaultAppId) ?? workspaceApps[0];
+  const activeApp =
+    workspaceApps.find((app) => app.id === defaultAppId) ?? workspaceApps[0];
   const activeItem = defaultItemByApp[activeApp.id] ?? activeApp.items?.[0];
 
   return {
@@ -425,6 +476,7 @@ function getInitialState() {
     activeItem,
     calendar: getInitialCalendarState(),
     assets: getInitialAssetsState(),
+    users: getInitialUsersState(),
     lastAction: "",
     assetSearchQuery: "",
     assetMenuId: null,
@@ -436,15 +488,20 @@ function getInitialState() {
     eventDrawerMode: "create",
     activeDrawerEventId: null,
     eventDraft: getInitialEventDraft(),
+    isUserDrawerOpen: false,
+    userDraft: getInitialUserDraft(),
   };
 }
 
 function formatDateTimeLocalValue(date) {
-  return [
-    date.getFullYear(),
-    String(date.getMonth() + 1).padStart(2, "0"),
-    String(date.getDate()).padStart(2, "0"),
-  ].join("-") + `T${String(date.getHours()).padStart(2, "0")}:${String(date.getMinutes()).padStart(2, "0")}`;
+  return (
+    [
+      date.getFullYear(),
+      String(date.getMonth() + 1).padStart(2, "0"),
+      String(date.getDate()).padStart(2, "0"),
+    ].join("-") +
+    `T${String(date.getHours()).padStart(2, "0")}:${String(date.getMinutes()).padStart(2, "0")}`
+  );
 }
 
 function getInitialEventDraft() {
@@ -479,6 +536,23 @@ function getInitialEventDraft() {
   };
 }
 
+function getInitialUserDraft() {
+  const today = new Date();
+  return {
+    name: "",
+    email: "",
+    phone: "",
+    department: "",
+    position: "",
+    joinDate: formatDateTimeLocalValue(today),
+    role: "custom",
+    permissions: [],
+    sendInvitation: true,
+    password: "",
+    confirmPassword: "",
+  };
+}
+
 function getDaysInMonth(year, month) {
   return new Date(year, month + 1, 0).getDate();
 }
@@ -487,7 +561,11 @@ function buildCalendarDays(year, month, selectedDate) {
   const today = getTodayDate();
   const firstDay = new Date(year, month, 1).getDay();
   const daysInMonth = getDaysInMonth(year, month);
-  const daysInPrevMonth = getDaysInMonth(year, month - 1 < 0 ? year - 1 : year, month - 1 < 0 ? 11 : month - 1);
+  const daysInPrevMonth = getDaysInMonth(
+    year,
+    month - 1 < 0 ? year - 1 : year,
+    month - 1 < 0 ? 11 : month - 1,
+  );
   const cells = [];
   const selectedYear = selectedDate?.getFullYear?.();
   const selectedMonth = selectedDate?.getMonth?.();
@@ -504,7 +582,10 @@ function buildCalendarDays(year, month, selectedDate) {
       isCurrentMonth: false,
       year: itemYear,
       monthIndex: itemMonth,
-      isToday: isSameCalendarDate(today, new Date(itemYear, itemMonth, dayValue)),
+      isToday: isSameCalendarDate(
+        today,
+        new Date(itemYear, itemMonth, dayValue),
+      ),
     });
   }
 
@@ -529,7 +610,10 @@ function buildCalendarDays(year, month, selectedDate) {
       isCurrentMonth: false,
       year: itemYear,
       monthIndex: itemMonth,
-      isToday: isSameCalendarDate(today, new Date(itemYear, itemMonth, dayValue)),
+      isToday: isSameCalendarDate(
+        today,
+        new Date(itemYear, itemMonth, dayValue),
+      ),
     });
   }
 
@@ -569,7 +653,9 @@ function syncCalendarSelectionForDisplayedMonth(state, activeApp) {
     return;
   }
 
-  const selectedEvent = monthEvents.find((event) => event.id === state.calendar.selectedEventId);
+  const selectedEvent = monthEvents.find(
+    (event) => event.id === state.calendar.selectedEventId,
+  );
 
   if (selectedEvent) {
     state.calendar.selectedDay = Number(selectedEvent.day);
@@ -581,16 +667,23 @@ function syncCalendarSelectionForDisplayedMonth(state, activeApp) {
 }
 
 function getVisibleCalendarPanelEvents(activeApp, state) {
-  const monthEvents = getEventsForDisplayedMonth(activeApp, state).filter(isUpcomingEvent);
+  const monthEvents = getEventsForDisplayedMonth(activeApp, state).filter(
+    isUpcomingEvent,
+  );
 
   if (monthEvents.length <= 2) {
     return monthEvents;
   }
 
   const visible = monthEvents.slice(0, 2);
-  const selectedEvent = monthEvents.find((event) => event.id === state.calendar.selectedEventId);
+  const selectedEvent = monthEvents.find(
+    (event) => event.id === state.calendar.selectedEventId,
+  );
 
-  if (selectedEvent && !visible.some((event) => event.id === selectedEvent.id)) {
+  if (
+    selectedEvent &&
+    !visible.some((event) => event.id === selectedEvent.id)
+  ) {
     return [visible[0], selectedEvent].filter(Boolean);
   }
 
@@ -606,14 +699,16 @@ function createAttachmentPreview(
   options = {
     imageClassName: "drawer-detail__attachment-image",
     frameClassName: "drawer-detail__attachment-frame",
-  }
+  },
 ) {
   if (!fileData?.dataUrl) {
     return null;
   }
 
-  const imageClassName = options.imageClassName ?? "drawer-detail__attachment-image";
-  const frameClassName = options.frameClassName ?? "drawer-detail__attachment-frame";
+  const imageClassName =
+    options.imageClassName ?? "drawer-detail__attachment-image";
+  const frameClassName =
+    options.frameClassName ?? "drawer-detail__attachment-frame";
 
   if (fileData.type?.startsWith("image/")) {
     const image = createElement("img", imageClassName);
@@ -640,7 +735,8 @@ function getEventAttachments(event) {
   if (event.attachmentName || event.attachmentFile?.name) {
     return [
       {
-        name: event.attachmentName || event.attachmentFile?.name || "Attachment",
+        name:
+          event.attachmentName || event.attachmentFile?.name || "Attachment",
         type: event.attachmentFile?.type || "",
         dataUrl: event.attachmentFile?.dataUrl || "",
       },
@@ -706,17 +802,25 @@ function createDrawerAttachmentPreview(fileData) {
 
   if (fileData.type === "application/pdf") {
     const paper = createElement("div", "drawer-detail__attachment-paper");
-    const loading = createElement("div", "drawer-detail__attachment-paper-loading");
+    const loading = createElement(
+      "div",
+      "drawer-detail__attachment-paper-loading",
+    );
 
     paper.append(loading);
 
     loadPdfJs()
       .then(async (pdfjsLib) => {
-        const loadingTask = pdfjsLib.getDocument({ data: dataUrlToUint8Array(fileData.dataUrl) });
+        const loadingTask = pdfjsLib.getDocument({
+          data: dataUrlToUint8Array(fileData.dataUrl),
+        });
         const pdfDocument = await loadingTask.promise;
         const page = await pdfDocument.getPage(1);
         const viewport = page.getViewport({ scale: 1.15 });
-        const canvas = createElement("canvas", "drawer-detail__attachment-paper-canvas");
+        const canvas = createElement(
+          "canvas",
+          "drawer-detail__attachment-paper-canvas",
+        );
         const context = canvas.getContext("2d");
         const outputScale = window.devicePixelRatio || 1;
 
@@ -724,7 +828,10 @@ function createDrawerAttachmentPreview(fileData) {
           throw new Error("Canvas context unavailable");
         }
 
-        paper.style.setProperty("--paper-ratio", `${viewport.width} / ${viewport.height}`);
+        paper.style.setProperty(
+          "--paper-ratio",
+          `${viewport.width} / ${viewport.height}`,
+        );
         canvas.width = Math.floor(viewport.width * outputScale);
         canvas.height = Math.floor(viewport.height * outputScale);
         canvas.style.width = "100%";
@@ -733,7 +840,8 @@ function createDrawerAttachmentPreview(fileData) {
         await page.render({
           canvasContext: context,
           viewport,
-          transform: outputScale === 1 ? null : [outputScale, 0, 0, outputScale, 0, 0],
+          transform:
+            outputScale === 1 ? null : [outputScale, 0, 0, outputScale, 0, 0],
         }).promise;
 
         paper.innerHTML = "";
@@ -741,7 +849,9 @@ function createDrawerAttachmentPreview(fileData) {
       })
       .catch(() => {
         paper.innerHTML = "";
-        paper.append(createElement("div", "drawer-detail__attachment-paper-fallback"));
+        paper.append(
+          createElement("div", "drawer-detail__attachment-paper-fallback"),
+        );
       });
 
     return paper;
@@ -750,24 +860,63 @@ function createDrawerAttachmentPreview(fileData) {
   return createElement("div", "drawer-detail__attachment-paper-fallback");
 }
 
-function createAttachmentViewerOverlayLegacy(attachment, closeViewer, isOpen = false) {
+function createAttachmentViewerOverlayLegacy(
+  attachment,
+  closeViewer,
+  isOpen = false,
+) {
   const overlay = createElement(
     "div",
-    `attachment-viewer-overlay${isOpen ? " is-open" : ""}`
+    `attachment-viewer-overlay${isOpen ? " is-open" : ""}`,
   );
-  const backdrop = createElement("button", "attachment-viewer-overlay__backdrop");
+  const backdrop = createElement(
+    "button",
+    "attachment-viewer-overlay__backdrop",
+  );
   const viewer = createElement("section", "attachment-viewer");
   const header = createElement("div", "attachment-viewer__header");
   const titleBlock = createElement("div", "attachment-viewer__title-block");
-  const eyebrow = createElement("p", "attachment-viewer__eyebrow", "Attachment Preview");
-  const title = createElement("h3", "attachment-viewer__title", attachment?.name || "Attachment");
-  const hint = createElement("p", "attachment-viewer__hint", "Scroll to zoom, drag to move, or reset the frame.");
+  const eyebrow = createElement(
+    "p",
+    "attachment-viewer__eyebrow",
+    "Attachment Preview",
+  );
+  const title = createElement(
+    "h3",
+    "attachment-viewer__title",
+    attachment?.name || "Attachment",
+  );
+  const hint = createElement(
+    "p",
+    "attachment-viewer__hint",
+    "Scroll to zoom, drag to move, or reset the frame.",
+  );
   const actions = createElement("div", "attachment-viewer__actions");
-  const zoomOutButton = createElement("button", "attachment-viewer__control", "−");
-  const zoomValue = createElement("span", "attachment-viewer__zoom-value", "100%");
-  const zoomInButton = createElement("button", "attachment-viewer__control", "+");
-  const resetButton = createElement("button", "attachment-viewer__control attachment-viewer__control--label", "Reset");
-  const closeButton = createElement("button", "attachment-viewer__control attachment-viewer__control--label", "Close");
+  const zoomOutButton = createElement(
+    "button",
+    "attachment-viewer__control",
+    "−",
+  );
+  const zoomValue = createElement(
+    "span",
+    "attachment-viewer__zoom-value",
+    "100%",
+  );
+  const zoomInButton = createElement(
+    "button",
+    "attachment-viewer__control",
+    "+",
+  );
+  const resetButton = createElement(
+    "button",
+    "attachment-viewer__control attachment-viewer__control--label",
+    "Reset",
+  );
+  const closeButton = createElement(
+    "button",
+    "attachment-viewer__control attachment-viewer__control--label",
+    "Close",
+  );
   const viewport = createElement("div", "attachment-viewer__viewport");
   const stage = createElement("div", "attachment-viewer__stage");
   const asset = createElement("div", "attachment-viewer__asset");
@@ -847,7 +996,7 @@ function createAttachmentViewerOverlayLegacy(attachment, closeViewer, isOpen = f
       event.preventDefault();
       setScale(scale + (event.deltaY < 0 ? 0.18 : -0.18));
     },
-    { passive: false }
+    { passive: false },
   );
   viewport.addEventListener("dblclick", () => {
     setScale(scale === 1 ? 2 : 1);
@@ -914,7 +1063,13 @@ function createAttachmentViewerOverlayLegacy(attachment, closeViewer, isOpen = f
   };
 
   titleBlock.append(eyebrow, title, hint);
-  actions.append(zoomOutButton, zoomValue, zoomInButton, resetButton, closeButton);
+  actions.append(
+    zoomOutButton,
+    zoomValue,
+    zoomInButton,
+    resetButton,
+    closeButton,
+  );
   header.append(titleBlock, actions);
 
   if (preview) {
@@ -924,8 +1079,8 @@ function createAttachmentViewerOverlayLegacy(attachment, closeViewer, isOpen = f
       createElement(
         "div",
         "attachment-viewer__fallback",
-        "Inline preview is available for image and PDF attachments."
-      )
+        "Inline preview is available for image and PDF attachments.",
+      ),
     );
   }
 
@@ -938,28 +1093,49 @@ function createAttachmentViewerOverlayLegacy(attachment, closeViewer, isOpen = f
   return overlay;
 }
 
-function createAttachmentViewerOverlay(attachment, closeViewer, isOpen = false) {
+function createAttachmentViewerOverlay(
+  attachment,
+  closeViewer,
+  isOpen = false,
+) {
   const overlay = createElement(
     "div",
-    `attachment-viewer-overlay${isOpen ? " is-open" : ""}`
+    `attachment-viewer-overlay${isOpen ? " is-open" : ""}`,
   );
-  const backdrop = createElement("button", "attachment-viewer-overlay__backdrop");
+  const backdrop = createElement(
+    "button",
+    "attachment-viewer-overlay__backdrop",
+  );
   const viewer = createElement("section", "attachment-viewer");
   const topActions = createElement("div", "attachment-viewer__top-actions");
-  const closeButton = createElement("button", "attachment-viewer__icon-button attachment-viewer__icon-button--close");
-  const downloadButton = createElement("button", "attachment-viewer__icon-button attachment-viewer__icon-button--download");
+  const closeButton = createElement(
+    "button",
+    "attachment-viewer__icon-button attachment-viewer__icon-button--close",
+  );
+  const downloadButton = createElement(
+    "button",
+    "attachment-viewer__icon-button attachment-viewer__icon-button--download",
+  );
   const dock = createElement("div", "attachment-viewer__dock");
-  const zoomOutButton = createElement("button", "attachment-viewer__icon-button");
+  const zoomOutButton = createElement(
+    "button",
+    "attachment-viewer__icon-button",
+  );
   const resetButton = createElement("button", "attachment-viewer__icon-button");
-  const zoomInButton = createElement("button", "attachment-viewer__icon-button");
+  const zoomInButton = createElement(
+    "button",
+    "attachment-viewer__icon-button",
+  );
   const viewport = createElement("div", "attachment-viewer__viewport");
   const stage = createElement("div", "attachment-viewer__stage");
   const asset = createElement("div", "attachment-viewer__asset");
   const isDocument = attachment?.type === "application/pdf";
   const preview = attachment?.type?.startsWith("image/")
     ? createAttachmentPreview(attachment, {
-        imageClassName: "attachment-viewer__media attachment-viewer__media--image",
-        frameClassName: "attachment-viewer__media attachment-viewer__media--frame",
+        imageClassName:
+          "attachment-viewer__media attachment-viewer__media--image",
+        frameClassName:
+          "attachment-viewer__media attachment-viewer__media--frame",
       })
     : null;
   const loadingIndicator = createElement("div", "attachment-viewer__loading");
@@ -1066,7 +1242,7 @@ function createAttachmentViewerOverlay(attachment, closeViewer, isOpen = false) 
       event.preventDefault();
       setScale(scale + (event.deltaY < 0 ? 0.18 : -0.18));
     },
-    { passive: false }
+    { passive: false },
   );
   viewport.addEventListener("dblclick", () => {
     if (!isPreviewReady) {
@@ -1088,7 +1264,11 @@ function createAttachmentViewerOverlay(attachment, closeViewer, isOpen = false) 
     applyTransform();
   });
   viewport.addEventListener("pointermove", (event) => {
-    if (!isDragging || event.pointerId !== pointerId || (scale === 1 && !isDocument)) {
+    if (
+      !isDragging ||
+      event.pointerId !== pointerId ||
+      (scale === 1 && !isDocument)
+    ) {
       return;
     }
 
@@ -1147,11 +1327,17 @@ function createAttachmentViewerOverlay(attachment, closeViewer, isOpen = false) 
           return;
         }
 
-        loadingTask = pdfjsLib.getDocument({ data: dataUrlToUint8Array(attachment.dataUrl) });
+        loadingTask = pdfjsLib.getDocument({
+          data: dataUrlToUint8Array(attachment.dataUrl),
+        });
         const pdfDocument = await loadingTask.promise;
         const outputScale = window.devicePixelRatio || 1;
 
-        for (let pageNumber = 1; pageNumber <= pdfDocument.numPages; pageNumber += 1) {
+        for (
+          let pageNumber = 1;
+          pageNumber <= pdfDocument.numPages;
+          pageNumber += 1
+        ) {
           const page = await pdfDocument.getPage(pageNumber);
 
           if (isDestroyed) {
@@ -1174,7 +1360,8 @@ function createAttachmentViewerOverlay(attachment, closeViewer, isOpen = false) 
           await page.render({
             canvasContext: context,
             viewport: pdfViewport,
-            transform: outputScale === 1 ? null : [outputScale, 0, 0, outputScale, 0, 0],
+            transform:
+              outputScale === 1 ? null : [outputScale, 0, 0, outputScale, 0, 0],
           }).promise;
 
           pdfStack.append(canvas);
@@ -1210,8 +1397,17 @@ function createAttachmentViewerOverlay(attachment, closeViewer, isOpen = false) 
   return overlay;
 }
 
-function createDrawerSelect(labelText, valueText, options, onChange, modifier = "") {
-  const group = createElement("div", `drawer-form__group${modifier ? ` ${modifier}` : ""}`);
+function createDrawerSelect(
+  labelText,
+  valueText,
+  options,
+  onChange,
+  modifier = "",
+) {
+  const group = createElement(
+    "div",
+    `drawer-form__group${modifier ? ` ${modifier}` : ""}`,
+  );
   const label = createElement("label", "drawer-form__label", labelText);
   const selectWrap = createElement("div", "drawer-form__select-wrap");
   const select = document.createElement("select");
@@ -1236,7 +1432,10 @@ function createDrawerSelect(labelText, valueText, options, onChange, modifier = 
 }
 
 function createTagSelector(state, onUpdate) {
-  const group = createElement("div", "drawer-form__group drawer-form__group--compact");
+  const group = createElement(
+    "div",
+    "drawer-form__group drawer-form__group--compact",
+  );
   const label = createElement("label", "drawer-form__label", "Tag");
   const picker = createElement("div", "drawer-form__tag-picker");
 
@@ -1245,7 +1444,7 @@ function createTagSelector(state, onUpdate) {
     const tagButton = createElement(
       "button",
       `drawer-form__tag${isActive ? " is-active" : ""}`,
-      tag
+      tag,
     );
     const tagStyle = getEventTagStyle(tag);
 
@@ -1313,7 +1512,9 @@ function buildTimeOptions() {
 
   for (let hour = 0; hour < 24; hour += 1) {
     for (let minute = 0; minute < 60; minute += 15) {
-      options.push(`${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")}`);
+      options.push(
+        `${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")}`,
+      );
     }
   }
 
@@ -1357,8 +1558,10 @@ function formatMinutesAsTime(totalMinutes) {
 }
 
 function parseEventSchedule(meta = "") {
-  const [timeRange = "", location = ""] = meta.split("|").map((value) => value.trim());
-  
+  const [timeRange = "", location = ""] = meta
+    .split("|")
+    .map((value) => value.trim());
+
   if (timeRange.toLowerCase() === "all day") {
     return {
       startMinutes: 0,
@@ -1368,8 +1571,10 @@ function parseEventSchedule(meta = "") {
       isAllDay: true,
     };
   }
-  
-  const [rawStart = "", rawEnd = ""] = timeRange.split("-").map((value) => value.trim());
+
+  const [rawStart = "", rawEnd = ""] = timeRange
+    .split("-")
+    .map((value) => value.trim());
   const start = parseTimeToken(rawStart);
   const end = parseTimeToken(rawEnd);
   const startMinutes = start ? start.hours * 60 + start.minutes : 9 * 60;
@@ -1385,7 +1590,11 @@ function parseEventSchedule(meta = "") {
 }
 
 function getSelectedCalendarDate(state) {
-  return new Date(state.calendar.displayYear, state.calendar.displayMonth, state.calendar.selectedDay);
+  return new Date(
+    state.calendar.displayYear,
+    state.calendar.displayMonth,
+    state.calendar.selectedDay,
+  );
 }
 
 function getWeekDates(selectedDate) {
@@ -1413,7 +1622,8 @@ function syncCalendarToDate(state, activeApp, date) {
   state.calendar.displayYear = date.getFullYear();
   state.calendar.displayMonth = date.getMonth();
   state.calendar.selectedDay = date.getDate();
-  state.calendar.selectedEventId = getEventsForDate(activeApp, date)[0]?.id ?? null;
+  state.calendar.selectedEventId =
+    getEventsForDate(activeApp, date)[0]?.id ?? null;
 }
 
 function getEventSurfaceColor(event) {
@@ -1453,13 +1663,19 @@ function getEventPrimaryTag(event) {
   return getNormalizedEventTag(event);
 }
 
-function createNativeSelect(options, value, onChange, className = "drawer-form__native-select") {
+function createNativeSelect(
+  options,
+  value,
+  onChange,
+  className = "drawer-form__native-select",
+) {
   const select = document.createElement("select");
   select.className = className;
 
   options.forEach((option) => {
     const optionElement = document.createElement("option");
-    const normalizedOption = typeof option === "string" ? { value: option, label: option } : option;
+    const normalizedOption =
+      typeof option === "string" ? { value: option, label: option } : option;
 
     optionElement.value = normalizedOption.value;
     optionElement.textContent = normalizedOption.label;
@@ -1531,7 +1747,7 @@ function buildEventFromDraft(state) {
       displayStartTime = "00:00";
     }
 
-    const metaLabel = isAllDay 
+    const metaLabel = isAllDay
       ? `All day | ${locationLabel}`
       : `${displayStartTime} - ${displayEndTime} | ${locationLabel}`;
 
@@ -1550,8 +1766,12 @@ function buildEventFromDraft(state) {
       location: state.eventDraft.location.trim(),
       description: state.eventDraft.description,
       participants: [...state.eventDraft.participants],
-      reminders: state.eventDraft.reminders.map((reminder) => ({ ...reminder })),
-      attachments: state.eventDraft.attachments.map((attachment) => ({ ...attachment })),
+      reminders: state.eventDraft.reminders.map((reminder) => ({
+        ...reminder,
+      })),
+      attachments: state.eventDraft.attachments.map((attachment) => ({
+        ...attachment,
+      })),
       tag: primaryTag,
     });
 
@@ -1567,6 +1787,29 @@ function isDraftValid(draft) {
   }
 
   return isDraftDateRangeValid(draft.start, draft.end);
+}
+
+function isUserDraftValid(draft) {
+  if (!draft.name?.trim()) {
+    return false;
+  }
+  if (!draft.email?.trim() || !draft.email.includes('@')) {
+    return false;
+  }
+  if (!draft.department) {
+    return false;
+  }
+  if (!draft.position?.trim()) {
+    return false;
+  }
+  // Password validation
+  if (!draft.password || draft.password.length < 6) {
+    return false;
+  }
+  if (draft.password !== draft.confirmPassword) {
+    return false;
+  }
+  return true;
 }
 
 function sortCalendarEvents(events) {
@@ -1665,7 +1908,7 @@ function insertPlainTextAtCursor(text) {
 function createEventDrawer(state, closeDrawer, onSave, isOpen = false) {
   const overlay = createElement(
     "div",
-    `event-drawer-overlay${isOpen ? " is-open" : ""}`
+    `event-drawer-overlay${isOpen ? " is-open" : ""}`,
   );
   const backdrop = createElement("button", "event-drawer-overlay__backdrop");
   const drawer = createElement("aside", "event-drawer");
@@ -1693,7 +1936,10 @@ function createEventDrawer(state, closeDrawer, onSave, isOpen = false) {
   const titleLabel = createElement("div", "drawer-form__title-label");
   const titleStatus = createElement("span", "drawer-form__title-status");
   const titleInput = createElement("input", "drawer-form__title-input");
-  titleStatus.style.setProperty("--title-color", getEventTagStyle(state.eventDraft.tag ?? "Event").color);
+  titleStatus.style.setProperty(
+    "--title-color",
+    getEventTagStyle(state.eventDraft.tag ?? "Event").color,
+  );
   titleInput.type = "text";
   titleInput.value = state.eventDraft.title;
   titleInput.placeholder = "Enter event title";
@@ -1712,8 +1958,8 @@ function createEventDrawer(state, closeDrawer, onSave, isOpen = false) {
   // Format date as DD/MM/YYYY
   const formatDate = (date) => {
     const d = new Date(date);
-    const day = String(d.getDate()).padStart(2, '0');
-    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, "0");
+    const month = String(d.getMonth() + 1).padStart(2, "0");
     const year = d.getFullYear();
     return `${day}/${month}/${year}`;
   };
@@ -1721,12 +1967,16 @@ function createEventDrawer(state, closeDrawer, onSave, isOpen = false) {
   // Format time as HH:MM
   const formatTime = (date) => {
     const d = new Date(date);
-    const hours = String(d.getHours()).padStart(2, '0');
-    const minutes = String(d.getMinutes()).padStart(2, '0');
+    const hours = String(d.getHours()).padStart(2, "0");
+    const minutes = String(d.getMinutes()).padStart(2, "0");
     return `${hours}:${minutes}`;
   };
 
-  const allDayLabel = createElement("span", "drawer-form__all-day-label", "All day");
+  const allDayLabel = createElement(
+    "span",
+    "drawer-form__all-day-label",
+    "All day",
+  );
   const allDayToggleLabel = createElement("label", "switch");
   const allDayToggleInput = document.createElement("input");
   allDayToggleInput.type = "checkbox";
@@ -1744,9 +1994,21 @@ function createEventDrawer(state, closeDrawer, onSave, isOpen = false) {
   const dateWrap = createElement("div", "drawer-form__input-wrap");
   const dateIcon = createIcon("calendar");
 
-  const startDateDisplay = createElement("span", "drawer-form__datetime-display", formatDate(state.eventDraft.start));
-  const endDateDisplay = createElement("span", "drawer-form__datetime-display", formatDate(state.eventDraft.end));
-  const dateSeparator = createElement("span", "drawer-form__datetime-separator", " - ");
+  const startDateDisplay = createElement(
+    "span",
+    "drawer-form__datetime-display",
+    formatDate(state.eventDraft.start),
+  );
+  const endDateDisplay = createElement(
+    "span",
+    "drawer-form__datetime-display",
+    formatDate(state.eventDraft.end),
+  );
+  const dateSeparator = createElement(
+    "span",
+    "drawer-form__datetime-separator",
+    " - ",
+  );
 
   const startDateInput = document.createElement("input");
   startDateInput.type = "date";
@@ -1758,11 +2020,24 @@ function createEventDrawer(state, closeDrawer, onSave, isOpen = false) {
   endDateInput.value = getDraftDatePart(state.eventDraft.end);
 
   const handleDateChange = () => {
-    updateDraftDateTime(state, "start", startDateInput.value, getDraftTimePart(state.eventDraft.start));
-    updateDraftDateTime(state, "end", endDateInput.value, getDraftTimePart(state.eventDraft.end));
+    updateDraftDateTime(
+      state,
+      "start",
+      startDateInput.value,
+      getDraftTimePart(state.eventDraft.start),
+    );
+    updateDraftDateTime(
+      state,
+      "end",
+      endDateInput.value,
+      getDraftTimePart(state.eventDraft.end),
+    );
 
     if (!isDraftDateRangeValid(state.eventDraft.start, state.eventDraft.end)) {
-      state.eventDraft.end = addMinutesToDateTimeValue(state.eventDraft.start, 60);
+      state.eventDraft.end = addMinutesToDateTimeValue(
+        state.eventDraft.start,
+        60,
+      );
     }
     renderDrawer();
   };
@@ -1773,34 +2048,70 @@ function createEventDrawer(state, closeDrawer, onSave, isOpen = false) {
   startDateDisplay.addEventListener("click", () => startDateInput.showPicker());
   endDateDisplay.addEventListener("click", () => endDateInput.showPicker());
 
-  dateWrap.append(dateIcon, startDateDisplay, dateSeparator, endDateDisplay, startDateInput, endDateInput);
+  dateWrap.append(
+    dateIcon,
+    startDateDisplay,
+    dateSeparator,
+    endDateDisplay,
+    startDateInput,
+    endDateInput,
+  );
   dateRow.append(dateWrap);
 
   // Time input row
-  const timeRow = createElement("div", `drawer-form__datetime-inputs${state.eventDraft.isAllDay ? " is-hidden" : ""}`);
+  const timeRow = createElement(
+    "div",
+    `drawer-form__datetime-inputs${state.eventDraft.isAllDay ? " is-hidden" : ""}`,
+  );
   const timeWrap = createElement("div", "drawer-form__input-wrap");
   const timeIcon = createIcon("clock");
 
-  const startTimeDisplay = createElement("span", "drawer-form__datetime-display", formatTime(state.eventDraft.start));
-  const endTimeDisplay = createElement("span", "drawer-form__datetime-display", formatTime(state.eventDraft.end));
-  const timeSeparator = createElement("span", "drawer-form__datetime-separator", " - ");
+  const startTimeDisplay = createElement(
+    "span",
+    "drawer-form__datetime-display",
+    formatTime(state.eventDraft.start),
+  );
+  const endTimeDisplay = createElement(
+    "span",
+    "drawer-form__datetime-display",
+    formatTime(state.eventDraft.end),
+  );
+  const timeSeparator = createElement(
+    "span",
+    "drawer-form__datetime-separator",
+    " - ",
+  );
 
   const startTimeInput = document.createElement("input");
   startTimeInput.type = "time";
   startTimeInput.className = "drawer-form__time-input";
   startTimeInput.step = "900";
   startTimeInput.value = getDraftTimePart(state.eventDraft.start);
-  startTimeInput.max = getDraftTimePart(addMinutesToDateTimeValue(state.eventDraft.end, -15));
+  startTimeInput.max = getDraftTimePart(
+    addMinutesToDateTimeValue(state.eventDraft.end, -15),
+  );
   const endTimeInput = document.createElement("input");
   endTimeInput.type = "time";
   endTimeInput.className = "drawer-form__time-input";
   endTimeInput.step = "900";
   endTimeInput.value = getDraftTimePart(state.eventDraft.end);
-  endTimeInput.min = getDraftTimePart(addMinutesToDateTimeValue(state.eventDraft.start, 15));
+  endTimeInput.min = getDraftTimePart(
+    addMinutesToDateTimeValue(state.eventDraft.start, 15),
+  );
 
   const handleTimeChange = () => {
-    updateDraftDateTime(state, "start", getDraftDatePart(state.eventDraft.start), startTimeInput.value);
-    updateDraftDateTime(state, "end", getDraftDatePart(state.eventDraft.end), endTimeInput.value);
+    updateDraftDateTime(
+      state,
+      "start",
+      getDraftDatePart(state.eventDraft.start),
+      startTimeInput.value,
+    );
+    updateDraftDateTime(
+      state,
+      "end",
+      getDraftDatePart(state.eventDraft.end),
+      endTimeInput.value,
+    );
     renderDrawer();
   };
 
@@ -1810,25 +2121,52 @@ function createEventDrawer(state, closeDrawer, onSave, isOpen = false) {
   startTimeDisplay.addEventListener("click", () => startTimeInput.showPicker());
   endTimeDisplay.addEventListener("click", () => endTimeInput.showPicker());
 
-  timeWrap.append(timeIcon, startTimeDisplay, timeSeparator, endTimeDisplay, startTimeInput, endTimeInput);
+  timeWrap.append(
+    timeIcon,
+    startTimeDisplay,
+    timeSeparator,
+    endTimeDisplay,
+    startTimeInput,
+    endTimeInput,
+  );
   timeRow.append(timeWrap);
 
   scheduleGroup.append(scheduleLabel, allDayRow, dateRow, timeRow);
 
   const participantsGroup = createElement("div", "drawer-form__group");
   const participantsLabel = createSectionLabel("users", "Participants");
-  const participantsField = createElement("div", "drawer-form__participant-field");
+  const participantsField = createElement(
+    "div",
+    "drawer-form__participant-field",
+  );
   const participantsInput = createElement("input", "drawer-form__input");
-  const selectedParticipants = createElement("div", "drawer-form__participants");
-  const participantSuggestions = createElement("div", "drawer-form__participant-suggestions");
-  const normalizedQuery = state.eventDraft.participantQuery.trim().toLowerCase();
+  const selectedParticipants = createElement(
+    "div",
+    "drawer-form__participants",
+  );
+  const participantSuggestions = createElement(
+    "div",
+    "drawer-form__participant-suggestions",
+  );
+  const normalizedQuery = state.eventDraft.participantQuery
+    .trim()
+    .toLowerCase();
   const selectedParticipantUsers = state.eventDraft.participants
-    .map((participantId) => participantOptions.find((user) => user.id === participantId))
+    .map((participantId) =>
+      participantOptions.find((user) => user.id === participantId),
+    )
     .filter(Boolean);
-  const visibleParticipants = selectedParticipantUsers.slice(0, visibleParticipantLimit);
-  const hiddenParticipantCount = Math.max(selectedParticipantUsers.length - visibleParticipantLimit, 0);
+  const visibleParticipants = selectedParticipantUsers.slice(
+    0,
+    visibleParticipantLimit,
+  );
+  const hiddenParticipantCount = Math.max(
+    selectedParticipantUsers.length - visibleParticipantLimit,
+    0,
+  );
   const allParticipantsSelected =
-    participantOptions.length > 0 && state.eventDraft.participants.length === participantOptions.length;
+    participantOptions.length > 0 &&
+    state.eventDraft.participants.length === participantOptions.length;
   const filteredParticipants = participantOptions.filter((user) => {
     const alreadySelected = state.eventDraft.participants.includes(user.id);
 
@@ -1853,7 +2191,10 @@ function createEventDrawer(state, closeDrawer, onSave, isOpen = false) {
   participantsInput.addEventListener("keydown", (event) => {
     if (event.key === "Enter" && filteredParticipants.length > 0) {
       event.preventDefault();
-      state.eventDraft.participants = [...state.eventDraft.participants, filteredParticipants[0].id];
+      state.eventDraft.participants = [
+        ...state.eventDraft.participants,
+        filteredParticipants[0].id,
+      ];
       state.eventDraft.participantQuery = "";
       state.eventDraft.isParticipantPopupOpen = false;
       renderDrawer({ focusParticipantInput: true });
@@ -1863,7 +2204,9 @@ function createEventDrawer(state, closeDrawer, onSave, isOpen = false) {
   const allParticipantsButton = createElement(
     "button",
     `drawer-form__participant-all${allParticipantsSelected ? " is-active" : ""}`,
-    allParticipantsSelected ? "All Participants Selected" : "Select All Participants"
+    allParticipantsSelected
+      ? "All Participants Selected"
+      : "Select All Participants",
   );
   allParticipantsButton.type = "button";
   allParticipantsButton.addEventListener("click", () => {
@@ -1877,14 +2220,24 @@ function createEventDrawer(state, closeDrawer, onSave, isOpen = false) {
 
   visibleParticipants.forEach((participant) => {
     const chip = createElement("button", "drawer-form__participant-chip");
-    const avatar = createElement("span", "drawer-form__participant-avatar", participant.name.slice(0, 1));
-    const name = createElement("span", "drawer-form__participant-name", participant.name);
+    const avatar = createElement(
+      "span",
+      "drawer-form__participant-avatar",
+      participant.name.slice(0, 1),
+    );
+    const name = createElement(
+      "span",
+      "drawer-form__participant-name",
+      participant.name,
+    );
     const remove = createElement("span", "drawer-form__participant-remove");
 
     chip.type = "button";
     remove.append(createIcon("close"));
     chip.addEventListener("click", () => {
-      state.eventDraft.participants = state.eventDraft.participants.filter((id) => id !== participant.id);
+      state.eventDraft.participants = state.eventDraft.participants.filter(
+        (id) => id !== participant.id,
+      );
       state.eventDraft.isParticipantPopupOpen = false;
       renderDrawer({ focusParticipantInput: true });
     });
@@ -1896,7 +2249,7 @@ function createEventDrawer(state, closeDrawer, onSave, isOpen = false) {
     const moreButton = createElement(
       "button",
       "drawer-form__participant-more",
-      `+${hiddenParticipantCount} more`
+      `+${hiddenParticipantCount} more`,
     );
 
     moreButton.type = "button";
@@ -1908,18 +2261,28 @@ function createEventDrawer(state, closeDrawer, onSave, isOpen = false) {
   }
 
   filteredParticipants.slice(0, 5).forEach((participant) => {
-    const optionButton = createElement("button", "drawer-form__participant-option");
+    const optionButton = createElement(
+      "button",
+      "drawer-form__participant-option",
+    );
     const info = createElement("div", "drawer-form__participant-option-copy");
-    const name = createElement("strong", "drawer-form__participant-option-name", participant.name);
+    const name = createElement(
+      "strong",
+      "drawer-form__participant-option-name",
+      participant.name,
+    );
     const meta = createElement(
       "span",
       "drawer-form__participant-option-meta",
-      `${participant.role} | ${participant.email}`
+      `${participant.role} | ${participant.email}`,
     );
 
     optionButton.type = "button";
     optionButton.addEventListener("click", () => {
-      state.eventDraft.participants = [...state.eventDraft.participants, participant.id];
+      state.eventDraft.participants = [
+        ...state.eventDraft.participants,
+        participant.id,
+      ];
       state.eventDraft.participantQuery = "";
       state.eventDraft.isParticipantPopupOpen = false;
       renderDrawer({ focusParticipantInput: true });
@@ -1929,9 +2292,9 @@ function createEventDrawer(state, closeDrawer, onSave, isOpen = false) {
       createElement(
         "span",
         "drawer-form__participant-avatar drawer-form__participant-avatar--option",
-        participant.name.slice(0, 1)
+        participant.name.slice(0, 1),
       ),
-      info
+      info,
     );
     participantSuggestions.append(optionButton);
   });
@@ -1941,11 +2304,19 @@ function createEventDrawer(state, closeDrawer, onSave, isOpen = false) {
   if (filteredParticipants.length > 0) {
     participantsField.append(participantSuggestions);
   } else if (normalizedQuery) {
-    const emptyState = createElement("p", "drawer-form__participant-empty", "No matching users found.");
+    const emptyState = createElement(
+      "p",
+      "drawer-form__participant-empty",
+      "No matching users found.",
+    );
     participantsField.append(emptyState);
   }
 
-  participantsGroup.append(participantsLabel, participantsField, allParticipantsButton);
+  participantsGroup.append(
+    participantsLabel,
+    participantsField,
+    allParticipantsButton,
+  );
 
   if (selectedParticipantUsers.length > 0) {
     participantsGroup.append(selectedParticipants);
@@ -1969,7 +2340,8 @@ function createEventDrawer(state, closeDrawer, onSave, isOpen = false) {
   const descriptionInput = createElement("div", "drawer-form__editable");
 
   descriptionInput.contentEditable = "true";
-  descriptionInput.dataset.placeholder = "Add a short description or paste the meeting link here...";
+  descriptionInput.dataset.placeholder =
+    "Add a short description or paste the meeting link here...";
   descriptionInput.innerHTML = state.eventDraft.description;
   descriptionInput.addEventListener("input", () => {
     syncRichTextValue(descriptionInput, (value) => {
@@ -2045,12 +2417,21 @@ function createEventDrawer(state, closeDrawer, onSave, isOpen = false) {
   descriptionEditor.append(descriptionToolbar, descriptionInput);
   descriptionGroup.append(descriptionLabel, descriptionEditor);
 
-  const reminderGroup = createElement("div", "drawer-form__group drawer-form__group--compact");
+  const reminderGroup = createElement(
+    "div",
+    "drawer-form__group drawer-form__group--compact",
+  );
   const reminderLabel = createSectionLabel("reminder", "Reminder");
   const reminderList = createElement("div", "drawer-form__reminders");
-  const addReminderButton = createElement("button", "drawer-form__reminder-add");
+  const addReminderButton = createElement(
+    "button",
+    "drawer-form__reminder-add",
+  );
   addReminderButton.type = "button";
-  addReminderButton.append(createIcon("reminder"), createElement("span", "", "Add reminders"));
+  addReminderButton.append(
+    createIcon("reminder"),
+    createElement("span", "", "Add reminders"),
+  );
   addReminderButton.addEventListener("click", () => {
     state.eventDraft.reminders = [
       ...state.eventDraft.reminders,
@@ -2069,16 +2450,30 @@ function createEventDrawer(state, closeDrawer, onSave, isOpen = false) {
   } else {
     state.eventDraft.reminders.forEach((reminder) => {
       const row = createElement("div", "drawer-form__reminder-row");
-      const methodWrap = createElement("div", "drawer-form__select-wrap drawer-form__select-wrap--compact");
-      const relationWrap = createElement("div", "drawer-form__select-wrap drawer-form__select-wrap--compact");
-      const amountWrap = createElement("div", "drawer-form__select-wrap drawer-form__select-wrap--compact");
-      const deleteButton = createElement("button", "drawer-form__reminder-delete");
+      const methodWrap = createElement(
+        "div",
+        "drawer-form__select-wrap drawer-form__select-wrap--compact",
+      );
+      const relationWrap = createElement(
+        "div",
+        "drawer-form__select-wrap drawer-form__select-wrap--compact",
+      );
+      const amountWrap = createElement(
+        "div",
+        "drawer-form__select-wrap drawer-form__select-wrap--compact",
+      );
+      const deleteButton = createElement(
+        "button",
+        "drawer-form__reminder-delete",
+      );
 
       deleteButton.type = "button";
       deleteButton.setAttribute("aria-label", "Remove reminder");
       deleteButton.append(createIcon("trash"));
       deleteButton.addEventListener("click", () => {
-        state.eventDraft.reminders = state.eventDraft.reminders.filter((item) => item.id !== reminder.id);
+        state.eventDraft.reminders = state.eventDraft.reminders.filter(
+          (item) => item.id !== reminder.id,
+        );
         renderDrawer();
       });
 
@@ -2089,9 +2484,9 @@ function createEventDrawer(state, closeDrawer, onSave, isOpen = false) {
           (value) => {
             reminder.method = value;
           },
-          "drawer-form__native-select drawer-form__native-select--compact"
+          "drawer-form__native-select drawer-form__native-select--compact",
         ),
-        createIcon("chevron-down")
+        createIcon("chevron-down"),
       );
       relationWrap.append(
         createNativeSelect(
@@ -2100,9 +2495,9 @@ function createEventDrawer(state, closeDrawer, onSave, isOpen = false) {
           (value) => {
             reminder.relation = value;
           },
-          "drawer-form__native-select drawer-form__native-select--compact"
+          "drawer-form__native-select drawer-form__native-select--compact",
         ),
-        createIcon("chevron-down")
+        createIcon("chevron-down"),
       );
       amountWrap.append(
         createNativeSelect(
@@ -2111,16 +2506,20 @@ function createEventDrawer(state, closeDrawer, onSave, isOpen = false) {
           (value) => {
             reminder.amount = value;
           },
-          "drawer-form__native-select drawer-form__native-select--compact"
+          "drawer-form__native-select drawer-form__native-select--compact",
         ),
-        createIcon("chevron-down")
+        createIcon("chevron-down"),
       );
 
       row.append(methodWrap, relationWrap, amountWrap, deleteButton);
       reminderList.append(row);
     });
 
-    const addAnotherReminder = createElement("button", "drawer-form__reminder-link", "Add another reminder");
+    const addAnotherReminder = createElement(
+      "button",
+      "drawer-form__reminder-link",
+      "Add another reminder",
+    );
     addAnotherReminder.type = "button";
     addAnotherReminder.addEventListener("click", () => {
       state.eventDraft.reminders = [
@@ -2138,7 +2537,10 @@ function createEventDrawer(state, closeDrawer, onSave, isOpen = false) {
   }
   reminderGroup.append(reminderLabel, reminderList);
 
-  const attachmentGroup = createElement("div", "drawer-form__group drawer-form__group--compact");
+  const attachmentGroup = createElement(
+    "div",
+    "drawer-form__group drawer-form__group--compact",
+  );
   const attachmentLabel = createSectionLabel("attachment", "Attachment");
   const attachmentField = createElement("label", "drawer-form__attachment");
   const attachmentInput = document.createElement("input");
@@ -2148,7 +2550,7 @@ function createEventDrawer(state, closeDrawer, onSave, isOpen = false) {
     "drawer-form__attachment-copy",
     state.eventDraft.attachments.length > 0
       ? `${state.eventDraft.attachments.length} file selected`
-      : "Upload file(s)"
+      : "Upload file(s)",
   );
   const attachmentList = createElement("div", "drawer-form__attachment-list");
 
@@ -2181,7 +2583,10 @@ function createEventDrawer(state, closeDrawer, onSave, isOpen = false) {
           pendingFiles -= 1;
 
           if (pendingFiles === 0) {
-            state.eventDraft.attachments = [...existingAttachments, ...nextAttachments];
+            state.eventDraft.attachments = [
+              ...existingAttachments,
+              ...nextAttachments,
+            ];
             attachmentInput.value = "";
             renderDrawer();
           }
@@ -2198,7 +2603,10 @@ function createEventDrawer(state, closeDrawer, onSave, isOpen = false) {
       pendingFiles -= 1;
 
       if (pendingFiles === 0) {
-        state.eventDraft.attachments = [...existingAttachments, ...nextAttachments];
+        state.eventDraft.attachments = [
+          ...existingAttachments,
+          ...nextAttachments,
+        ];
         attachmentInput.value = "";
         renderDrawer();
       }
@@ -2207,17 +2615,32 @@ function createEventDrawer(state, closeDrawer, onSave, isOpen = false) {
 
   if (state.eventDraft.attachments.length > 0) {
     state.eventDraft.attachments.forEach((attachment, index) => {
-      const attachmentCard = createElement("div", "drawer-form__attachment-preview");
-      const attachmentHeader = createElement("div", "drawer-form__attachment-preview-head");
-      const attachmentName = createElement("span", "drawer-form__attachment-chip-name", attachment.name);
-      const removeButton = createElement("button", "drawer-form__attachment-chip-remove");
+      const attachmentCard = createElement(
+        "div",
+        "drawer-form__attachment-preview",
+      );
+      const attachmentHeader = createElement(
+        "div",
+        "drawer-form__attachment-preview-head",
+      );
+      const attachmentName = createElement(
+        "span",
+        "drawer-form__attachment-chip-name",
+        attachment.name,
+      );
+      const removeButton = createElement(
+        "button",
+        "drawer-form__attachment-chip-remove",
+      );
       const preview = createAttachmentPreview(attachment);
 
       removeButton.type = "button";
       removeButton.setAttribute("aria-label", `Remove ${attachment.name}`);
       removeButton.append(createIcon("close"));
       removeButton.addEventListener("click", () => {
-        state.eventDraft.attachments = state.eventDraft.attachments.filter((_, attachmentIndex) => attachmentIndex !== index);
+        state.eventDraft.attachments = state.eventDraft.attachments.filter(
+          (_, attachmentIndex) => attachmentIndex !== index,
+        );
         renderDrawer();
       });
       attachmentHeader.append(attachmentName, removeButton);
@@ -2228,7 +2651,11 @@ function createEventDrawer(state, closeDrawer, onSave, isOpen = false) {
         attachmentCard.append(preview);
       } else {
         attachmentCard.append(
-          createElement("div", "drawer-form__attachment-preview-fallback", "Preview available for image and PDF files.")
+          createElement(
+            "div",
+            "drawer-form__attachment-preview-fallback",
+            "Preview available for image and PDF files.",
+          ),
         );
       }
 
@@ -2242,8 +2669,16 @@ function createEventDrawer(state, closeDrawer, onSave, isOpen = false) {
   const tagsGroup = createTagSelector(state, renderDrawer);
   const footer = createElement("div", "event-drawer__footer");
   const footerLeft = createElement("div", "event-drawer__footer-actions");
-  const cancelButton = createElement("button", "event-drawer__button event-drawer__button--ghost", "Cancel");
-  const saveButton = createElement("button", "event-drawer__button event-drawer__button--primary", "Save");
+  const cancelButton = createElement(
+    "button",
+    "event-drawer__button event-drawer__button--ghost",
+    "Cancel",
+  );
+  const saveButton = createElement(
+    "button",
+    "event-drawer__button event-drawer__button--primary",
+    "Save",
+  );
   const saveEnabled = isDraftValid(state.eventDraft);
   cancelButton.type = "button";
   saveButton.type = "button";
@@ -2269,16 +2704,23 @@ function createEventDrawer(state, closeDrawer, onSave, isOpen = false) {
     locationGroup,
     descriptionGroup,
     attachmentGroup,
-    reminderGroup
+    reminderGroup,
   );
   drawer.append(header, body, footer);
   overlay.append(backdrop, drawer);
 
-  if (state.eventDraft.isParticipantPopupOpen && selectedParticipantUsers.length > 0) {
+  if (
+    state.eventDraft.isParticipantPopupOpen &&
+    selectedParticipantUsers.length > 0
+  ) {
     const popupBackdrop = createElement("button", "drawer-popup__backdrop");
     const popup = createElement("div", "drawer-popup");
     const popupHeader = createElement("div", "drawer-popup__header");
-    const popupTitle = createElement("h3", "drawer-popup__title", "All Participants");
+    const popupTitle = createElement(
+      "h3",
+      "drawer-popup__title",
+      "All Participants",
+    );
     const popupClose = createElement("button", "drawer-popup__close");
     const popupList = createElement("div", "drawer-popup__list");
 
@@ -2297,15 +2739,29 @@ function createEventDrawer(state, closeDrawer, onSave, isOpen = false) {
     selectedParticipantUsers.forEach((participant) => {
       const item = createElement("div", "drawer-popup__item");
       const identity = createElement("div", "drawer-popup__identity");
-      const avatar = createElement("span", "drawer-form__participant-avatar", participant.name.slice(0, 1));
+      const avatar = createElement(
+        "span",
+        "drawer-form__participant-avatar",
+        participant.name.slice(0, 1),
+      );
       const copy = createElement("div", "drawer-popup__copy");
-      const name = createElement("strong", "drawer-popup__name", participant.name);
-      const email = createElement("span", "drawer-popup__email", participant.email);
+      const name = createElement(
+        "strong",
+        "drawer-popup__name",
+        participant.name,
+      );
+      const email = createElement(
+        "span",
+        "drawer-popup__email",
+        participant.email,
+      );
       const remove = createElement("button", "drawer-popup__remove", "Remove");
 
       remove.type = "button";
       remove.addEventListener("click", () => {
-        state.eventDraft.participants = state.eventDraft.participants.filter((id) => id !== participant.id);
+        state.eventDraft.participants = state.eventDraft.participants.filter(
+          (id) => id !== participant.id,
+        );
         state.eventDraft.isParticipantPopupOpen =
           state.eventDraft.participants.length > visibleParticipantLimit;
         renderDrawer({ focusParticipantInput: true });
@@ -2329,7 +2785,9 @@ function createEventDrawer(state, closeDrawer, onSave, isOpen = false) {
 
     if (options.focusParticipantInput) {
       requestAnimationFrame(() => {
-        const nextInput = nextOverlay.querySelector(".drawer-form__participant-field .drawer-form__input");
+        const nextInput = nextOverlay.querySelector(
+          ".drawer-form__participant-field .drawer-form__input",
+        );
 
         if (!nextInput) {
           return;
@@ -2353,7 +2811,10 @@ function createEventDrawer(state, closeDrawer, onSave, isOpen = false) {
 
     let shouldRender = false;
 
-    if (state.eventDraft.isDatePickerOpen && !dateField.contains(event.target)) {
+    if (
+      state.eventDraft.isDatePickerOpen &&
+      !dateField.contains(event.target)
+    ) {
       state.eventDraft.isDatePickerOpen = false;
       shouldRender = true;
     }
@@ -2384,18 +2845,28 @@ function createEventDrawer(state, closeDrawer, onSave, isOpen = false) {
   return overlay;
 }
 
-function createEventDetailDrawer(activeApp, state, closeDrawer, openAttachmentViewer, isOpen = false) {
+function createEventDetailDrawer(
+  activeApp,
+  state,
+  closeDrawer,
+  openAttachmentViewer,
+  isOpen = false,
+) {
   const event = getCalendarEventById(activeApp, state.activeDrawerEventId);
   const overlay = createElement(
     "div",
-    `event-drawer-overlay${isOpen ? " is-open" : ""}`
+    `event-drawer-overlay${isOpen ? " is-open" : ""}`,
   );
   const backdrop = createElement("button", "event-drawer-overlay__backdrop");
   const drawer = createElement("aside", "event-drawer");
   const header = createElement("div", "event-drawer__header");
   const headerLeft = createElement("div", "event-drawer__header-left");
   const backButton = createElement("button", "event-drawer__back");
-  const title = createElement("h2", "event-drawer__title", event?.title ?? "Event Details");
+  const title = createElement(
+    "h2",
+    "event-drawer__title",
+    event?.title ?? "Event Details",
+  );
   const closeButton = createElement("button", "event-drawer__close");
   const body = createElement("div", "event-drawer__body");
 
@@ -2411,7 +2882,9 @@ function createEventDetailDrawer(activeApp, state, closeDrawer, openAttachmentVi
   closeButton.addEventListener("click", closeDrawer);
 
   if (!event) {
-    body.append(createElement("p", "calendar-surface__empty", "Event not found."));
+    body.append(
+      createElement("p", "calendar-surface__empty", "Event not found."),
+    );
   } else {
     const participantOptions = getUserManagementApp()?.users ?? [];
     const schedule = parseEventSchedule(event.meta);
@@ -2419,25 +2892,37 @@ function createEventDetailDrawer(activeApp, state, closeDrawer, openAttachmentVi
     const titleRow = createElement("div", "drawer-detail__title");
     const titleDot = createElement("span", "drawer-detail__dot");
     const titleCopy = createElement("div", "drawer-detail__title-copy");
-    const titleText = createElement("strong", "drawer-detail__title-text", event.title);
+    const titleText = createElement(
+      "strong",
+      "drawer-detail__title-text",
+      event.title,
+    );
     const metaGrid = createElement("div", "drawer-detail__meta-grid");
     const dateMeta = createElement("div", "drawer-detail__meta-item");
     const dateLabel = createSectionLabel("calendar", "Date");
     const dateValue = createElement(
       "span",
       "drawer-detail__meta-value",
-      new Date(event.year, event.monthIndex, Number(event.day)).toLocaleDateString("en-US", {
+      new Date(
+        event.year,
+        event.monthIndex,
+        Number(event.day),
+      ).toLocaleDateString("en-US", {
         month: "long",
         day: "numeric",
         year: "numeric",
-      })
+      }),
     );
     const tagMeta = createElement("div", "drawer-detail__meta-item");
     const tagLabel = createSectionLabel("description", "Tag");
     const tagList = createElement("div", "drawer-detail__chips");
     const eventTag = getNormalizedEventTag(event);
     const tagStyle = getEventTagStyle(eventTag);
-    const metaTagChip = createElement("span", "drawer-detail__chip drawer-detail__chip--accent", eventTag);
+    const metaTagChip = createElement(
+      "span",
+      "drawer-detail__chip drawer-detail__chip--accent",
+      eventTag,
+    );
 
     titleDot.style.setProperty("--title-color", getEventSurfaceColor(event));
     metaTagChip.style.setProperty("--tag-color", tagStyle.color);
@@ -2462,17 +2947,26 @@ function createEventDetailDrawer(activeApp, state, closeDrawer, openAttachmentVi
     }
 
     const participantNames = (event.participants ?? [])
-      .map((participantId) => participantOptions.find((user) => user.id === participantId))
+      .map((participantId) =>
+        participantOptions.find((user) => user.id === participantId),
+      )
       .filter(Boolean);
     if (participantNames.length > 0) {
-      const participantItem = createElement("li", "drawer-detail__ordered-item");
+      const participantItem = createElement(
+        "li",
+        "drawer-detail__ordered-item",
+      );
       const allParticipantsSelected =
-        participantOptions.length > 0 && participantNames.length === participantOptions.length;
+        participantOptions.length > 0 &&
+        participantNames.length === participantOptions.length;
       const participantSummary = allParticipantsSelected
         ? "All participants"
         : participantNames.length <= 4
           ? participantNames.map((participant) => participant.name).join(", ")
-          : `${participantNames.slice(0, 4).map((participant) => participant.name).join(", ")} +${participantNames.length - 4} more`;
+          : `${participantNames
+              .slice(0, 4)
+              .map((participant) => participant.name)
+              .join(", ")} +${participantNames.length - 4} more`;
 
       participantItem.innerHTML = `<strong>Participants:</strong> ${participantSummary}`;
       detailsList.append(participantItem);
@@ -2490,37 +2984,55 @@ function createEventDetailDrawer(activeApp, state, closeDrawer, openAttachmentVi
     const attachments = getEventAttachments(event);
 
     if (attachments.length > 0) {
-      const attachmentList = createElement("div", "drawer-detail__attachment-list");
+      const attachmentList = createElement(
+        "div",
+        "drawer-detail__attachment-list",
+      );
 
       attachments.forEach((attachment) => {
         const attachmentCard = createElement(
           "article",
           `drawer-detail__attachment drawer-detail__attachment--interactive${
-            attachment.type === "application/pdf" ? " drawer-detail__attachment--document" : ""
-          }`
+            attachment.type === "application/pdf"
+              ? " drawer-detail__attachment--document"
+              : ""
+          }`,
         );
         const attachmentMedia = createElement(
           "div",
           `drawer-detail__attachment-media${
-            attachment.type === "application/pdf" ? " drawer-detail__attachment-media--document" : ""
-          }`
+            attachment.type === "application/pdf"
+              ? " drawer-detail__attachment-media--document"
+              : ""
+          }`,
         );
-        const attachmentOverlayLabel = createElement("span", "drawer-detail__attachment-overlay-label", "Preview");
+        const attachmentOverlayLabel = createElement(
+          "span",
+          "drawer-detail__attachment-overlay-label",
+          "Preview",
+        );
         const preview = createDrawerAttachmentPreview(attachment);
         const previewShell = createElement(
           "div",
           `drawer-detail__attachment-preview-shell${
-            attachment.type === "application/pdf" ? " drawer-detail__attachment-preview-shell--document" : ""
-          }`
+            attachment.type === "application/pdf"
+              ? " drawer-detail__attachment-preview-shell--document"
+              : ""
+          }`,
         );
         const attachmentOverlay = createElement(
           "div",
           `drawer-detail__attachment-overlay${
-            attachment.type === "application/pdf" ? " drawer-detail__attachment-overlay--document" : ""
-          }`
+            attachment.type === "application/pdf"
+              ? " drawer-detail__attachment-overlay--document"
+              : ""
+          }`,
         );
 
-        attachmentCard.setAttribute("aria-label", `Preview ${attachment.name || "attachment"}`);
+        attachmentCard.setAttribute(
+          "aria-label",
+          `Preview ${attachment.name || "attachment"}`,
+        );
         attachmentCard.tabIndex = 0;
         attachmentCard.role = "button";
         attachmentCard.addEventListener("click", () => {
@@ -2537,7 +3049,9 @@ function createEventDetailDrawer(activeApp, state, closeDrawer, openAttachmentVi
         if (preview) {
           previewShell.append(preview);
         } else {
-          previewShell.append(createElement("div", "drawer-detail__attachment-paper-fallback"));
+          previewShell.append(
+            createElement("div", "drawer-detail__attachment-paper-fallback"),
+          );
         }
 
         previewShell.append(attachmentOverlay);
@@ -2562,16 +3076,24 @@ function createEventDetailDrawer(activeApp, state, closeDrawer, openAttachmentVi
   return overlay;
 }
 
-  function createUserManagementView(activeApp) {
+function createUserManagementView(activeApp) {
   const wrapper = createElement("section", "user-management-view");
   const header = createElement("div", "user-management-view__header");
   const titleBlock = createElement("div", "user-management-view__titles");
-  const eyebrow = createElement("p", "user-management-view__eyebrow", "Team Directory");
-  const title = createElement("h2", "user-management-view__title", "User Accounts");
+  const eyebrow = createElement(
+    "p",
+    "user-management-view__eyebrow",
+    "Team Directory",
+  );
+  const title = createElement(
+    "h2",
+    "user-management-view__title",
+    "User Accounts",
+  );
   const meta = createElement(
     "p",
     "user-management-view__meta",
-    `${activeApp.users.length} accounts available for role and access setup.`
+    `${activeApp.users.length} accounts available for role and access setup.`,
   );
   const list = createElement("div", "user-management-view__list");
 
@@ -2581,7 +3103,11 @@ function createEventDetailDrawer(activeApp, state, closeDrawer, openAttachmentVi
   activeApp.users.forEach((user) => {
     const card = createElement("article", "user-card");
     const identity = createElement("div", "user-card__identity");
-    const avatar = createElement("div", "user-card__avatar", user.name.slice(0, 1));
+    const avatar = createElement(
+      "div",
+      "user-card__avatar",
+      user.name.slice(0, 1),
+    );
     const copy = createElement("div", "user-card__copy");
     const name = createElement("h3", "user-card__name", user.name);
     const email = createElement("p", "user-card__email", user.email);
@@ -2589,7 +3115,7 @@ function createEventDetailDrawer(activeApp, state, closeDrawer, openAttachmentVi
     const status = createElement(
       "span",
       `user-card__status user-card__status--${user.status.toLowerCase()}`,
-      user.status
+      user.status,
     );
 
     copy.append(name, email);
@@ -2626,8 +3152,12 @@ export function createAppShell() {
   const panelHeading = createElement("h1", "panel__title");
   const panelBody = createElement("div", "panel__body");
 
-  const contentPlaceholder = createElement("div", "content-stage__empty");
-  const contentLabel = createElement("p", "content-stage__label", "Selected module");
+  const contentPlaceholder = createElement("div", "content-stage__content");
+  const contentLabel = createElement(
+    "p",
+    "content-stage__label",
+    "Selected module",
+  );
   const contentHeading = createElement("h2", "content-stage__title");
   const contentMeta = createElement("p", "content-stage__meta");
 
@@ -2649,7 +3179,917 @@ export function createAppShell() {
   }
 
   function createAssetsWorkspace(activeApp) {
-    return null;
+    const wrapper = createElement("section", "assets-workspace");
+    const meta = ASSET_PAGE_META.Assets;
+
+    const header = createElement("div", "assets-workspace__header");
+    const titleBlock = createElement("div", "assets-workspace__title-block");
+    const eyebrow = createElement(
+      "p",
+      "assets-workspace__eyebrow",
+      meta.eyebrow,
+    );
+    const title = createElement("h2", "assets-workspace__title", meta.title);
+    const actions = createElement("div", "assets-workspace__actions");
+    const importBtn = createElement("button", "assets-workspace__btn");
+    const exportBtn = createElement("button", "assets-workspace__btn");
+
+    importBtn.type = "button";
+    importBtn.setAttribute("aria-label", "Import assets");
+    importBtn.append(
+      createIcon("import"),
+      createElement("span", null, "Import"),
+    );
+
+    exportBtn.type = "button";
+    exportBtn.setAttribute("aria-label", "Export assets");
+    exportBtn.append(
+      createIcon("export"),
+      createElement("span", null, "Export"),
+    );
+
+    exportBtn.addEventListener("click", () => {
+      const filteredRecords = getFilteredAssetRecords(
+        activeApp,
+        state.assets.searches.inventory,
+        state.assets.filters.inventory,
+      );
+      exportAssetsToCSV(filteredRecords);
+    });
+
+    const fileInput = document.createElement("input");
+    fileInput.type = "file";
+    fileInput.accept = ".csv";
+    fileInput.style.display = "none";
+    fileInput.addEventListener("change", (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        importAssetsFromCSV(file, activeApp);
+      }
+      fileInput.value = "";
+    });
+    importBtn.addEventListener("click", () => fileInput.click());
+
+    titleBlock.append(eyebrow, title);
+    actions.append(importBtn, exportBtn, fileInput);
+    header.append(titleBlock, actions);
+
+    const toolbar = createElement("div", "assets-workspace__toolbar");
+    const searchWrap = createElement("div", "assets-workspace__search");
+    const searchInput = createElement(
+      "input",
+      "assets-workspace__search-input",
+    );
+    const searchIcon = createElement("span", "assets-workspace__search-icon");
+    const filterWrap = createElement("div", "assets-workspace__filter");
+    const filterBtn = createElement("button", "assets-workspace__filter-btn");
+    const filterIcon = createElement("span", "assets-workspace__filter-icon");
+    const filterDropdown = createElement(
+      "div",
+      "assets-workspace__filter-dropdown",
+    );
+
+    searchInput.type = "text";
+    searchInput.placeholder = "Search assets...";
+    searchInput.setAttribute(
+      "aria-label",
+      "Search assets by name, code, or category",
+    );
+    searchInput.value = state.assets.searches.inventory;
+    searchInput.addEventListener("input", (e) => {
+      state.assets.searches.inventory = e.target.value;
+      render();
+    });
+
+    searchIcon.append(createIcon("search"));
+
+    filterDropdown.setAttribute("role", "listbox");
+    filterDropdown.setAttribute("aria-label", "Filter options");
+
+    filterBtn.type = "button";
+    filterBtn.setAttribute("aria-label", "Filter assets");
+    filterBtn.setAttribute("aria-haspopup", "listbox");
+    filterBtn.setAttribute("aria-expanded", "false");
+    filterIcon.append(createIcon("filter"));
+    filterBtn.append(
+      filterIcon,
+      createElement(
+        "span",
+        null,
+        getFilterLabel(state.assets.filters.inventory),
+      ),
+    );
+
+    let isFilterOpen = false;
+
+    filterBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      isFilterOpen = !isFilterOpen;
+      filterDropdown.classList.toggle("is-open", isFilterOpen);
+      filterBtn.setAttribute("aria-expanded", String(isFilterOpen));
+    });
+
+    document.addEventListener("click", () => {
+      isFilterOpen = false;
+      filterDropdown.classList.remove("is-open");
+      filterBtn.setAttribute("aria-expanded", "false");
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && isFilterOpen) {
+        isFilterOpen = false;
+        filterDropdown.classList.remove("is-open");
+        filterBtn.setAttribute("aria-expanded", "false");
+        filterBtn.focus();
+      }
+    });
+
+    filterDropdown.addEventListener("click", (e) => e.stopPropagation());
+
+    ASSET_INVENTORY_FILTERS.forEach(([value, label]) => {
+      const isActive = state.assets.filters.inventory === value;
+      const option = createElement(
+        "button",
+        `assets-workspace__filter-option${isActive ? " is-active" : ""}`,
+        label,
+      );
+      option.type = "button";
+      option.setAttribute("role", "option");
+      option.setAttribute("aria-selected", String(isActive));
+      option.addEventListener("click", () => {
+        state.assets.filters.inventory = value;
+        filterBtn.querySelector("span").textContent = label;
+        isFilterOpen = false;
+        filterDropdown.classList.remove("is-open");
+        filterBtn.setAttribute("aria-expanded", "false");
+        filterBtn.focus();
+        render();
+      });
+      filterDropdown.append(option);
+    });
+
+    searchWrap.append(searchInput, searchIcon);
+    filterWrap.append(filterBtn, filterDropdown);
+
+    const filteredRecords = getFilteredAssetRecords(
+      activeApp,
+      state.assets.searches.inventory,
+      state.assets.filters.inventory,
+    );
+    const totalCount = activeApp.records?.length || 0;
+    const countLabel = createElement("span", "assets-workspace__count", `Showing ${filteredRecords.length} of ${totalCount} assets`);
+
+    toolbar.append(searchWrap, filterWrap, countLabel);
+
+    const tableWrapper = createElement(
+      "div",
+      "assets-workspace__table-wrapper",
+    );
+    const table = createElement("table", "assets-workspace__table");
+    const thead = createElement("thead");
+    const tbody = createElement("tbody");
+
+    tbody.addEventListener("scroll", () => {
+      if (tbody.scrollTop > 0) {
+        table.classList.add("assets-workspace__table-body--scrolled");
+      } else {
+        table.classList.remove("assets-workspace__table-body--scrolled");
+      }
+    });
+    const headerRow = createElement("tr");
+
+    const columns = [
+      { label: "ASSET NAME", width: "38%" },
+      { label: "ASSET NUMBER", width: "14%" },
+      { label: "CATEGORY", width: "14%" },
+      { label: "SITE", width: "10%" },
+      { label: "STATUS", width: "15%" },
+      { label: "ACTION", width: "9%" },
+    ];
+
+    columns.forEach((col) => {
+      const th = createElement("th", null, col.label);
+      th.style.width = col.width;
+      headerRow.append(th);
+    });
+
+    thead.append(headerRow);
+
+    if (filteredRecords.length === 0) {
+      const emptyRow = createElement("tr", "assets-workspace__empty-row");
+      const emptyCell = createElement("td", null, "No assets found");
+      emptyCell.colSpan = 6;
+      emptyRow.append(emptyCell);
+      tbody.append(emptyRow);
+    } else {
+      filteredRecords.forEach((record) => {
+        const row = createElement("tr");
+        row.dataset.assetId = record.id;
+
+        const nameCell = createElement("td", null, record.name);
+
+        const codeCell = createElement("td", null, record.code);
+
+        const categoryCell = createElement("td", null, record.category);
+
+        const siteCell = createElement("td", null, record.location);
+
+        const statusCell = createElement("td");
+        const statusBadge = createElement(
+          "span",
+          `assets-workspace__status assets-workspace__status--${record.statusTone}`,
+          record.status,
+        );
+        statusCell.append(statusBadge);
+
+        const actionCell = createElement("td");
+        const kebabBtn = createElement("button", "assets-workspace__kebab-btn");
+        kebabBtn.type = "button";
+        kebabBtn.setAttribute("aria-label", "Asset actions");
+        kebabBtn.append(createIcon("more-vertical"));
+
+        const kebabDropdown = createElement(
+          "div",
+          "assets-workspace__kebab-dropdown",
+        );
+        kebabDropdown.setAttribute("role", "menu");
+
+        const menuItems = [
+          {
+            label: "View",
+            icon: "eye",
+            action: () => openAssetDetailDrawer(record, activeApp),
+          },
+          {
+            label: "Edit",
+            icon: "edit",
+            action: () => openAssetEditDrawer(record, activeApp),
+          },
+          {
+            label: "Mutation",
+            icon: "arrow-left-right",
+            action: () => console.log("Mutation", record.id),
+          },
+          {
+            label: "Check Out",
+            icon: "log-out",
+            action: () => console.log("Check Out", record.id),
+          },
+          {
+            label: "Remove",
+            icon: "trash",
+            action: () => confirmDeleteAsset(record, activeApp),
+            danger: true,
+          },
+        ];
+
+        let isKebabOpen = false;
+
+        kebabBtn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          isKebabOpen = !isKebabOpen;
+          kebabDropdown.classList.toggle("is-open", isKebabOpen);
+        });
+
+        document.addEventListener("click", () => {
+          isKebabOpen = false;
+          kebabDropdown.classList.remove("is-open");
+        });
+
+        menuItems.forEach((item) => {
+          const menuBtn = createElement(
+            "button",
+            `assets-workspace__kebab-option${item.danger ? " assets-workspace__kebab-option--danger" : ""}`,
+          );
+          menuBtn.type = "button";
+          menuBtn.setAttribute("role", "menuitem");
+          menuBtn.append(
+            createIcon(item.icon),
+            createElement("span", null, item.label),
+          );
+          menuBtn.addEventListener("click", () => {
+            item.action();
+            isKebabOpen = false;
+            kebabDropdown.classList.remove("is-open");
+          });
+          kebabDropdown.append(menuBtn);
+        });
+
+        actionCell.append(kebabBtn, kebabDropdown);
+
+        row.append(
+          nameCell,
+          codeCell,
+          categoryCell,
+          siteCell,
+          statusCell,
+          actionCell,
+        );
+        tbody.append(row);
+      });
+    }
+
+    table.append(thead, tbody);
+    tableWrapper.append(table);
+
+    const headerToolbar = createElement(
+      "div",
+      "assets-workspace__header-toolbar",
+    );
+    headerToolbar.append(header, toolbar);
+    wrapper.append(headerToolbar, tableWrapper);
+
+    return wrapper;
+  }
+
+  function getFilterLabel(value) {
+    const found = ASSET_INVENTORY_FILTERS.find(([v]) => v === value);
+    return found ? found[1] : "All";
+  }
+
+  function getFilteredAssetRecords(activeApp, search, filter) {
+    let records = activeApp.records || [];
+
+    if (search) {
+      const searchLower = search.toLowerCase();
+      records = records.filter(
+        (r) =>
+          r.name.toLowerCase().includes(searchLower) ||
+          r.code.toLowerCase().includes(searchLower) ||
+          r.category.toLowerCase().includes(searchLower),
+      );
+    }
+
+    if (filter && filter !== "all") {
+      records = records.filter((r) => r.statusTone === filter);
+    }
+
+    return records;
+  }
+
+  function exportAssetsToCSV(records) {
+    const headers = [
+      "Asset Name",
+      "Asset Number",
+      "Category",
+      "Site",
+      "Status",
+      "Assigned To",
+      "Department",
+      "Condition",
+      "Serial Number",
+    ];
+    const rows = records.map((r) => [
+      `"${r.name}"`,
+      `"${r.code}"`,
+      `"${r.category}"`,
+      `"${r.location}"`,
+      `"${r.status}"`,
+      `"${r.assignedTo}"`,
+      `"${r.department}"`,
+      `"${r.condition}"`,
+      `"${r.serialNumber}"`,
+    ]);
+
+    const csvContent = [
+      headers.join(","),
+      ...rows.map((row) => row.join(",")),
+    ].join("\n");
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = `assets_export_${new Date().toISOString().split("T")[0]}.csv`;
+    link.click();
+    URL.revokeObjectURL(link.href);
+  }
+
+  function importAssetsFromCSV(file, activeApp) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const text = e.target.result;
+      const lines = text.split("\n").filter((line) => line.trim());
+      if (lines.length < 2) return;
+
+      const headers = lines[0]
+        .split(",")
+        .map((h) => h.trim().replace(/"/g, ""));
+      for (let i = 1; i < lines.length; i++) {
+        const values = lines[i].match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g) || [];
+        const cleanValues = values.map((v) => v.replace(/"/g, "").trim());
+
+        if (cleanValues.length >= 4) {
+          const newId = `asset-${Date.now()}-${i}`;
+          const newRecord = {
+            id: newId,
+            code:
+              cleanValues[1] ||
+              `AST-${String(activeApp.records.length + 1).padStart(3, "0")}`,
+            name: cleanValues[0] || "New Asset",
+            category: cleanValues[2] || "Uncategorized",
+            location: cleanValues[3] || "Unassigned",
+            status: cleanValues[4] || "Available",
+            statusTone: getAssetStatusTone(cleanValues[4] || "Available"),
+            assignedTo: cleanValues[5] || "-",
+            department: cleanValues[6] || "-",
+            condition: cleanValues[7] || "Ready to deploy",
+            serialNumber: cleanValues[8] || "-",
+            purchaseDate: formatAssetDateLabel(new Date()),
+            valueLabel: "Rp 0",
+            notes: "",
+            dueLabel: "-",
+          };
+          activeApp.records.push(newRecord);
+        }
+      }
+      render();
+    };
+    reader.readAsText(file);
+  }
+
+  // ===== USER MANAGEMENT FUNCTIONS =====
+
+  function getUserStatusTone(status) {
+    const tones = {
+      Active: "active",
+      Pending: "pending",
+      Suspended: "suspended",
+    };
+
+    return tones[status] ?? "active";
+  }
+
+  function getFilteredUserRecords(activeApp, search, filter) {
+    let records = activeApp.users || [];
+
+    // Apply search filter
+    if (search && search.trim()) {
+      const searchLower = search.toLowerCase();
+      records = records.filter((record) =>
+        record.name?.toLowerCase().includes(searchLower) ||
+        record.email?.toLowerCase().includes(searchLower) ||
+        record.department?.toLowerCase().includes(searchLower) ||
+        record.position?.toLowerCase().includes(searchLower)
+      );
+    }
+
+    // Apply status filter
+    if (filter && filter !== "all") {
+      const filterMap = {
+        active: "Active",
+        pending: "Pending",
+        suspended: "Suspended",
+      };
+      const targetStatus = filterMap[filter];
+      if (targetStatus) {
+        records = records.filter((record) => record.status === targetStatus);
+      }
+    }
+
+    return records;
+  }
+
+  function exportUsersToCSV(records) {
+    if (records.length === 0) {
+      alert("No users to export");
+      return;
+    }
+
+    const headers = ["Name", "Email", "Phone", "Department", "Position", "Join Date", "Role", "Status"];
+    const csvRows = [headers.join(",")];
+
+    records.forEach((record) => {
+      const row = [
+        `"${record.name}"`,
+        `"${record.email}"`,
+        `"${record.phone || ""}"`,
+        `"${record.department}"`,
+        `"${record.position}"`,
+        `"${record.joinDate}"`,
+        `"${record.role}"`,
+        `"${record.status}"`,
+      ];
+      csvRows.push(row.join(","));
+    });
+
+    const csvContent = csvRows.join("\n");
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const link = document.createElement("a");
+    const url = URL.createObjectURL(blob);
+
+    link.setAttribute("href", url);
+    link.setAttribute("download", `users-${new Date().toISOString().split("T")[0]}.csv`);
+    link.style.visibility = "hidden";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
+  function importUsersFromCSV(file, activeApp) {
+    const reader = new FileReader();
+
+    reader.onload = (e) => {
+      const text = e.target.result;
+      const lines = text.split("\n").filter((line) => line.trim());
+
+      if (lines.length < 2) {
+        alert("CSV file is empty or invalid");
+        return;
+      }
+
+      // Skip header row
+      const dataLines = lines.slice(1);
+      let imported = 0;
+
+      dataLines.forEach((line, index) => {
+        const values = parseCSVRow(line);
+
+        if (values.length >= 5) {
+          const newId = `usr-${Date.now()}-${index}`;
+          const status = values[7]?.replace(/"/g, "") || "Active";
+          const newUser = {
+            id: newId,
+            name: values[0]?.replace(/"/g, "") || "New User",
+            email: values[1]?.replace(/"/g, "") || "",
+            phone: values[2]?.replace(/"/g, "") || "081234567890",
+            department: values[3]?.replace(/"/g, "") || "Unassigned",
+            position: values[4]?.replace(/"/g, "") || "Staff",
+            joinDate: values[5]?.replace(/"/g, "") || new Date().toISOString().split("T")[0],
+            role: values[6]?.replace(/"/g, "") || "custom",
+            permissions: values[6]?.replace(/"/g, "") === "admin"
+              ? ["dashboard", "calendar", "employee-journey", "assets", "settings"]
+              : ["dashboard"],
+            sendInvitation: true,
+            status: status,
+            statusTone: getUserStatusTone(status),
+          };
+          activeApp.users.push(newUser);
+          imported++;
+        }
+      });
+
+      alert(`Successfully imported ${imported} user${imported === 1 ? "" : "s"}`);
+      render();
+    };
+
+    reader.readAsText(file);
+  }
+
+  function parseCSVRow(row) {
+    const result = [];
+    let current = "";
+    let inQuotes = false;
+
+    for (let i = 0; i < row.length; i++) {
+      const char = row[i];
+      if (char === '"') {
+        inQuotes = !inQuotes;
+      } else if (char === "," && !inQuotes) {
+        result.push(current);
+        current = "";
+      } else {
+        current += char;
+      }
+    }
+    result.push(current);
+    return result;
+  }
+
+  function createUsersWorkspace(activeApp) {
+    const wrapper = createElement("section", "users-workspace");
+    const meta = USER_PAGE_META["All Users"];
+
+    // ===== HEADER TOOLBAR (sticky) =====
+    const headerToolbar = createElement("div", "users-workspace__header-toolbar");
+
+    // ===== HEADER =====
+    const header = createElement("div", "users-workspace__header");
+    const titleBlock = createElement("div", "users-workspace__title-block");
+    const eyebrow = createElement("p", "users-workspace__eyebrow", meta.eyebrow);
+    const title = createElement("h2", "users-workspace__title", meta.title);
+    const actions = createElement("div", "users-workspace__actions");
+    const importBtn = createElement("button", "users-workspace__btn");
+    const exportBtn = createElement("button", "users-workspace__btn");
+
+    importBtn.type = "button";
+    importBtn.setAttribute("aria-label", "Import users");
+    importBtn.append(createIcon("import"), createElement("span", null, "Import"));
+
+    exportBtn.type = "button";
+    exportBtn.setAttribute("aria-label", "Export users");
+    exportBtn.append(createIcon("export"), createElement("span", null, "Export"));
+
+    exportBtn.addEventListener("click", () => {
+      const filteredRecords = getFilteredUserRecords(
+        activeApp,
+        state.users.search,
+        state.users.filter,
+      );
+      exportUsersToCSV(filteredRecords);
+    });
+
+    const fileInput = document.createElement("input");
+    fileInput.type = "file";
+    fileInput.accept = ".csv";
+    fileInput.style.display = "none";
+    fileInput.addEventListener("change", (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        importUsersFromCSV(file, activeApp);
+      }
+      fileInput.value = "";
+    });
+    importBtn.addEventListener("click", () => fileInput.click());
+
+    titleBlock.append(eyebrow, title);
+    actions.append(importBtn, exportBtn, fileInput);
+    header.append(titleBlock, actions);
+
+    // ===== TOOLBAR =====
+    const toolbar = createElement("div", "users-workspace__toolbar");
+    const searchWrap = createElement("div", "users-workspace__search");
+    const searchInput = createElement("input", "users-workspace__search-input");
+    const searchIcon = createElement("span", "users-workspace__search-icon");
+    const filterWrap = createElement("div", "users-workspace__filter");
+    const filterBtn = createElement("button", "users-workspace__filter-btn");
+    const filterIcon = createElement("span", "users-workspace__filter-icon");
+    const filterDropdown = createElement("div", "users-workspace__filter-dropdown");
+
+    searchInput.type = "text";
+    searchInput.placeholder = "Search users...";
+    searchInput.setAttribute("aria-label", "Search users by name, email, department, or position");
+    searchInput.value = state.users.search;
+    searchInput.addEventListener("input", (e) => {
+      state.users.search = e.target.value;
+      render();
+    });
+
+    searchIcon.append(createIcon("search"));
+
+    filterDropdown.setAttribute("role", "listbox");
+    filterDropdown.setAttribute("aria-label", "Filter options");
+
+    filterBtn.type = "button";
+    filterBtn.setAttribute("aria-label", "Filter users");
+    filterBtn.setAttribute("aria-haspopup", "listbox");
+    filterBtn.setAttribute("aria-expanded", "false");
+    filterIcon.append(createIcon("filter"));
+    filterBtn.append(
+      filterIcon,
+      createElement("span", null, getFilterLabel(state.users.filter)),
+    );
+
+    let isFilterOpen = false;
+
+    filterBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      isFilterOpen = !isFilterOpen;
+      filterDropdown.classList.toggle("is-open", isFilterOpen);
+      filterBtn.setAttribute("aria-expanded", String(isFilterOpen));
+    });
+
+    document.addEventListener("click", () => {
+      isFilterOpen = false;
+      filterDropdown.classList.remove("is-open");
+      filterBtn.setAttribute("aria-expanded", "false");
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && isFilterOpen) {
+        isFilterOpen = false;
+        filterDropdown.classList.remove("is-open");
+        filterBtn.setAttribute("aria-expanded", "false");
+        filterBtn.focus();
+      }
+    });
+
+    filterDropdown.addEventListener("click", (e) => e.stopPropagation());
+
+    USERS_FILTERS.forEach(([value, label]) => {
+      const isActive = state.users.filter === value;
+      const option = createElement(
+        "button",
+        `users-workspace__filter-option${isActive ? " is-active" : ""}`,
+        label,
+      );
+      option.type = "button";
+      option.setAttribute("role", "option");
+      option.setAttribute("aria-selected", String(isActive));
+      option.addEventListener("click", () => {
+        state.users.filter = value;
+        filterBtn.querySelector("span").textContent = label;
+        isFilterOpen = false;
+        filterDropdown.classList.remove("is-open");
+        filterBtn.setAttribute("aria-expanded", "false");
+        filterBtn.focus();
+        render();
+      });
+      filterDropdown.append(option);
+    });
+
+    searchWrap.append(searchInput, searchIcon);
+    filterWrap.append(filterBtn, filterDropdown);
+
+    const filteredRecords = getFilteredUserRecords(
+      activeApp,
+      state.users.search,
+      state.users.filter,
+    );
+    const totalCount = activeApp.users?.length || 0;
+    const countLabel = createElement("span", "users-workspace__count", `Showing ${filteredRecords.length} of ${totalCount} users`);
+
+    toolbar.append(searchWrap, filterWrap, countLabel);
+
+    headerToolbar.append(header, toolbar);
+
+    // ===== TABLE =====
+    const tableWrapper = createElement("div", "users-workspace__table-wrapper");
+    const table = createElement("table", "users-workspace__table");
+    const thead = createElement("thead");
+    const tbody = createElement("tbody");
+
+    tbody.addEventListener("scroll", () => {
+      if (tbody.scrollTop > 0) {
+        table.classList.add("users-workspace__table-body--scrolled");
+      } else {
+        table.classList.remove("users-workspace__table-body--scrolled");
+      }
+    });
+
+    const headerRow = createElement("tr");
+
+    const columns = [
+      { label: "NAME", width: "20%" },
+      { label: "EMAIL", width: "24%" },
+      { label: "DEPARTMENT", width: "16%" },
+      { label: "POSITION", width: "16%" },
+      { label: "JOIN DATE", width: "18%" },
+      { label: "ACTION", width: "6%" },
+    ];
+
+    columns.forEach((col, index) => {
+      const th = createElement("th", `col-${index}`, col.label);
+      headerRow.append(th);
+    });
+
+    thead.append(headerRow);
+
+    if (filteredRecords.length === 0) {
+      const emptyRow = createElement("tr", "users-workspace__empty-row");
+      const emptyCell = createElement("td", null, "No users found");
+      emptyCell.colSpan = 6;
+      emptyRow.append(emptyCell);
+      tbody.append(emptyRow);
+    } else {
+      filteredRecords.forEach((record) => {
+        const row = createElement("tr");
+        row.dataset.userId = record.id;
+
+        // Name cell
+        const nameCell = createElement("td", "col-0", record.name);
+
+        // Email cell
+        const emailCell = createElement("td", "col-1", record.email);
+
+        // Department cell
+        const departmentCell = createElement("td", "col-2", record.department);
+
+        // Position cell
+        const positionCell = createElement("td", "col-3", record.position);
+
+        // Join Date cell - format date as DD/MM/YYYY
+        const formatDate = (dateStr) => {
+          const date = new Date(dateStr);
+          const day = String(date.getDate()).padStart(2, '0');
+          const month = String(date.getMonth() + 1).padStart(2, '0');
+          const year = date.getFullYear();
+          return `${day}/${month}/${year}`;
+        };
+        const joinDateCell = createElement("td", "col-4", formatDate(record.joinDate));
+
+        // Action cell with kebab
+        const actionCell = createElement("td", "col-5");
+        actionCell.classList.add("users-workspace__action-cell");
+        const kebabBtn = createElement("button", "users-workspace__kebab-btn");
+        kebabBtn.type = "button";
+        kebabBtn.setAttribute("aria-label", "User actions");
+        kebabBtn.style.cssText = "display:flex;align-items:center;justify-content:center;width:28px;height:28px;background:transparent;border:none;cursor:pointer;";
+        kebabBtn.innerHTML = '<span style="font-size:16px;color:#666;">⋮</span>';
+
+        const kebabDropdown = createElement("div", "users-workspace__kebab-dropdown");
+        kebabDropdown.style.cssText = "display:none;position:absolute;right:16px;top:50%;transform:translateY(-50%);background:white;border:1px solid #ccc;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,0.15);min-width:120px;z-index:1000;";
+        kebabDropdown.setAttribute("role", "menu");
+
+        const menuItems = [
+          {
+            label: "View",
+            icon: "eye",
+            action: () => openUserDetailDrawer(record),
+          },
+          {
+            label: "Edit",
+            icon: "edit",
+            action: () => openUserEditDrawer(record),
+          },
+          {
+            label: "Delete",
+            icon: "trash",
+            action: () => confirmDeleteUser(record, activeApp),
+            danger: true,
+          },
+        ];
+
+        let isKebabOpen = false;
+
+        kebabBtn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          isKebabOpen = !isKebabOpen;
+          kebabDropdown.style.display = isKebabOpen ? "block" : "none";
+        });
+
+        document.addEventListener("click", () => {
+          isKebabOpen = false;
+          kebabDropdown.style.display = "none";
+        });
+
+        menuItems.forEach((item) => {
+          const menuBtn = createElement(
+            "button",
+            `users-workspace__kebab-option${item.danger ? " users-workspace__kebab-option--danger" : ""}`,
+          );
+          menuBtn.type = "button";
+          menuBtn.setAttribute("role", "menuitem");
+          menuBtn.style.cssText = "display:flex;align-items:center;gap:8px;width:100%;padding:10px 14px;border:none;background:none;text-align:left;cursor:pointer;";
+          menuBtn.append(
+            createIcon(item.icon),
+            createElement("span", null, item.label),
+          );
+          menuBtn.addEventListener("click", () => {
+            item.action();
+            isKebabOpen = false;
+            kebabDropdown.style.display = "none";
+          });
+          kebabDropdown.append(menuBtn);
+        });
+
+        actionCell.append(kebabBtn, kebabDropdown);
+
+        row.append(nameCell, emailCell, departmentCell, positionCell, joinDateCell, actionCell);
+        tbody.append(row);
+      });
+    }
+
+    table.append(thead, tbody);
+    tableWrapper.append(table);
+
+    // ===== ASSEMBLE =====
+    wrapper.append(headerToolbar, tableWrapper);
+
+    return wrapper;
+  }
+
+  function openUserDetailDrawer(record) {
+    // TODO: Implement user detail drawer
+    alert(`View user: ${record.name}`);
+  }
+
+  function openUserEditDrawer(record) {
+    // TODO: Implement user edit drawer
+    alert(`Edit user: ${record.name}`);
+  }
+
+  function confirmDeleteUser(record, activeApp) {
+    const confirmed = window.confirm(
+      `Are you sure you want to delete "${record.name}"?`,
+    );
+    if (confirmed) {
+      activeApp.users = activeApp.users.filter((u) => u.id !== record.id);
+      render();
+    }
+  }
+
+  function openAssetDetailDrawer(record, activeApp) {
+    state.selectedRecordId = record.id;
+    state.activeItem = "Assets";
+    state.lastAction = "asset-detail";
+    render();
+  }
+
+  function openAssetEditDrawer(record, activeApp) {
+    state.editingAssetId = record.id;
+    state.draft = { ...record };
+    state.activeItem = "Assets";
+    state.lastAction = "asset-edit";
+    render();
+  }
+
+  function confirmDeleteAsset(record, activeApp) {
+    const confirmed = window.confirm(
+      `Are you sure you want to delete "${record.name}"?`,
+    );
+    if (confirmed) {
+      activeApp.records = activeApp.records.filter((r) => r.id !== record.id);
+      render();
+    }
   }
 
   function animateCloseEventDrawer(onClosed) {
@@ -2691,6 +4131,12 @@ export function createAppShell() {
     });
   }
 
+  function closeUserDrawer() {
+    state.isUserDrawerOpen = false;
+    state.userDraft = getInitialUserDraft();
+    render();
+  }
+
   function openAttachmentViewer(attachment) {
     state.attachmentViewer.isOpen = true;
     state.attachmentViewer.attachment = { ...attachment };
@@ -2720,21 +4166,33 @@ export function createAppShell() {
   }
 
   function createCalendarEventsPopup(activeApp, isOpen = false) {
-    const monthEvents = getEventsForDisplayedMonth(activeApp, state).filter(isUpcomingEvent);
+    const monthEvents = getEventsForDisplayedMonth(activeApp, state).filter(
+      isUpcomingEvent,
+    );
     const overlay = createElement(
       "div",
-      `calendar-events-modal-overlay${isOpen ? " is-open" : ""}`
+      `calendar-events-modal-overlay${isOpen ? " is-open" : ""}`,
     );
-    const backdrop = createElement("button", "calendar-events-modal-overlay__backdrop");
+    const backdrop = createElement(
+      "button",
+      "calendar-events-modal-overlay__backdrop",
+    );
     const dialog = createElement("section", "calendar-events-modal");
     const header = createElement("div", "calendar-events-modal__header");
-    const eyebrow = createElement("span", "calendar-events-modal__eyebrow", "Upcoming Events");
+    const eyebrow = createElement(
+      "span",
+      "calendar-events-modal__eyebrow",
+      "Upcoming Events",
+    );
     const title = createElement(
       "h3",
       "calendar-events-modal__title",
-      `${MONTH_NAMES[state.calendar.displayMonth]} ${state.calendar.displayYear}`
+      `${MONTH_NAMES[state.calendar.displayMonth]} ${state.calendar.displayYear}`,
     );
-    const headerCopy = createElement("div", "calendar-events-modal__header-copy");
+    const headerCopy = createElement(
+      "div",
+      "calendar-events-modal__header-copy",
+    );
     const closeButton = createElement("button", "calendar-events-modal__close");
     const list = createElement("div", "calendar-events-modal__list");
 
@@ -2774,24 +4232,44 @@ export function createAppShell() {
         createElement(
           "p",
           "calendar-events-modal__empty",
-          "No upcoming events in this month."
-        )
+          "No upcoming events in this month.",
+        ),
       );
     } else {
       monthEvents.forEach((event) => {
         const card = createElement(
           "article",
-          `calendar-events-modal__card${event.id === state.calendar.selectedEventId ? " is-active" : ""}`
+          `calendar-events-modal__card${event.id === state.calendar.selectedEventId ? " is-active" : ""}`,
         );
         const accent = createElement("span", "calendar-events-modal__accent");
         const dayBlock = createElement("div", "calendar-events-modal__date");
-        const day = createElement("strong", "calendar-events-modal__day", String(event.day).padStart(2, "0"));
-        const month = createElement("span", "calendar-events-modal__month", event.monthLabel);
+        const day = createElement(
+          "strong",
+          "calendar-events-modal__day",
+          String(event.day).padStart(2, "0"),
+        );
+        const month = createElement(
+          "span",
+          "calendar-events-modal__month",
+          event.monthLabel,
+        );
         const body = createElement("div", "calendar-events-modal__card-body");
-        const titleText = createElement("strong", "calendar-events-modal__card-title", event.title);
-        const meta = createElement("span", "calendar-events-modal__card-meta", event.meta);
+        const titleText = createElement(
+          "strong",
+          "calendar-events-modal__card-title",
+          event.title,
+        );
+        const meta = createElement(
+          "span",
+          "calendar-events-modal__card-meta",
+          event.meta,
+        );
         const tag = getNormalizedEventTag(event);
-        const tagChip = createElement("span", "calendar-events-modal__chip", tag);
+        const tagChip = createElement(
+          "span",
+          "calendar-events-modal__chip",
+          tag,
+        );
         const tagStyle = getEventTagStyle(tag);
 
         card.tabIndex = 0;
@@ -2846,6 +4324,386 @@ export function createAppShell() {
     render();
   }
 
+  function createUserDrawer(state, closeDrawer, onSave, isOpen = false) {
+    const overlay = createElement(
+      "div",
+      `user-drawer-overlay${isOpen ? " is-open" : ""}`,
+    );
+    const backdrop = createElement("button", "user-drawer-overlay__backdrop");
+    const drawer = createElement("aside", "user-drawer");
+    const header = createElement("div", "user-drawer__header");
+    const headerLeft = createElement("div", "user-drawer__header-left");
+    const backButton = createElement("button", "user-drawer__back");
+    const title = createElement("h2", "user-drawer__title", "New User");
+    const closeButton = createElement("button", "user-drawer__close");
+    const body = createElement("div", "user-drawer__body");
+
+    overlay.setAttribute("aria-hidden", String(!state.isUserDrawerOpen));
+    drawer.setAttribute("aria-label", "New user drawer");
+    backdrop.type = "button";
+    backButton.type = "button";
+    closeButton.type = "button";
+    backButton.append(createIcon("chevron-left"));
+    closeButton.append(createIcon("close"));
+    backdrop.addEventListener("click", closeDrawer);
+    backButton.addEventListener("click", closeDrawer);
+    closeButton.addEventListener("click", closeDrawer);
+
+    // ===== BASIC INFORMATION SECTION =====
+    const basicInfoSection = createElement("div", "drawer-form__section");
+    basicInfoSection.append(createSectionLabel("user", "Basic Information"));
+
+    // Name field (required)
+    const nameGroup = createElement("div", "drawer-form__group");
+    const nameLabel = createElement("label", "drawer-form__label");
+    nameLabel.append(createElement("span", "", "Full Name"), createElement("span", "drawer-form__required", " *"));
+    const nameInput = createElement("input", "drawer-form__title-input");
+    nameInput.type = "text";
+    nameInput.value = state.userDraft.name;
+    nameInput.placeholder = "Enter full name";
+    nameInput.required = true;
+    nameInput.addEventListener("input", (event) => {
+      state.userDraft.name = event.target.value;
+    });
+    nameGroup.append(nameLabel, nameInput);
+    basicInfoSection.append(nameGroup);
+
+    // Email and Phone in 2 columns
+    const emailPhoneRow = createElement("div", "drawer-form__row-2col");
+
+    // Email field (required)
+    const emailGroup = createElement("div", "drawer-form__group");
+    const emailLabel = createElement("label", "drawer-form__label");
+    emailLabel.append(createElement("span", "", "Email"), createElement("span", "drawer-form__required", " *"));
+    const emailInput = createElement("input", "drawer-form__title-input");
+    emailInput.type = "email";
+    emailInput.value = state.userDraft.email;
+    emailInput.placeholder = "user@company.com";
+    emailInput.required = true;
+    emailInput.addEventListener("input", (event) => {
+      state.userDraft.email = event.target.value;
+    });
+    emailGroup.append(emailLabel, emailInput);
+
+    // Phone field
+    const phoneGroup = createElement("div", "drawer-form__group");
+    const phoneLabel = createElement("label", "drawer-form__label", "Phone");
+    const phoneInput = createElement("input", "drawer-form__title-input");
+    phoneInput.type = "tel";
+    phoneInput.value = state.userDraft.phone;
+    phoneInput.placeholder = "081234567890";
+    phoneInput.addEventListener("input", (event) => {
+      state.userDraft.phone = event.target.value;
+    });
+    phoneGroup.append(phoneLabel, phoneInput);
+
+    emailPhoneRow.append(emailGroup, phoneGroup);
+    basicInfoSection.append(emailPhoneRow);
+
+    // ===== WORK INFORMATION SECTION =====
+    const workInfoSection = createElement("div", "drawer-form__section");
+    workInfoSection.append(createSectionLabel("briefcase", "Work Information"));
+
+    // Department and Position in 2 columns
+    const deptPositionRow = createElement("div", "drawer-form__row-2col");
+
+    // Department dropdown (required)
+    const departmentGroup = createElement("div", "drawer-form__group");
+    const departmentLabel = createElement("label", "drawer-form__label");
+    departmentLabel.append(createElement("span", "", "Department"), createElement("span", "drawer-form__required", " *"));
+    const departmentSelect = createElement("select", "drawer-form__title-input");
+    departmentSelect.required = true;
+    const defaultOption = document.createElement("option");
+    defaultOption.value = "";
+    defaultOption.textContent = "Select department";
+    defaultOption.disabled = true;
+    defaultOption.selected = !state.userDraft.department;
+    departmentSelect.append(defaultOption);
+    const departments = ["HRGA", "Finance", "IT", "Operations", "Marketing", "Creative Studio", "Asset Ops", "Other"];
+    departments.forEach((dept) => {
+      const option = document.createElement("option");
+      option.value = dept;
+      option.textContent = dept;
+      if (dept === state.userDraft.department) option.selected = true;
+      departmentSelect.append(option);
+    });
+    departmentSelect.addEventListener("change", (event) => {
+      state.userDraft.department = event.target.value;
+    });
+    departmentGroup.append(departmentLabel, departmentSelect);
+
+    // Position field (required)
+    const positionGroup = createElement("div", "drawer-form__group");
+    const positionLabel = createElement("label", "drawer-form__label");
+    positionLabel.append(createElement("span", "", "Position"), createElement("span", "drawer-form__required", " *"));
+    const positionInput = createElement("input", "drawer-form__title-input");
+    positionInput.type = "text";
+    positionInput.value = state.userDraft.position;
+    positionInput.placeholder = "e.g. HR Manager, Developer, etc.";
+    positionInput.required = true;
+    positionInput.addEventListener("input", (event) => {
+      state.userDraft.position = event.target.value;
+    });
+    positionGroup.append(positionLabel, positionInput);
+
+    deptPositionRow.append(departmentGroup, positionGroup);
+    workInfoSection.append(deptPositionRow);
+
+    // Join Date field
+    const joinDateGroup = createElement("div", "drawer-form__group");
+    const joinDateLabel = createElement("label", "drawer-form__label", "Join Date");
+    const joinDateInput = createElement("input", "drawer-form__date-input");
+    joinDateInput.type = "date";
+    joinDateInput.value = getDraftDatePart(state.userDraft.joinDate);
+    joinDateInput.addEventListener("change", (event) => {
+      state.userDraft.joinDate = event.target.value;
+    });
+    joinDateGroup.append(joinDateLabel, joinDateInput);
+    workInfoSection.append(joinDateGroup);
+
+    // ===== ACCESS & SECURITY SECTION =====
+    const accessSection = createElement("div", "drawer-form__section");
+    accessSection.append(createSectionLabel("shield", "Access & Security"));
+
+    // Password and Confirm Password in 2 columns
+    const passwordRow = createElement("div", "drawer-form__row-2col");
+
+    // Password field (required)
+    const passwordGroup = createElement("div", "drawer-form__group");
+    const passwordLabel = createElement("label", "drawer-form__label");
+    passwordLabel.append(createElement("span", "", "Password"), createElement("span", "drawer-form__required", " *"));
+    const passwordWrap = createElement("div", "drawer-form__password-wrap");
+    const passwordInput = createElement("input", "drawer-form__input");
+    passwordInput.type = "password";
+    passwordInput.value = state.userDraft.password;
+    passwordInput.placeholder = "Enter password (min. 6 characters)";
+    passwordInput.required = true;
+    const passwordToggle = createElement("button", "drawer-form__password-toggle");
+    passwordToggle.type = "button";
+    passwordToggle.setAttribute("aria-label", "Toggle password visibility");
+    passwordToggle.append(createIcon("eye"));
+    passwordToggle.addEventListener("click", () => {
+      const isPassword = passwordInput.type === "password";
+      passwordInput.type = isPassword ? "text" : "password";
+      passwordToggle.innerHTML = "";
+      passwordToggle.append(createIcon(isPassword ? "eye-off" : "eye"));
+    });
+    passwordWrap.append(passwordInput, passwordToggle);
+    passwordGroup.append(passwordLabel, passwordWrap);
+
+    // Confirm Password field (required)
+    const confirmPasswordGroup = createElement("div", "drawer-form__group");
+    const confirmPasswordLabel = createElement("label", "drawer-form__label");
+    confirmPasswordLabel.append(createElement("span", "", "Confirm Password"), createElement("span", "drawer-form__required", " *"));
+    const confirmPasswordWrap = createElement("div", "drawer-form__password-wrap");
+    const confirmPasswordInput = createElement("input", "drawer-form__input");
+    confirmPasswordInput.type = "password";
+    confirmPasswordInput.value = state.userDraft.confirmPassword;
+    confirmPasswordInput.placeholder = "Confirm password";
+    confirmPasswordInput.required = true;
+    const confirmPasswordToggle = createElement("button", "drawer-form__password-toggle");
+    confirmPasswordToggle.type = "button";
+    confirmPasswordToggle.setAttribute("aria-label", "Toggle confirm password visibility");
+    confirmPasswordToggle.append(createIcon("eye"));
+    confirmPasswordToggle.addEventListener("click", () => {
+      const isPassword = confirmPasswordInput.type === "password";
+      confirmPasswordInput.type = isPassword ? "text" : "password";
+      confirmPasswordToggle.innerHTML = "";
+      confirmPasswordToggle.append(createIcon(isPassword ? "eye-off" : "eye"));
+    });
+    confirmPasswordWrap.append(confirmPasswordInput, confirmPasswordToggle);
+    confirmPasswordGroup.append(confirmPasswordLabel, confirmPasswordWrap);
+
+    passwordRow.append(passwordGroup, confirmPasswordGroup);
+    accessSection.append(passwordRow);
+
+    // Role selection
+    const roleGroup = createElement("div", "drawer-form__group");
+    const roleLabel = createElement("label", "drawer-form__label", "Role");
+    const roleOptionsContainer = createElement("div", "drawer-form__role-options");
+
+    const adminOption = createElement("label", "drawer-form__role-option");
+    const adminRadio = document.createElement("input");
+    adminRadio.type = "radio";
+    adminRadio.name = "user-role";
+    adminRadio.value = "admin";
+    adminRadio.checked = state.userDraft.role === "admin";
+    adminOption.append(adminRadio, createElement("span", "", " Admin"));
+
+    const customOption = createElement("label", "drawer-form__role-option");
+    const customRadio = document.createElement("input");
+    customRadio.type = "radio";
+    customRadio.name = "user-role";
+    customRadio.value = "custom";
+    customRadio.checked = state.userDraft.role === "custom";
+    customOption.append(customRadio, createElement("span", "", " Custom"));
+
+    roleOptionsContainer.append(adminOption, customOption);
+    roleGroup.append(roleLabel, roleOptionsContainer);
+    accessSection.append(roleGroup);
+
+    // Permissions checkbox group
+    const permissionsGroup = createElement("div", "drawer-form__group");
+    const permissionsLabel = createElement("label", "drawer-form__label", "Permissions");
+    const permissionsList = createElement("div", "drawer-form__permissions-list");
+
+    const availablePermissions = [
+      { id: "dashboard", label: "Dashboard" },
+      { id: "calendar", label: "Calendar" },
+      { id: "employee-journey", label: "Employee Journey" },
+      { id: "assets", label: "Assets" },
+      { id: "settings", label: "Settings" },
+    ];
+
+    // Store permission checkbox and label references for role-based updates
+    const permissionCheckboxes = [];
+    const permissionLabels = [];
+
+    availablePermissions.forEach((perm) => {
+      const permLabel = createElement("label", "drawer-form__permission-item");
+      const permCheckbox = document.createElement("input");
+      permCheckbox.type = "checkbox";
+      permCheckbox.value = perm.id;
+      permCheckbox.checked = state.userDraft.permissions.includes(perm.id);
+      permCheckbox.addEventListener("change", (event) => {
+        if (event.target.checked) {
+          state.userDraft.permissions.push(perm.id);
+        } else {
+          state.userDraft.permissions = state.userDraft.permissions.filter((p) => p !== perm.id);
+        }
+      });
+      permLabel.append(permCheckbox, createElement("span", "", perm.label));
+      permissionsList.append(permLabel);
+      permissionCheckboxes.push(permCheckbox);
+      permissionLabels.push(permLabel);
+    });
+
+    permissionsGroup.append(permissionsLabel, permissionsList);
+    accessSection.append(permissionsGroup);
+
+    // Helper function to update permissions based on role
+    const updatePermissionsForRole = (role) => {
+      if (role === "admin") {
+        // Admin: all permissions checked and disabled
+        state.userDraft.permissions = availablePermissions.map(p => p.id);
+        permissionCheckboxes.forEach(cb => {
+          cb.checked = true;
+          cb.disabled = true;
+        });
+        permissionLabels.forEach(label => label.style.opacity = "0.5");
+      } else {
+        // Custom: all permissions unchecked, enabled, user can manually select
+        state.userDraft.permissions = [];
+        permissionCheckboxes.forEach(cb => {
+          cb.checked = false;
+          cb.disabled = false;
+        });
+        permissionLabels.forEach(label => label.style.opacity = "1");
+      }
+    };
+
+    // Set initial state based on current role
+    if (state.userDraft.role === "admin") {
+      updatePermissionsForRole("admin");
+    }
+
+    // Role change handlers - must be added after permission checkboxes are created
+    adminRadio.addEventListener("change", () => {
+      state.userDraft.role = "admin";
+      updatePermissionsForRole("admin");
+    });
+
+    customRadio.addEventListener("change", () => {
+      state.userDraft.role = "custom";
+      updatePermissionsForRole("custom");
+    });
+
+    // Send invitation toggle
+    const invitationGroup = createElement("div", "drawer-form__group");
+    const invitationLabel = createElement("label", "drawer-form__invitation-label");
+    const invitationToggle = document.createElement("input");
+    invitationToggle.type = "checkbox";
+    invitationToggle.checked = state.userDraft.sendInvitation;
+    invitationToggle.addEventListener("change", (event) => {
+      state.userDraft.sendInvitation = event.target.checked;
+    });
+    invitationLabel.append(
+      invitationToggle,
+      createElement("span", "", " Send invitation email with login credentials")
+    );
+    invitationGroup.append(invitationLabel);
+    accessSection.append(invitationGroup);
+
+    // ===== FOOTER WITH SAVE AND CANCEL BUTTONS =====
+    const footer = createElement("div", "user-drawer__footer");
+    const footerLeft = createElement("div", "user-drawer__footer-actions");
+    const cancelButton = createElement(
+      "button",
+      "user-drawer__button user-drawer__button--ghost",
+      "Cancel",
+    );
+    const saveButton = createElement(
+      "button",
+      "user-drawer__button user-drawer__button--primary",
+      "Save",
+    );
+
+    const saveEnabled = isUserDraftValid(state.userDraft);
+    cancelButton.type = "button";
+    saveButton.type = "button";
+    saveButton.disabled = !saveEnabled;
+    cancelButton.addEventListener("click", closeDrawer);
+    saveButton.addEventListener("click", () => {
+      if (!isUserDraftValid(state.userDraft)) {
+        return;
+      }
+      onSave();
+    });
+    footerLeft.append(saveButton, cancelButton);
+    footer.append(footerLeft);
+
+    // Update password field listeners to also update save button state
+    passwordInput.addEventListener("input", (event) => {
+      state.userDraft.password = event.target.value;
+      saveButton.disabled = !isUserDraftValid(state.userDraft);
+    });
+    confirmPasswordInput.addEventListener("input", (event) => {
+      state.userDraft.confirmPassword = event.target.value;
+      saveButton.disabled = !isUserDraftValid(state.userDraft);
+    });
+
+    headerLeft.append(backButton, title);
+    header.append(headerLeft, closeButton);
+    body.append(basicInfoSection, workInfoSection, accessSection);
+    drawer.append(header, body, footer);
+    overlay.append(backdrop, drawer);
+
+    return overlay;
+  }
+
+  function saveUserDraft() {
+    const userApp = getUserManagementApp();
+    const newUser = {
+      id: `usr-${Date.now()}`,
+      name: state.userDraft.name,
+      email: state.userDraft.email,
+      phone: state.userDraft.phone,
+      department: state.userDraft.department,
+      position: state.userDraft.position,
+      joinDate: state.userDraft.joinDate,
+      role: state.userDraft.role,
+      permissions: state.userDraft.role === "admin" ? [] : state.userDraft.permissions,
+      status: state.userDraft.status,
+    };
+
+    userApp.users.push(newUser);
+    state.activeItem = "All Users";
+    state.lastAction = "user-created";
+    state.isUserDrawerOpen = false;
+    state.userDraft = getInitialUserDraft();
+    render();
+  }
+
   function updateActiveMarker() {
     const activeButton = railNav.querySelector(".rail-nav__item.is-active");
 
@@ -2854,7 +4712,9 @@ export function createAppShell() {
     }
 
     const markerHeight = 64;
-    const offset = activeButton.offsetTop + Math.max((activeButton.offsetHeight - markerHeight) / 2, 0);
+    const offset =
+      activeButton.offsetTop +
+      Math.max((activeButton.offsetHeight - markerHeight) / 2, 0);
     marker.style.transform = `translateY(${offset}px)`;
   }
 
@@ -2894,36 +4754,41 @@ export function createAppShell() {
     const newEventButton = createElement(
       "button",
       `calendar-panel__primary-action${state.lastAction === "new-event" ? " is-active" : ""}`,
-      "New Event"
+      "New Event",
     );
     const sectionHeader = createElement("div", "calendar-panel__head");
-    const sectionTitle = createElement("h3", "calendar-panel__title", "Upcoming Events");
-    const viewAll = createElement(
-      "button",
-      "calendar-panel__link",
-      "View all"
+    const sectionTitle = createElement(
+      "h3",
+      "calendar-panel__title",
+      "Upcoming Events",
     );
+    const viewAll = createElement("button", "calendar-panel__link", "View all");
     const events = createElement("div", "calendar-events");
     const monthBar = createElement("div", "calendar-month");
     const monthLabel = createElement(
       "h3",
       "calendar-month__label",
-      `${MONTH_NAMES[state.calendar.displayMonth]} ${state.calendar.displayYear}`
+      `${MONTH_NAMES[state.calendar.displayMonth]} ${state.calendar.displayYear}`,
     );
     const monthPrev = createElement("button", "calendar-month__button");
     const monthNext = createElement("button", "calendar-month__button");
-    const monthCollapse = createElement("button", `calendar-month__button${state.calendar.isMonthOpen ? "" : " is-collapsed"}`);
+    const monthCollapse = createElement(
+      "button",
+      `calendar-month__button${state.calendar.isMonthOpen ? "" : " is-collapsed"}`,
+    );
     const monthActions = createElement("div", "calendar-month__actions");
     const weekRow = createElement(
       "div",
-      `calendar-grid calendar-grid--weekdays${state.calendar.isMonthOpen ? "" : " is-hidden"}`
+      `calendar-grid calendar-grid--weekdays${state.calendar.isMonthOpen ? "" : " is-hidden"}`,
     );
     const dayGrid = createElement(
       "div",
-      `calendar-grid calendar-grid--days${state.calendar.isMonthOpen ? "" : " is-hidden"}`
+      `calendar-grid calendar-grid--days${state.calendar.isMonthOpen ? "" : " is-hidden"}`,
     );
 
-    const monthEvents = getEventsForDisplayedMonth(activeApp, state).filter(isUpcomingEvent);
+    const monthEvents = getEventsForDisplayedMonth(activeApp, state).filter(
+      isUpcomingEvent,
+    );
     const visibleEvents = getVisibleCalendarPanelEvents(activeApp, state);
 
     viewAll.type = "button";
@@ -2984,17 +4849,29 @@ export function createAppShell() {
 
     if (visibleEvents.length === 0) {
       events.append(
-        createElement("p", "calendar-panel__empty", "No upcoming events in this month.")
+        createElement(
+          "p",
+          "calendar-panel__empty",
+          "No upcoming events in this month.",
+        ),
       );
     } else {
       visibleEvents.forEach((event) => {
         const card = createElement(
           "article",
-          `event-card${event.id === state.calendar.selectedEventId ? " is-active" : ""}`
+          `event-card${event.id === state.calendar.selectedEventId ? " is-active" : ""}`,
         );
         const date = createElement("div", "event-card__date");
-        const day = createElement("strong", "event-card__day", String(event.day).padStart(2, "0"));
-        const month = createElement("span", "event-card__month", event.monthLabel);
+        const day = createElement(
+          "strong",
+          "event-card__day",
+          String(event.day).padStart(2, "0"),
+        );
+        const month = createElement(
+          "span",
+          "event-card__month",
+          event.monthLabel,
+        );
         const body = createElement("div", "event-card__body");
         const title = createElement("h4", "event-card__title", event.title);
         const titleRow = createElement("div", "event-card__title-row");
@@ -3041,12 +4918,16 @@ export function createAppShell() {
     buildCalendarDays(
       state.calendar.displayYear,
       state.calendar.displayMonth,
-      new Date(state.calendar.displayYear, state.calendar.displayMonth, state.calendar.selectedDay)
+      new Date(
+        state.calendar.displayYear,
+        state.calendar.displayMonth,
+        state.calendar.selectedDay,
+      ),
     ).forEach((dayItem) => {
       const dayButton = createElement(
         "button",
         `calendar-grid__day${dayItem.active ? " is-active" : ""}${dayItem.muted ? " is-muted" : ""}${dayItem.isToday ? " is-today" : ""}`,
-        String(dayItem.value)
+        String(dayItem.value),
       );
 
       dayButton.type = "button";
@@ -3062,7 +4943,9 @@ export function createAppShell() {
           state.calendar.displayYear = dayItem.year;
           state.calendar.displayMonth = dayItem.monthIndex;
           state.calendar.selectedDay = dayItem.value;
-          state.calendar.selectedEventId = monthEvents.find((event) => Number(event.day) === dayItem.value)?.id ?? null;
+          state.calendar.selectedEventId =
+            monthEvents.find((event) => Number(event.day) === dayItem.value)
+              ?.id ?? null;
           render();
         });
       }
@@ -3073,7 +4956,14 @@ export function createAppShell() {
     monthActions.append(monthPrev, monthNext);
     monthBar.append(monthCollapse, monthLabel, monthActions);
     sectionHeader.append(sectionTitle, viewAll);
-    wrapper.append(newEventButton, sectionHeader, events, monthBar, weekRow, dayGrid);
+    wrapper.append(
+      newEventButton,
+      sectionHeader,
+      events,
+      monthBar,
+      weekRow,
+      dayGrid,
+    );
 
     return wrapper;
   }
@@ -3095,7 +4985,7 @@ export function createAppShell() {
             day: "numeric",
             year: "numeric",
           })
-        : `${MONTH_NAMES[state.calendar.displayMonth]} ${state.calendar.displayYear}`
+        : `${MONTH_NAMES[state.calendar.displayMonth]} ${state.calendar.displayYear}`,
     );
     const nav = createElement("div", "calendar-surface__nav");
     const prev = createElement("button", "calendar-surface__nav-button");
@@ -3105,7 +4995,7 @@ export function createAppShell() {
       const tab = createElement(
         "button",
         `calendar-workspace__tab${state.calendar.viewMode === label.toLowerCase() ? " is-active" : ""}`,
-        label
+        label,
       );
       tab.type = "button";
       tab.addEventListener("click", () => {
@@ -3125,7 +5015,10 @@ export function createAppShell() {
     next.setAttribute("aria-label", "Next month");
     prev.append(createIcon("chevron-left"));
     today.append(createIcon("circle"));
-    today.classList.toggle("is-active", isSameCalendarDate(selectedDate, todayDate));
+    today.classList.toggle(
+      "is-active",
+      isSameCalendarDate(selectedDate, todayDate),
+    );
     next.append(createIcon("chevron-right"));
 
     prev.addEventListener("click", () => {
@@ -3135,14 +5028,16 @@ export function createAppShell() {
         state.calendar.displayYear = previousDate.getFullYear();
         state.calendar.displayMonth = previousDate.getMonth();
         state.calendar.selectedDay = previousDate.getDate();
-        state.calendar.selectedEventId = getEventsForDate(activeApp, previousDate)[0]?.id ?? null;
+        state.calendar.selectedEventId =
+          getEventsForDate(activeApp, previousDate)[0]?.id ?? null;
       } else if (state.calendar.viewMode === "week") {
         const previousWeek = new Date(selectedDate);
         previousWeek.setDate(selectedDate.getDate() - 7);
         state.calendar.displayYear = previousWeek.getFullYear();
         state.calendar.displayMonth = previousWeek.getMonth();
         state.calendar.selectedDay = previousWeek.getDate();
-        state.calendar.selectedEventId = getEventsForDate(activeApp, previousWeek)[0]?.id ?? null;
+        state.calendar.selectedEventId =
+          getEventsForDate(activeApp, previousWeek)[0]?.id ?? null;
       } else {
         if (state.calendar.displayMonth === 0) {
           state.calendar.displayMonth = 11;
@@ -3163,14 +5058,16 @@ export function createAppShell() {
         state.calendar.displayYear = nextDate.getFullYear();
         state.calendar.displayMonth = nextDate.getMonth();
         state.calendar.selectedDay = nextDate.getDate();
-        state.calendar.selectedEventId = getEventsForDate(activeApp, nextDate)[0]?.id ?? null;
+        state.calendar.selectedEventId =
+          getEventsForDate(activeApp, nextDate)[0]?.id ?? null;
       } else if (state.calendar.viewMode === "week") {
         const nextWeek = new Date(selectedDate);
         nextWeek.setDate(selectedDate.getDate() + 7);
         state.calendar.displayYear = nextWeek.getFullYear();
         state.calendar.displayMonth = nextWeek.getMonth();
         state.calendar.selectedDay = nextWeek.getDate();
-        state.calendar.selectedEventId = getEventsForDate(activeApp, nextWeek)[0]?.id ?? null;
+        state.calendar.selectedEventId =
+          getEventsForDate(activeApp, nextWeek)[0]?.id ?? null;
       } else {
         if (state.calendar.displayMonth === 11) {
           state.calendar.displayMonth = 0;
@@ -3199,11 +5096,15 @@ export function createAppShell() {
       const firstDayOfMonth = new Date(year, month, 1).getDay();
       const daysInMonth = getDaysInMonth(year, month);
       const totalRows = Math.ceil((firstDayOfMonth + daysInMonth) / 7);
-      
+
       board.style.gridTemplateRows = `repeat(${totalRows}, minmax(0, 1fr))`;
-      
+
       ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].forEach((dayName) => {
-        const weekday = createElement("div", "calendar-surface__weekday", dayName);
+        const weekday = createElement(
+          "div",
+          "calendar-surface__weekday",
+          dayName,
+        );
         weekHeader.append(weekday);
       });
 
@@ -3214,25 +5115,28 @@ export function createAppShell() {
         const col = index % 7;
         const dayIndex = index - firstDayOfMonth + 1;
         const isCurrentMonth = dayIndex >= 1 && dayIndex <= daysInMonth;
-        
+
         const cell = createElement(
           "article",
-          `calendar-surface__cell${isCurrentMonth ? "" : " is-muted"}`
+          `calendar-surface__cell${isCurrentMonth ? "" : " is-muted"}`,
         );
         cell.style.gridColumn = String(col + 1);
         cell.style.gridRow = String(row + 1);
 
         if (isCurrentMonth) {
-          const isToday = isSameCalendarDate(today, new Date(year, month, dayIndex));
+          const isToday = isSameCalendarDate(
+            today,
+            new Date(year, month, dayIndex),
+          );
           const isSelected = dayIndex === state.calendar.selectedDay;
-          
+
           if (isToday) cell.classList.add("is-today");
           if (isSelected) cell.classList.add("is-selected");
 
           const dateNumber = createElement(
             "button",
             `calendar-surface__date${isToday ? " is-today" : ""}`,
-            String(dayIndex)
+            String(dayIndex),
           );
           const dayEvents = activeApp.events.filter((event) => {
             return (
@@ -3268,14 +5172,25 @@ export function createAppShell() {
               "button",
               `calendar-surface__event${useCompactMonthEvents ? " calendar-surface__event--month" : ""}${
                 event.id === state.calendar.selectedEventId ? " is-active" : ""
-              }`
+              }`,
             );
             const schedule = parseEventSchedule(event.meta);
-            const eventTitle = createElement("strong", "calendar-surface__event-title", event.title);
-            const eventMeta = createElement("span", "calendar-surface__event-meta", schedule.label);
+            const eventTitle = createElement(
+              "strong",
+              "calendar-surface__event-title",
+              event.title,
+            );
+            const eventMeta = createElement(
+              "span",
+              "calendar-surface__event-meta",
+              schedule.label,
+            );
 
             eventCard.type = "button";
-            eventCard.style.setProperty("--event-bg", getEventSurfaceColor(event));
+            eventCard.style.setProperty(
+              "--event-bg",
+              getEventSurfaceColor(event),
+            );
             eventCard.title = `${event.title} • ${schedule.label}`;
             eventCard.addEventListener("click", (eventClick) => {
               eventClick.stopPropagation();
@@ -3297,7 +5212,7 @@ export function createAppShell() {
             const overflowIndicator = createElement(
               "button",
               "calendar-surface__event-overflow",
-              `+${overflowCount} more`
+              `+${overflowCount} more`,
             );
             overflowIndicator.type = "button";
             overflowIndicator.title = `${overflowCount} more events on this day`;
@@ -3321,11 +5236,21 @@ export function createAppShell() {
 
     function createWeekBoard() {
       const selectedWeekDates = getWeekDates(selectedDate);
-      const weekHeader = createElement("div", "calendar-surface__weekdays calendar-surface__weekdays--week");
-      const board = createElement("div", "calendar-surface__board calendar-surface__board--week");
+      const weekHeader = createElement(
+        "div",
+        "calendar-surface__weekdays calendar-surface__weekdays--week",
+      );
+      const board = createElement(
+        "div",
+        "calendar-surface__board calendar-surface__board--week",
+      );
 
       selectedWeekDates.forEach((date) => {
-        const weekday = createElement("div", "calendar-surface__weekday", date.toLocaleDateString("en-US", { weekday: "short" }));
+        const weekday = createElement(
+          "div",
+          "calendar-surface__weekday",
+          date.toLocaleDateString("en-US", { weekday: "short" }),
+        );
         weekHeader.append(weekday);
         const isToday = isSameCalendarDate(date, todayDate);
 
@@ -3337,12 +5262,12 @@ export function createAppShell() {
             date.getFullYear() === state.calendar.displayYear
               ? " is-selected"
               : ""
-          }`
+          }`,
         );
         const dateNumber = createElement(
           "button",
           `calendar-surface__date calendar-surface__date--week${isToday ? " is-today" : ""}`,
-          String(date.getDate())
+          String(date.getDate()),
         );
         const events = getEventsForDate(activeApp, date);
 
@@ -3364,13 +5289,24 @@ export function createAppShell() {
         events.forEach((event) => {
           const eventCard = createElement(
             "button",
-            `calendar-surface__event calendar-surface__event--stack${event.id === state.calendar.selectedEventId ? " is-active" : ""}`
+            `calendar-surface__event calendar-surface__event--stack${event.id === state.calendar.selectedEventId ? " is-active" : ""}`,
           );
           eventCard.type = "button";
-          eventCard.style.setProperty("--event-bg", getEventSurfaceColor(event));
+          eventCard.style.setProperty(
+            "--event-bg",
+            getEventSurfaceColor(event),
+          );
           eventCard.append(
-            createElement("strong", "calendar-surface__event-title", event.title),
-            createElement("span", "calendar-surface__event-meta", parseEventSchedule(event.meta).label)
+            createElement(
+              "strong",
+              "calendar-surface__event-title",
+              event.title,
+            ),
+            createElement(
+              "span",
+              "calendar-surface__event-meta",
+              parseEventSchedule(event.meta).label,
+            ),
           );
           eventCard.addEventListener("click", () => {
             openEventDetailDrawer(event);
@@ -3394,7 +5330,7 @@ export function createAppShell() {
           weekday: "long",
           month: "long",
           day: "numeric",
-        })
+        }),
       );
       const events = getEventsForDate(activeApp, selectedDate);
       const list = createElement("div", "calendar-surface__day-list");
@@ -3404,23 +5340,42 @@ export function createAppShell() {
           createElement(
             "p",
             "calendar-surface__empty",
-            "No events scheduled for this day."
-          )
+            "No events scheduled for this day.",
+          ),
         );
       } else {
         events
           .slice()
-          .sort((left, right) => parseEventSchedule(left.meta).startMinutes - parseEventSchedule(right.meta).startMinutes)
+          .sort(
+            (left, right) =>
+              parseEventSchedule(left.meta).startMinutes -
+              parseEventSchedule(right.meta).startMinutes,
+          )
           .forEach((event) => {
             const item = createElement(
               "button",
-              `calendar-surface__day-event${event.id === state.calendar.selectedEventId ? " is-active" : ""}`
+              `calendar-surface__day-event${event.id === state.calendar.selectedEventId ? " is-active" : ""}`,
             );
             const schedule = parseEventSchedule(event.meta);
-            const copy = createElement("div", "calendar-surface__day-event-copy");
-            const time = createElement("span", "calendar-surface__day-event-time", schedule.label);
-            const titleText = createElement("strong", "calendar-surface__day-event-title", event.title);
-            const meta = createElement("span", "calendar-surface__day-event-meta", schedule.location || event.meta);
+            const copy = createElement(
+              "div",
+              "calendar-surface__day-event-copy",
+            );
+            const time = createElement(
+              "span",
+              "calendar-surface__day-event-time",
+              schedule.label,
+            );
+            const titleText = createElement(
+              "strong",
+              "calendar-surface__day-event-title",
+              event.title,
+            );
+            const meta = createElement(
+              "span",
+              "calendar-surface__day-event-meta",
+              schedule.location || event.meta,
+            );
 
             item.type = "button";
             item.style.setProperty("--event-bg", getEventSurfaceColor(event));
@@ -3481,7 +5436,7 @@ export function createAppShell() {
     const newAssetButton = createElement(
       "button",
       `calendar-panel__primary-action${state.activeItem === "New asset" ? " is-active" : ""}`,
-      "New asset"
+      "New asset",
     );
 
     newAssetButton.type = "button";
@@ -3500,6 +5455,33 @@ export function createAppShell() {
     return wrapper;
   }
 
+  function createUserManagementPanel(activeApp) {
+    const wrapper = createElement("section", "calendar-panel");
+    const newUserButton = createElement(
+      "button",
+      `calendar-panel__primary-action${state.activeItem === "New User" ? " is-active" : ""}`,
+      "New User",
+    );
+
+    newUserButton.type = "button";
+    newUserButton.addEventListener("click", () => {
+      openUserDrawer();
+      render();
+    });
+
+    wrapper.append(newUserButton, createDefaultSubnav(activeApp));
+
+    return wrapper;
+  }
+
+  function openUserDrawer() {
+    state.lastAction = "new-user";
+    state.activeItem = "New User";
+    state.userDraft = getInitialUserDraft();
+    state.isUserDrawerOpen = true;
+    render();
+  }
+
   function renderPanel(activeApp) {
     panelHeading.textContent = activeApp.title;
     panelBody.innerHTML = "";
@@ -3511,6 +5493,11 @@ export function createAppShell() {
 
     if (activeApp.id === "assets") {
       panelBody.append(createAssetsPanel(activeApp));
+      return;
+    }
+
+    if (activeApp.id === "user-management") {
+      panelBody.append(createUserManagementPanel(activeApp));
       return;
     }
 
@@ -3527,17 +5514,25 @@ export function createAppShell() {
 
     if (activeApp.id === "user-management") {
       contentPlaceholder.innerHTML = "";
-      contentPlaceholder.append(createUserManagementView(activeApp));
+      contentPlaceholder.classList.remove("content-stage__empty");
+      contentPlaceholder.classList.add("content-stage__content");
+      if (state.activeItem === "All Users" || state.activeItem === "New User") {
+        contentPlaceholder.append(createUsersWorkspace(activeApp));
+      } else {
+        contentPlaceholder.append(createUserManagementView(activeApp));
+      }
       content.append(contentPlaceholder);
       return;
     }
 
-    if (activeApp.id === "assets") {
+    if (activeApp.id === "assets" && state.activeItem === "Assets") {
       content.append(createAssetsWorkspace(activeApp));
       return;
     }
 
     contentPlaceholder.innerHTML = "";
+    contentPlaceholder.classList.remove("content-stage__content");
+    contentPlaceholder.classList.add("content-stage__empty");
     contentLabel.textContent = "Selected module";
     contentHeading.textContent = `${activeApp.title} / ${state.activeItem}`;
     contentMeta.textContent =
@@ -3547,15 +5542,24 @@ export function createAppShell() {
   }
 
   function render() {
-    const activeApp = workspaceApps.find((app) => app.id === state.activeAppId) ?? workspaceApps[0];
+    const activeApp =
+      workspaceApps.find((app) => app.id === state.activeAppId) ??
+      workspaceApps[0];
     const currentOverlay = shell.querySelector(".event-drawer-overlay");
-    const currentAttachmentViewer = shell.querySelector(".attachment-viewer-overlay");
-    const currentEventsPopup = shell.querySelector(".calendar-events-modal-overlay");
+    const currentUserDrawerOverlay = shell.querySelector(".user-drawer-overlay");
+    const currentAttachmentViewer = shell.querySelector(
+      ".attachment-viewer-overlay",
+    );
+    const currentEventsPopup = shell.querySelector(
+      ".calendar-events-modal-overlay",
+    );
 
     currentOverlay?.__cleanupOutsideHandler?.();
+    currentUserDrawerOverlay?.__cleanupOutsideHandler?.();
     currentAttachmentViewer?.__cleanupViewerHandlers?.();
     currentEventsPopup?.__cleanupEscapeHandler?.();
     currentOverlay?.remove();
+    currentUserDrawerOverlay?.remove();
     currentAttachmentViewer?.remove();
     currentEventsPopup?.remove();
     renderRail();
@@ -3565,7 +5569,13 @@ export function createAppShell() {
     if (state.isEventDrawerOpen) {
       const drawerOverlay =
         state.eventDrawerMode === "detail"
-          ? createEventDetailDrawer(activeApp, state, closeEventDrawer, openAttachmentViewer, false)
+          ? createEventDetailDrawer(
+              activeApp,
+              state,
+              closeEventDrawer,
+              openAttachmentViewer,
+              false,
+            )
           : createEventDrawer(state, closeEventDrawer, saveEventDraft, false);
       shell.append(drawerOverlay);
 
@@ -3579,11 +5589,25 @@ export function createAppShell() {
       });
     }
 
+    if (state.isUserDrawerOpen) {
+      const userDrawerOverlay = createUserDrawer(state, closeUserDrawer, saveUserDraft, false);
+      shell.append(userDrawerOverlay);
+
+      requestAnimationFrame(() => {
+        void userDrawerOverlay.offsetWidth;
+        requestAnimationFrame(() => {
+          if (userDrawerOverlay.isConnected) {
+            userDrawerOverlay.classList.add("is-open");
+          }
+        });
+      });
+    }
+
     if (state.attachmentViewer.isOpen && state.attachmentViewer.attachment) {
       const attachmentViewerOverlay = createAttachmentViewerOverlay(
         state.attachmentViewer.attachment,
         closeAttachmentViewer,
-        false
+        false,
       );
       shell.append(attachmentViewerOverlay);
 
