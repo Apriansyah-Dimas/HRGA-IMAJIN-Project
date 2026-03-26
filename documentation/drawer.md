@@ -64,6 +64,8 @@ Drawers are slide-in panels from the right side of the screen used for creating/
   inset: 0;
   border: 0;
   background: oklch(0.18 0.02 255 / 0.42);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   opacity: 0;
   transition: opacity 260ms ease;
 }
@@ -136,6 +138,7 @@ Drawers are slide-in panels from the right side of the screen used for creating/
   font-family: "Outfit", sans-serif;
   font-size: 15px;
   font-weight: 600;
+  color: oklch(0.18 0.02 255);
 }
 ```
 
@@ -260,18 +263,26 @@ function createSectionLabel(iconName, text) {
 
 ```css
 .drawer-form__title-input {
-  flex: 1;
-  border: 0;
-  background: transparent;
+  width: 100%;
+  max-width: 320px;
+  border: 1px solid oklch(0.65 0.02 255);
+  background: #ffffff;
   color: oklch(0.18 0.02 255);
-  font-family: inherit;
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 500;
-  min-height: 40px;
+  outline: none;
+  padding: 9px 11px;
+  border-radius: 9px;
+  transition: border-color 0.15s ease;
+}
+
+.drawer-form__title-input:focus {
+  border-color: #8f96ef;
+  box-shadow: 0 0 0 3px oklch(0.55 0.12 281 / 0.1);
 }
 
 .drawer-form__title-input::placeholder {
-  color: oklch(0.5 0.02 255);
+  color: oklch(0.55 0.02 255);
 }
 ```
 
@@ -541,6 +552,37 @@ function close{Entity}Drawer() {
 }
 ```
 
+### Closing Animation (Reverse of Opening)
+
+For smooth closing animation, the drawer needs to transition out before being removed. Use this pattern:
+
+```javascript
+function close{Entity}Drawer() {
+  const overlay = shell.querySelector(".{entity}-drawer-overlay");
+  
+  if (overlay) {
+    overlay.classList.remove("is-open");
+    
+    setTimeout(() => {
+      state.is{Entity}DrawerOpen = false;
+      state.{entity}Draft = getInitial{Entity}Draft();
+      
+      if (overlay.isConnected) {
+        overlay.remove();
+      }
+      
+      render();
+    }, 360);
+  } else {
+    state.is{Entity}DrawerOpen = false;
+    state.{entity}Draft = getInitial{Entity}Draft();
+    render();
+  }
+}
+```
+
+**Important**: The CSS transition duration is 360ms, so the `setTimeout` should match (`360ms`).
+
 ### Save Function
 
 ```javascript
@@ -649,10 +691,14 @@ Copy and replace `{drawer-name}` with your drawer's name (e.g., `user-drawer`, `
     opacity 300ms ease;
 }
 
+/* When .is-open is added: drawer slides in */
 .{drawer-name}-overlay.is-open .{drawer-name} {
   transform: translateX(0);
   opacity: 1;
 }
+
+/* When .is-open is removed: drawer slides out (reverse animation) */
+/* No additional CSS needed - transition handles it automatically */
 
 /* Header */
 .{drawer-name}__header {
@@ -784,15 +830,17 @@ Add these to the `icons` object in `createIcon()` function:
 
 5. **Validation**: Disable the Save button until the form is valid. Use a validation function like `is{Entity}DraftValid()`.
 
-6. **Animation**: Use `requestAnimationFrame` twice for smooth slide-in animation when opening the drawer.
+6. **Opening Animation**: Use `requestAnimationFrame` twice for smooth slide-in animation when opening the drawer.
 
-7. **Accessibility**: Always set `aria-hidden`, `aria-label`, and proper `type` attributes on buttons.
+7. **Closing Animation**: Remove the `is-open` class first, wait for the CSS transition (360ms), then remove the overlay from DOM. This creates a smooth slide-out effect.
 
-8. **State management**: Reset draft state when closing the drawer to prevent stale data.
+8. **Accessibility**: Always set `aria-hidden`, `aria-label`, and proper `type` attributes on buttons.
 
-9. **Spacing consistency**: Use the documented pixel values for consistent spacing across all drawers.
+9. **State management**: Reset draft state when closing the drawer to prevent stale data.
 
-10. **Font colors**: Use the OKLCH color values provided for consistent text hierarchy.
+10. **Spacing consistency**: Use the documented pixel values for consistent spacing across all drawers.
+
+11. **Font colors**: Use the OKLCH color values provided for consistent text hierarchy.
 
 ---
 
@@ -815,6 +863,11 @@ Add these to the `icons` object in `createIcon()` function:
 - Use double `requestAnimationFrame` for adding `is-open` class
 - Ensure `will-change: transform, opacity` is set
 
+### Closing animation not smooth
+- For closing, use the closing animation pattern with `setTimeout` (360ms to match CSS transition)
+- Remove the overlay from DOM AFTER the transition completes
+- Do NOT immediately set `state.isDrawerOpen = false` - wait for the animation
+
 ### Font color too light
 - Use `oklch(0.3 0.02 255)` for labels, not lighter values
 - For input text, use `oklch(0.18 0.02 255)` for maximum contrast
@@ -825,3 +878,7 @@ Add these to the `icons` object in `createIcon()` function:
 ## Changelog
 
 - **2026-03-26**: Initial documentation based on Calendar New Event drawer
+- **2026-03-26**: Added backdrop blur effect documentation
+- **2026-03-26**: Added closing animation pattern with setTimeout
+- **2026-03-26**: Updated font color specifications for better visibility
+- **2026-03-26**: Added closing animation troubleshooting

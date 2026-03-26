@@ -4,6 +4,16 @@ import {
   workspaceApps,
 } from "../data/navigation.js";
 
+function getSites() {
+  const app = workspaceApps.find((a) => a.id === "user-management");
+  return app?.sites || [];
+}
+
+function getDepartments() {
+  const app = workspaceApps.find((a) => a.id === "user-management");
+  return app?.departments || [];
+}
+
 const MONTH_NAMES = [
   "January",
   "February",
@@ -156,6 +166,14 @@ function createIcon(name, label = "") {
       '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 20v-1.2a3.8 3.8 0 00-3.8-3.8H7.8A3.8 3.8 0 004 18.8V20"/><circle cx="10" cy="8" r="3.2"/><path d="M20 20v-1.2a3.8 3.8 0 00-2.4-3.5"/><path d="M14.8 4.7a3.2 3.2 0 010 6.1"/></svg>',
     "profile-app":
       '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.5"/><path d="M5 20a7 7 0 0114 0"/><circle cx="12" cy="12" r="9"/></svg>',
+    image:
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="3.5" width="17" height="17" rx="2"/><circle cx="9" cy="10" r="1.5"/><path d="M21 15l-5-5-5 5"/></svg>',
+    package:
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/><path d="M12 3v18"/><path d="M4 7.5l8 4.5"/><path d="M20 7.5l-8 4.5"/></svg>',
+    "map-pin":
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s6-5.4 6-11a6 6 0 10-12 0c0 5.6 6 11 6 11z"/><circle cx="12" cy="10" r="2.5"/></svg>',
+    settings:
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="2.5"/><path d="M12 2v4"/><path d="M12 18v4"/><path d="M4.9 4.9l2.8 2.8"/><path d="M16.3 16.3l2.8 2.8"/><path d="M2 12h4"/><path d="M18 12h4"/><path d="M4.9 19.1l2.8-2.8"/><path d="M16.3 7.7l2.8-2.8"/></svg>',
   };
 
   icon.innerHTML = icons[name] ?? "";
@@ -340,6 +358,29 @@ const ASSET_REQUEST_FILTERS = {
   ],
 };
 
+// Asset Category to Roman Numeral Mapping
+const ASSET_CATEGORY_TO_ROMAWI = {
+  "Elektronik": "I",
+  "Furniture": "II",
+  "Laptop and Komp": "III",
+  "Kendaraan": "IV",
+  "Machine and Tooling": "V",
+};
+
+// Reverse mapping for display
+const ASSET_ROMAWI_TO_CATEGORY = Object.fromEntries(
+  Object.entries(ASSET_CATEGORY_TO_ROMAWI).map(([k, v]) => [v, k])
+);
+
+// Asset Status Options
+const ASSET_STATUS_OPTIONS = [
+  "Active",
+  "Broken",
+  "In Repair",
+  "Lost/Missing",
+  "Sell",
+];
+
 function formatAssetDateLabel(date) {
   return date
     .toLocaleDateString("en-GB", {
@@ -364,25 +405,65 @@ function getAssetStatusTone(status) {
     Stored: "stored",
     Maintenance: "maintenance",
     Reserved: "reserved",
+    Active: "active",
+    Broken: "broken",
+    "In Repair": "in-repair",
+    "Lost/Missing": "lost-missing",
+    Sell: "sell",
   };
 
   return tones[status] ?? "stored";
 }
 
+// Get site code from location name (sequential: BSD=01, Deltamas 1=02, Deltamas 2=03)
+function getSiteCodeFromLocation(location) {
+  const sites = getSites();
+  const siteIndex = sites.findIndex((s) =>
+    location.toLowerCase().includes(s.name.toLowerCase()) ||
+    location.toLowerCase().includes(s.code.toLowerCase())
+  );
+  // Return sequential code (01, 02, 03) based on site order
+  if (siteIndex >= 0) {
+    return String(siteIndex + 1).padStart(2, "0");
+  }
+  return "01"; // Default to first site
+}
+
+// Generate Asset Number with format FA001/I/01
+function generateAssetNumber(manualCode, category, location) {
+  const romawi = ASSET_CATEGORY_TO_ROMAWI[category] || "I";
+  const siteCode = getSiteCodeFromLocation(location);
+  return `${manualCode}/${romawi}/${siteCode}`;
+}
+
+// Parse Asset Number to get components
+function parseAssetNumber(assetNumber) {
+  const match = assetNumber.match(/^(.+?)\/(.+?)\/(.+?)$/);
+  if (match) {
+    return {
+      manualCode: match[1],
+      romawi: match[2],
+      siteCode: match[3],
+    };
+  }
+  return null;
+}
+
 function getInitialAssetDraft() {
   return {
-    code: "",
+    assetImage: null,
     name: "",
-    category: "",
+    manualCode: "",
+    category: "Elektronik",
+    site: "BSD",
+    status: "Active",
+    cost: "",
+    purchaseDate: new Date().toISOString().split("T")[0],
     department: "",
-    assignedTo: "",
-    location: "",
-    status: "Available",
-    dueLabel: "-",
-    condition: "Ready to deploy",
+    personInCharge: "",
+    brand: "",
+    model: "",
     serialNumber: "",
-    purchaseDate: formatAssetDateLabel(new Date()),
-    valueLabel: "Rp 0",
     notes: "",
   };
 }
@@ -490,6 +571,22 @@ function getInitialState() {
     eventDraft: getInitialEventDraft(),
     isUserDrawerOpen: false,
     userDraft: getInitialUserDraft(),
+    isSiteDrawerOpen: false,
+    siteDraft: getInitialSiteDraft(),
+    isDeptDrawerOpen: false,
+    deptDraft: getInitialDeptDraft(),
+    isAssetDrawerOpen: false,
+    assetDraft: getInitialAssetDraft(),
+    isSiteDetailDrawerOpen: false,
+    siteDetailMode: "view",
+    currentSiteId: null,
+    isDeptDetailDrawerOpen: false,
+    deptDetailMode: "view",
+    currentDeptId: null,
+    orgSettingsActiveTab: "sites",
+    isUserDetailDrawerOpen: false,
+    userDetailMode: "view",
+    currentUserId: null,
   };
 }
 
@@ -550,6 +647,23 @@ function getInitialUserDraft() {
     sendInvitation: true,
     password: "",
     confirmPassword: "",
+  };
+}
+
+function getInitialSiteDraft() {
+  return {
+    name: "",
+    code: "",
+    address: "",
+  };
+}
+
+function getInitialDeptDraft() {
+  return {
+    name: "",
+    code: "",
+    site: "",
+    head: "",
   };
 }
 
@@ -3129,6 +3243,845 @@ function createUserManagementView(activeApp) {
   return wrapper;
 }
 
+function createOrganizationSettingsView(state, activeApp, callbacks) {
+  const { onAddSite, onAddDept, onViewSite, onEditSite, onRemoveSite, onViewDept, onEditDept, onRemoveDept } = callbacks;
+  
+  const wrapper = createElement("section", "org-settings");
+  const header = createElement("div", "org-settings__header");
+  const title = createElement("h2", "org-settings__title", "Organization Settings");
+  
+  const headerTop = createElement("div", "org-settings__header-top");
+  const segmentedControl = createElement("div", "org-settings__segmented");
+  const sitesBtn = createElement("button", "org-settings__segment-btn is-active", "Sites");
+  const deptBtn = createElement("button", "org-settings__segment-btn", "Departments");
+  
+  const addBtn = createElement("button", "org-settings__add-btn");
+  addBtn.innerHTML = `
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M12 5v14M5 12h14"/>
+    </svg>
+    <span>Add Site</span>
+  `;
+  
+  addBtn.addEventListener("click", () => {
+    if (currentTab === "sites") {
+      onAddSite();
+    } else {
+      onAddDept();
+    }
+  });
+  
+  segmentedControl.append(sitesBtn, deptBtn);
+  headerTop.append(segmentedControl, addBtn);
+  header.append(title, headerTop);
+  
+  const contentArea = createElement("div", "org-settings__content");
+  
+  const sitesData = getSites();
+  
+  const deptData = getDepartments().map(dept => ({
+    ...dept,
+    site: "All Sites",
+    head: "-",
+    employees: 0,
+  }));
+  
+  let currentTab = state.orgSettingsActiveTab;
+  const allKebabMenus = [];
+  
+  function closeAllKebabMenus(except = null) {
+    allKebabMenus.forEach(({ btn, dropdown }) => {
+      if (dropdown !== except) {
+        dropdown.style.display = "none";
+      }
+    });
+  }
+  
+  function createKebabMenu(item, itemData, callbacks) {
+    const kebabBtn = createElement("button", "org-settings__kebab-btn");
+    kebabBtn.innerHTML = '<span style="font-size:16px;color:#666;">⋮</span>';
+    
+    const kebabDropdown = createElement("div", "org-settings__kebab-dropdown");
+    
+    const menuItems = [
+      { label: "View", icon: "eye", action: "view" },
+      { label: "Edit", icon: "edit", action: "edit" },
+      { label: "Remove", icon: "trash", action: "remove", danger: true },
+    ];
+    
+    menuItems.forEach(menu => {
+      const menuBtn = createElement("button", `org-settings__kebab-option${menu.danger ? " is-danger" : ""}`);
+      menuBtn.innerHTML = `
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          ${menu.icon === "eye" ? '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>' : ""}
+          ${menu.icon === "edit" ? '<path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/>' : ""}
+          ${menu.icon === "trash" ? '<path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/>' : ""}
+        </svg>
+        ${menu.label}
+      `;
+      
+      menuBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        closeAllKebabMenus();
+        if (callbacks && callbacks[menu.action]) {
+          callbacks[menu.action](itemData);
+        }
+      });
+      
+      kebabDropdown.append(menuBtn);
+    });
+    
+    allKebabMenus.push({ btn: kebabBtn, dropdown: kebabDropdown });
+    
+    kebabBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const isCurrentlyOpen = kebabDropdown.style.display === "block";
+      closeAllKebabMenus(kebabDropdown);
+      kebabDropdown.style.display = isCurrentlyOpen ? "none" : "block";
+    });
+    
+    document.addEventListener("click", () => {
+      kebabDropdown.style.display = "none";
+    });
+    
+    return { kebabBtn, kebabDropdown };
+  }
+  
+  function renderSites() {
+    currentTab = "sites";
+    state.orgSettingsActiveTab = "sites";
+    allKebabMenus.length = 0;
+    addBtn.innerHTML = `
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M12 5v14M5 12h14"/>
+      </svg>
+      <span>Add Site</span>
+    `;
+    contentArea.innerHTML = "";
+    
+    const sitesList = createElement("div", "org-settings__list");
+    
+    sitesData.forEach(site => {
+      const item = createElement("div", "org-settings__item");
+      const siteCallbacks = {
+        view: () => onViewSite(site),
+        edit: () => onEditSite(site),
+        remove: () => onRemoveSite(site),
+      };
+      const { kebabBtn, kebabDropdown } = createKebabMenu(item, site, siteCallbacks);
+      
+      item.innerHTML = `
+        <div class="org-settings__item-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M3 21h18M3 7v14M21 7v14M6 21V10M9 21V10M12 21V10M18 21V7M5 7l7-4 7 4"/>
+          </svg>
+        </div>
+        <div class="org-settings__item-info">
+          <div class="org-settings__item-name">${site.name}</div>
+          <div class="org-settings__item-meta">${site.code} · ${site.address}</div>
+        </div>
+      `;
+      item.appendChild(kebabDropdown);
+      item.appendChild(kebabBtn);
+      sitesList.appendChild(item);
+    });
+    
+    contentArea.appendChild(sitesList);
+  }
+  
+  function renderDepts() {
+    currentTab = "depts";
+    state.orgSettingsActiveTab = "depts";
+    allKebabMenus.length = 0;
+    addBtn.innerHTML = `
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M12 5v14M5 12h14"/>
+      </svg>
+      <span>Add Department</span>
+    `;
+    contentArea.innerHTML = "";
+    
+    const deptList = createElement("div", "org-settings__list");
+    
+    deptData.forEach(dept => {
+      const item = createElement("div", "org-settings__item");
+      const deptCallbacks = {
+        view: () => onViewDept(dept),
+        edit: () => onEditDept(dept),
+        remove: () => onRemoveDept(dept),
+      };
+      const { kebabBtn, kebabDropdown } = createKebabMenu(item, dept, deptCallbacks);
+      
+      item.innerHTML = `
+        <div class="org-settings__item-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+            <path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/>
+          </svg>
+        </div>
+        <div class="org-settings__item-info">
+          <div class="org-settings__item-name">${dept.name}</div>
+          <div class="org-settings__item-meta">${dept.code} · ${dept.site} · Head: ${dept.head}</div>
+        </div>
+        <span class="org-settings__item-badge">${dept.employees} employees</span>
+      `;
+      item.appendChild(kebabDropdown);
+      item.appendChild(kebabBtn);
+      deptList.appendChild(item);
+    });
+    
+    contentArea.appendChild(deptList);
+  }
+  
+  sitesBtn.addEventListener("click", () => {
+    sitesBtn.classList.add("is-active");
+    deptBtn.classList.remove("is-active");
+    renderSites();
+  });
+  
+  deptBtn.addEventListener("click", () => {
+    deptBtn.classList.add("is-active");
+    sitesBtn.classList.remove("is-active");
+    renderDepts();
+  });
+  
+  wrapper.appendChild(header);
+  wrapper.appendChild(contentArea);
+  
+  if (state.orgSettingsActiveTab === "depts") {
+    deptBtn.classList.add("is-active");
+    sitesBtn.classList.remove("is-active");
+    renderDepts();
+  } else {
+    renderSites();
+  }
+  
+  return wrapper;
+}
+
+function createSiteDrawer(state, closeDrawer, isOpen = false) {
+  const overlay = createElement(
+    "div",
+    `site-drawer-overlay${isOpen ? " is-open" : ""}`,
+  );
+  const backdrop = createElement("button", "site-drawer-overlay__backdrop");
+  const drawer = createElement("aside", "site-drawer");
+  const header = createElement("div", "site-drawer__header");
+  const headerLeft = createElement("div", "site-drawer__header-left");
+  const backButton = createElement("button", "site-drawer__back");
+  const title = createElement("h2", "site-drawer__title", "Add Site");
+  const closeButton = createElement("button", "site-drawer__close");
+  const body = createElement("div", "site-drawer__body");
+  const footer = createElement("div", "site-drawer__footer");
+
+  overlay.setAttribute("aria-hidden", String(!state.isSiteDrawerOpen));
+  drawer.setAttribute("aria-label", "Add site drawer");
+  backdrop.type = "button";
+  backButton.type = "button";
+  closeButton.type = "button";
+  backButton.append(createIcon("chevron-left"));
+  closeButton.append(createIcon("close"));
+  backdrop.addEventListener("click", closeDrawer);
+  backButton.addEventListener("click", closeDrawer);
+  closeButton.addEventListener("click", closeDrawer);
+
+  // Site Name field (required)
+  const nameGroup = createElement("div", "drawer-form__group");
+  const nameLabel = createElement("label", "drawer-form__label");
+  nameLabel.append(createElement("span", "", "Site Name"), createElement("span", "drawer-form__required", " *"));
+  const nameInput = createElement("input", "drawer-form__title-input");
+  nameInput.type = "text";
+  nameInput.value = state.siteDraft.name;
+  nameInput.placeholder = "e.g., Headquarters Jakarta";
+  nameInput.required = true;
+  nameInput.addEventListener("input", (event) => {
+    state.siteDraft.name = event.target.value;
+  });
+  nameGroup.append(nameLabel, nameInput);
+  body.appendChild(nameGroup);
+
+  // Site Code field (required)
+  const codeGroup = createElement("div", "drawer-form__group");
+  const codeLabel = createElement("label", "drawer-form__label");
+  codeLabel.append(createElement("span", "", "Site Code"), createElement("span", "drawer-form__required", " *"));
+  const codeInput = createElement("input", "drawer-form__title-input");
+  codeInput.type = "text";
+  codeInput.value = state.siteDraft.code;
+  codeInput.placeholder = "e.g., HQ-JKT";
+  codeInput.required = true;
+  codeInput.addEventListener("input", (event) => {
+    state.siteDraft.code = event.target.value;
+  });
+  codeGroup.append(codeLabel, codeInput);
+  body.appendChild(codeGroup);
+
+  // Address field (required)
+  const addressGroup = createElement("div", "drawer-form__group");
+  const addressLabel = createElement("label", "drawer-form__label");
+  addressLabel.append(createElement("span", "", "Address"), createElement("span", "drawer-form__required", " *"));
+  const addressInput = createElement("input", "drawer-form__title-input");
+  addressInput.type = "text";
+  addressInput.value = state.siteDraft.address;
+  addressInput.placeholder = "e.g., Jl. Sudirman No. 123, Jakarta Pusat";
+  addressInput.required = true;
+  addressInput.addEventListener("input", (event) => {
+    state.siteDraft.address = event.target.value;
+  });
+  addressGroup.append(addressLabel, addressInput);
+  body.appendChild(addressGroup);
+
+  // Footer
+  const footerActions = createElement("div", "site-drawer__footer-actions");
+  const cancelButton = createElement("button", "site-drawer__button site-drawer__button--ghost", "Cancel");
+  const saveButton = createElement("button", "site-drawer__button site-drawer__button--primary", "Save");
+  cancelButton.type = "button";
+  saveButton.type = "button";
+  cancelButton.addEventListener("click", closeDrawer);
+  saveButton.addEventListener("click", () => {
+    if (state.siteDraft.name && state.siteDraft.code && state.siteDraft.address) {
+      const userManagementApp = workspaceApps.find(app => app.id === "user-management");
+      if (userManagementApp) {
+        userManagementApp.sites = userManagementApp.sites || [];
+        userManagementApp.sites.push({
+          id: `site-${Date.now()}`,
+          name: state.siteDraft.name,
+          code: state.siteDraft.code,
+          address: state.siteDraft.address,
+        });
+      }
+      closeDrawer();
+    }
+  });
+  footerActions.append(saveButton, cancelButton);
+  footer.appendChild(footerActions);
+
+  headerLeft.append(backButton, title);
+  header.append(headerLeft, closeButton);
+  drawer.append(header, body, footer);
+  overlay.append(backdrop, drawer);
+
+  return overlay;
+}
+
+function createDeptDrawer(state, closeDrawer, isOpen = false) {
+  const overlay = createElement(
+    "div",
+    `dept-drawer-overlay${isOpen ? " is-open" : ""}`,
+  );
+  const backdrop = createElement("button", "dept-drawer-overlay__backdrop");
+  const drawer = createElement("aside", "dept-drawer");
+  const header = createElement("div", "dept-drawer__header");
+  const headerLeft = createElement("div", "dept-drawer__header-left");
+  const backButton = createElement("button", "dept-drawer__back");
+  const title = createElement("h2", "dept-drawer__title", "Add Department");
+  const closeButton = createElement("button", "dept-drawer__close");
+  const body = createElement("div", "dept-drawer__body");
+  const footer = createElement("div", "dept-drawer__footer");
+
+  overlay.setAttribute("aria-hidden", String(!state.isDeptDrawerOpen));
+  drawer.setAttribute("aria-label", "Add department drawer");
+  backdrop.type = "button";
+  backButton.type = "button";
+  closeButton.type = "button";
+  backButton.append(createIcon("chevron-left"));
+  closeButton.append(createIcon("close"));
+  backdrop.addEventListener("click", closeDrawer);
+  backButton.addEventListener("click", closeDrawer);
+  closeButton.addEventListener("click", closeDrawer);
+
+  // Department Name field (required)
+  const nameGroup = createElement("div", "drawer-form__group");
+  const nameLabel = createElement("label", "drawer-form__label");
+  nameLabel.append(createElement("span", "", "Department Name"), createElement("span", "drawer-form__required", " *"));
+  const nameInput = createElement("input", "drawer-form__title-input");
+  nameInput.type = "text";
+  nameInput.value = state.deptDraft.name;
+  nameInput.placeholder = "e.g., Human Resources";
+  nameInput.required = true;
+  nameInput.addEventListener("input", (event) => {
+    state.deptDraft.name = event.target.value;
+  });
+  nameGroup.append(nameLabel, nameInput);
+  body.appendChild(nameGroup);
+
+  // Department Code field (required)
+  const codeGroup = createElement("div", "drawer-form__group");
+  const codeLabel = createElement("label", "drawer-form__label");
+  codeLabel.append(createElement("span", "", "Department Code"), createElement("span", "drawer-form__required", " *"));
+  const codeInput = createElement("input", "drawer-form__title-input");
+  codeInput.type = "text";
+  codeInput.value = state.deptDraft.code;
+  codeInput.placeholder = "e.g., HRGA";
+  codeInput.required = true;
+  codeInput.addEventListener("input", (event) => {
+    state.deptDraft.code = event.target.value;
+  });
+  codeGroup.append(codeLabel, codeInput);
+  body.appendChild(codeGroup);
+
+  // Site dropdown (required)
+  const siteGroup = createElement("div", "drawer-form__group");
+  const siteLabel = createElement("label", "drawer-form__label");
+  siteLabel.append(createElement("span", "", "Site"), createElement("span", "drawer-form__required", " *"));
+  const siteSelect = createElement("select", "drawer-form__native-select");
+  siteSelect.required = true;
+  const defaultOption = document.createElement("option");
+  defaultOption.value = "";
+  defaultOption.textContent = "Select site";
+  defaultOption.disabled = true;
+  defaultOption.selected = !state.deptDraft.site;
+  siteSelect.append(defaultOption);
+  const allSites = getSites();
+  allSites.forEach((site) => {
+    const option = document.createElement("option");
+    option.value = site.name;
+    option.textContent = site.name;
+    siteSelect.append(option);
+  });
+  siteSelect.addEventListener("change", (event) => {
+    state.deptDraft.site = event.target.value;
+  });
+  siteGroup.append(siteLabel, siteSelect);
+  body.appendChild(siteGroup);
+
+  // Department Head field (optional)
+  const headGroup = createElement("div", "drawer-form__group");
+  const headLabel = createElement("label", "drawer-form__label", "Department Head");
+  const headInput = createElement("input", "drawer-form__title-input");
+  headInput.type = "text";
+  headInput.value = state.deptDraft.head;
+  headInput.placeholder = "e.g., Nadia Putri";
+  headInput.addEventListener("input", (event) => {
+    state.deptDraft.head = event.target.value;
+  });
+  headGroup.append(headLabel, headInput);
+  body.appendChild(headGroup);
+
+  // Footer
+  const footerActions = createElement("div", "dept-drawer__footer-actions");
+  const cancelButton = createElement("button", "dept-drawer__button dept-drawer__button--ghost", "Cancel");
+  const saveButton = createElement("button", "dept-drawer__button dept-drawer__button--primary", "Save");
+  cancelButton.type = "button";
+  saveButton.type = "button";
+  cancelButton.addEventListener("click", closeDrawer);
+  saveButton.addEventListener("click", () => {
+    if (state.deptDraft.name && state.deptDraft.code && state.deptDraft.site) {
+      const userManagementApp = workspaceApps.find(app => app.id === "user-management");
+      if (userManagementApp) {
+        userManagementApp.departments = userManagementApp.departments || [];
+        userManagementApp.departments.push({
+          id: `dept-${Date.now()}`,
+          name: state.deptDraft.name,
+          code: state.deptDraft.code,
+          site: state.deptDraft.site,
+          head: state.deptDraft.head || "-",
+          employees: 0,
+        });
+      }
+      closeDrawer();
+    }
+  });
+  footerActions.append(saveButton, cancelButton);
+  footer.appendChild(footerActions);
+
+  headerLeft.append(backButton, title);
+  header.append(headerLeft, closeButton);
+  drawer.append(header, body, footer);
+  overlay.append(backdrop, drawer);
+
+  return overlay;
+}
+
+function createSiteDetailDrawer(state, closeDrawer, onSave, mode = "view", isOpen = false) {
+  const site = state.siteDraft;
+  const isViewMode = mode === "view";
+
+  const overlay = createElement(
+    "div",
+    `site-detail-drawer-overlay${isOpen ? " is-open" : ""}`,
+  );
+  const backdrop = createElement("button", "site-detail-drawer-overlay__backdrop");
+  const drawer = createElement("aside", "site-detail-drawer");
+  const header = createElement("div", "site-detail-drawer__header");
+  const headerLeft = createElement("div", "site-detail-drawer__header-left");
+  const backButton = createElement("button", "site-detail-drawer__back");
+  const title = createElement("h2", "site-detail-drawer__title", isViewMode ? "Site Details" : "Edit Site");
+  const closeButton = createElement("button", "site-detail-drawer__close");
+  const body = createElement("div", "site-detail-drawer__body");
+  const footer = createElement("div", "site-detail-drawer__footer");
+
+  overlay.setAttribute("aria-hidden", String(!state.isSiteDetailDrawerOpen));
+  drawer.setAttribute("aria-label", isViewMode ? "Site details drawer" : "Edit site drawer");
+  backdrop.type = "button";
+  backButton.type = "button";
+  closeButton.type = "button";
+  backButton.append(createIcon("chevron-left"));
+  closeButton.append(createIcon("close"));
+  backdrop.addEventListener("click", closeDrawer);
+  backButton.addEventListener("click", closeDrawer);
+  closeButton.addEventListener("click", closeDrawer);
+
+  // Site Name field
+  const nameGroup = createElement("div", "drawer-form__group");
+  const nameLabel = createElement("label", "drawer-form__label");
+  nameLabel.append(createElement("span", "", "Site Name"));
+  const nameValue = createElement("div", "site-detail-drawer__value");
+  nameValue.textContent = site.name || "-";
+  nameGroup.append(nameLabel, isViewMode ? nameValue : createSiteInput(state, "name", site.name, "e.g., Headquarters Jakarta"));
+  body.appendChild(nameGroup);
+
+  // Site Code field
+  const codeGroup = createElement("div", "drawer-form__group");
+  const codeLabel = createElement("label", "drawer-form__label");
+  codeLabel.append(createElement("span", "", "Site Code"));
+  const codeValue = createElement("div", "site-detail-drawer__value");
+  codeValue.textContent = site.code || "-";
+  codeGroup.append(codeLabel, isViewMode ? codeValue : createSiteInput(state, "code", site.code, "e.g., HQ-JKT"));
+  body.appendChild(codeGroup);
+
+  // Address field
+  const addressGroup = createElement("div", "drawer-form__group");
+  const addressLabel = createElement("label", "drawer-form__label");
+  addressLabel.append(createElement("span", "", "Address"));
+  const addressValue = createElement("div", "site-detail-drawer__value");
+  addressValue.textContent = site.address || "-";
+  addressGroup.append(addressLabel, isViewMode ? addressValue : createSiteInput(state, "address", site.address, "e.g., Jl. Sudirman No. 123"));
+  body.appendChild(addressGroup);
+
+  // Footer
+  const footerActions = createElement("div", "site-detail-drawer__footer-actions");
+
+  if (isViewMode) {
+    const closeFooterBtn = createElement("button", "site-detail-drawer__button site-detail-drawer__button--primary", "Close");
+    closeFooterBtn.type = "button";
+    closeFooterBtn.addEventListener("click", closeDrawer);
+    footerActions.append(closeFooterBtn);
+  } else {
+    const cancelButton = createElement("button", "site-detail-drawer__button site-detail-drawer__button--ghost", "Cancel");
+    const saveButton = createElement("button", "site-detail-drawer__button site-detail-drawer__button--primary", "Save");
+    cancelButton.type = "button";
+    saveButton.type = "button";
+    cancelButton.addEventListener("click", closeDrawer);
+    saveButton.addEventListener("click", onSave);
+    footerActions.append(saveButton, cancelButton);
+  }
+
+  footer.appendChild(footerActions);
+
+  headerLeft.append(backButton, title);
+  header.append(headerLeft, closeButton);
+  drawer.append(header, body, footer);
+  overlay.append(backdrop, drawer);
+
+  return overlay;
+}
+
+function createSiteInput(state, field, value, placeholder) {
+  const input = createElement("input", "drawer-form__title-input");
+  input.type = "text";
+  input.value = value || "";
+  input.placeholder = placeholder;
+  input.dataset.field = field;
+  input.addEventListener("input", (e) => {
+    state.siteDraft[field] = e.target.value;
+  });
+  return input;
+}
+
+function createDeptDetailDrawer(state, closeDrawer, onSave, mode = "view", isOpen = false) {
+  const dept = state.deptDraft;
+  const isViewMode = mode === "view";
+
+  const overlay = createElement(
+    "div",
+    `dept-detail-drawer-overlay${isOpen ? " is-open" : ""}`,
+  );
+  const backdrop = createElement("button", "dept-detail-drawer-overlay__backdrop");
+  const drawer = createElement("aside", "dept-detail-drawer");
+  const header = createElement("div", "dept-detail-drawer__header");
+  const headerLeft = createElement("div", "dept-detail-drawer__header-left");
+  const backButton = createElement("button", "dept-detail-drawer__back");
+  const title = createElement("h2", "dept-detail-drawer__title", isViewMode ? "Department Details" : "Edit Department");
+  const closeButton = createElement("button", "dept-detail-drawer__close");
+  const body = createElement("div", "dept-detail-drawer__body");
+  const footer = createElement("div", "dept-detail-drawer__footer");
+
+  overlay.setAttribute("aria-hidden", String(!state.isDeptDetailDrawerOpen));
+  drawer.setAttribute("aria-label", isViewMode ? "Department details drawer" : "Edit department drawer");
+  backdrop.type = "button";
+  backButton.type = "button";
+  closeButton.type = "button";
+  backButton.append(createIcon("chevron-left"));
+  closeButton.append(createIcon("close"));
+  backdrop.addEventListener("click", closeDrawer);
+  backButton.addEventListener("click", closeDrawer);
+  closeButton.addEventListener("click", closeDrawer);
+
+  // Department Name field
+  const nameGroup = createElement("div", "drawer-form__group");
+  const nameLabel = createElement("label", "drawer-form__label");
+  nameLabel.append(createElement("span", "", "Department Name"));
+  const nameValue = createElement("div", "dept-detail-drawer__value");
+  nameValue.textContent = dept.name || "-";
+  nameGroup.append(nameLabel, isViewMode ? nameValue : createDeptInput(state, "name", dept.name, "e.g., Human Resources"));
+  body.appendChild(nameGroup);
+
+  // Department Code field
+  const codeGroup = createElement("div", "drawer-form__group");
+  const codeLabel = createElement("label", "drawer-form__label");
+  codeLabel.append(createElement("span", "", "Department Code"));
+  const codeValue = createElement("div", "dept-detail-drawer__value");
+  codeValue.textContent = dept.code || "-";
+  codeGroup.append(codeLabel, isViewMode ? codeValue : createDeptInput(state, "code", dept.code, "e.g., HRGA"));
+  body.appendChild(codeGroup);
+
+  // Site field
+  const siteGroup = createElement("div", "drawer-form__group");
+  const siteLabel = createElement("label", "drawer-form__label");
+  siteLabel.append(createElement("span", "", "Site"));
+  const siteValue = createElement("div", "dept-detail-drawer__value");
+  siteValue.textContent = dept.site || "-";
+  siteGroup.append(siteLabel, isViewMode ? siteValue : createDeptInput(state, "site", dept.site, "e.g., All Sites"));
+  body.appendChild(siteGroup);
+
+  // Department Head field
+  const headGroup = createElement("div", "drawer-form__group");
+  const headLabel = createElement("label", "drawer-form__label");
+  headLabel.append(createElement("span", "", "Department Head"));
+  const headValue = createElement("div", "dept-detail-drawer__value");
+  headValue.textContent = dept.head || "-";
+  headGroup.append(headLabel, isViewMode ? headValue : createDeptInput(state, "head", dept.head, "e.g., Nadia Putri"));
+  body.appendChild(headGroup);
+
+  // Footer
+  const footerActions = createElement("div", "dept-detail-drawer__footer-actions");
+
+  if (isViewMode) {
+    const closeFooterBtn = createElement("button", "dept-detail-drawer__button dept-detail-drawer__button--primary", "Close");
+    closeFooterBtn.type = "button";
+    closeFooterBtn.addEventListener("click", closeDrawer);
+    footerActions.append(closeFooterBtn);
+  } else {
+    const cancelButton = createElement("button", "dept-detail-drawer__button dept-detail-drawer__button--ghost", "Cancel");
+    const saveButton = createElement("button", "dept-detail-drawer__button dept-detail-drawer__button--primary", "Save");
+    cancelButton.type = "button";
+    saveButton.type = "button";
+    cancelButton.addEventListener("click", closeDrawer);
+    saveButton.addEventListener("click", onSave);
+    footerActions.append(saveButton, cancelButton);
+  }
+
+  footer.appendChild(footerActions);
+
+  headerLeft.append(backButton, title);
+  header.append(headerLeft, closeButton);
+  drawer.append(header, body, footer);
+  overlay.append(backdrop, drawer);
+
+  return overlay;
+}
+
+function createDeptInput(state, field, value, placeholder) {
+  const input = createElement("input", "drawer-form__title-input");
+  input.type = "text";
+  input.value = value || "";
+  input.placeholder = placeholder;
+  input.dataset.field = field;
+  input.addEventListener("input", (e) => {
+    state.deptDraft[field] = e.target.value;
+  });
+  return input;
+}
+
+function createUserDetailDrawer(state, closeDrawer, onSave, mode = "view", isOpen = false) {
+  const user = state.userDraft;
+  const isViewMode = mode === "view";
+
+  const overlay = createElement(
+    "div",
+    `user-detail-drawer-overlay${isOpen ? " is-open" : ""}`,
+  );
+  const backdrop = createElement("button", "user-detail-drawer-overlay__backdrop");
+  const drawer = createElement("aside", "user-detail-drawer");
+  const header = createElement("div", "user-detail-drawer__header");
+  const headerLeft = createElement("div", "user-detail-drawer__header-left");
+  const backButton = createElement("button", "user-detail-drawer__back");
+  const title = createElement("h2", "user-detail-drawer__title", isViewMode ? "User Details" : "Edit User");
+  const closeButton = createElement("button", "user-detail-drawer__close");
+  const body = createElement("div", "user-detail-drawer__body");
+  const footer = createElement("div", "user-detail-drawer__footer");
+
+  overlay.setAttribute("aria-hidden", String(!state.isUserDetailDrawerOpen));
+  drawer.setAttribute("aria-label", isViewMode ? "User details drawer" : "Edit user drawer");
+  backdrop.type = "button";
+  backButton.type = "button";
+  closeButton.type = "button";
+  backButton.append(createIcon("chevron-left"));
+  closeButton.append(createIcon("close"));
+  backdrop.addEventListener("click", closeDrawer);
+  backButton.addEventListener("click", closeDrawer);
+  closeButton.addEventListener("click", closeDrawer);
+
+  // Name field
+  const nameGroup = createElement("div", "drawer-form__group");
+  const nameLabel = createElement("label", "drawer-form__label");
+  nameLabel.append(createElement("span", "", "Name"));
+  const nameValue = createElement("div", "user-detail-drawer__value");
+  nameValue.textContent = user.name || "-";
+  nameGroup.append(nameLabel, isViewMode ? nameValue : createUserInput(state, "name", user.name, "e.g., Nadia Putri"));
+  body.appendChild(nameGroup);
+
+  // Email field
+  const emailGroup = createElement("div", "drawer-form__group");
+  const emailLabel = createElement("label", "drawer-form__label");
+  emailLabel.append(createElement("span", "", "Email"));
+  const emailValue = createElement("div", "user-detail-drawer__value");
+  emailValue.textContent = user.email || "-";
+  emailGroup.append(emailLabel, isViewMode ? emailValue : createUserInput(state, "email", user.email, "e.g., nadia@company.com"));
+  body.appendChild(emailGroup);
+
+  // Phone field
+  const phoneGroup = createElement("div", "drawer-form__group");
+  const phoneLabel = createElement("label", "drawer-form__label");
+  phoneLabel.append(createElement("span", "", "Phone"));
+  const phoneValue = createElement("div", "user-detail-drawer__value");
+  phoneValue.textContent = user.phone || "-";
+  phoneGroup.append(phoneLabel, isViewMode ? phoneValue : createUserInput(state, "phone", user.phone, "e.g., +62 812 3456 7890"));
+  body.appendChild(phoneGroup);
+
+  // Department field
+  const deptGroup = createElement("div", "drawer-form__group");
+  const deptLabel = createElement("label", "drawer-form__label");
+  deptLabel.append(createElement("span", "", "Department"));
+  const deptValue = createElement("div", "user-detail-drawer__value");
+  deptValue.textContent = user.department || "-";
+  if (isViewMode) {
+    deptGroup.append(deptLabel, deptValue);
+  } else {
+    const deptSelect = createElement("select", "drawer-form__title-input");
+    deptSelect.required = true;
+    const defaultOption = document.createElement("option");
+    defaultOption.value = "";
+    defaultOption.textContent = "Select department";
+    defaultOption.disabled = true;
+    defaultOption.selected = !user.department;
+    deptSelect.append(defaultOption);
+    const allDepartments = getDepartments();
+    allDepartments.forEach((dept) => {
+      const option = document.createElement("option");
+      option.value = dept.name;
+      option.textContent = dept.name;
+      if (dept.name === user.department) option.selected = true;
+      deptSelect.append(option);
+    });
+    deptSelect.addEventListener("change", (event) => {
+      state.userDraft.department = event.target.value;
+    });
+    deptGroup.append(deptLabel, deptSelect);
+  }
+  body.appendChild(deptGroup);
+
+  // Position field
+  const positionGroup = createElement("div", "drawer-form__group");
+  const positionLabel = createElement("label", "drawer-form__label");
+  positionLabel.append(createElement("span", "", "Position"));
+  const positionValue = createElement("div", "user-detail-drawer__value");
+  positionValue.textContent = user.position || "-";
+  positionGroup.append(positionLabel, isViewMode ? positionValue : createUserInput(state, "position", user.position, "e.g., HR Manager"));
+  body.appendChild(positionGroup);
+
+  // Join Date field
+  const joinDateGroup = createElement("div", "drawer-form__group");
+  const joinDateLabel = createElement("label", "drawer-form__label");
+  joinDateLabel.append(createElement("span", "", "Join Date"));
+  const formatDisplayDate = (dateStr) => {
+    if (!dateStr) return "-";
+    const date = new Date(dateStr);
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+  };
+  const joinDateValue = createElement("div", "user-detail-drawer__value");
+  joinDateValue.textContent = formatDisplayDate(user.joinDate);
+  joinDateGroup.append(joinDateLabel, isViewMode ? joinDateValue : createUserInput(state, "joinDate", user.joinDate, ""));
+  body.appendChild(joinDateGroup);
+
+  // Password field (only in edit mode)
+  if (!isViewMode) {
+    const passwordGroup = createElement("div", "drawer-form__group");
+    const passwordLabel = createElement("label", "drawer-form__label");
+    passwordLabel.append(createElement("span", "", "Password"));
+    const passwordInput = createUserPasswordInput(state, "password", user.password || "", "Leave blank to keep current");
+    passwordGroup.append(passwordLabel, passwordInput);
+    body.appendChild(passwordGroup);
+  }
+
+  // Footer
+  const footerActions = createElement("div", "user-detail-drawer__footer-actions");
+
+  if (isViewMode) {
+    const closeFooterBtn = createElement("button", "user-detail-drawer__button user-detail-drawer__button--primary", "Close");
+    closeFooterBtn.type = "button";
+    closeFooterBtn.addEventListener("click", closeDrawer);
+    footerActions.append(closeFooterBtn);
+  } else {
+    const cancelButton = createElement("button", "user-detail-drawer__button user-detail-drawer__button--ghost", "Cancel");
+    const saveButton = createElement("button", "user-detail-drawer__button user-detail-drawer__button--primary", "Save");
+    cancelButton.type = "button";
+    saveButton.type = "button";
+    cancelButton.addEventListener("click", closeDrawer);
+    saveButton.addEventListener("click", onSave);
+    footerActions.append(saveButton, cancelButton);
+  }
+
+  footer.appendChild(footerActions);
+
+  headerLeft.append(backButton, title);
+  header.append(headerLeft, closeButton);
+  drawer.append(header, body, footer);
+  overlay.append(backdrop, drawer);
+
+  return overlay;
+}
+
+function createUserInput(state, field, value, placeholder) {
+  const input = createElement("input", "drawer-form__title-input");
+  input.type = "text";
+  input.value = value || "";
+  input.placeholder = placeholder;
+  input.dataset.field = field;
+  input.addEventListener("input", (e) => {
+    state.userDraft[field] = e.target.value;
+  });
+  return input;
+}
+
+function createUserPasswordInput(state, field, value, placeholder) {
+  const wrapper = createElement("div", "drawer-form__password-wrapper");
+  const input = createElement("input", "drawer-form__title-input drawer-form__password-input");
+  input.type = "password";
+  input.value = value || "";
+  input.placeholder = placeholder;
+  input.dataset.field = field;
+  input.addEventListener("input", (e) => {
+    state.userDraft[field] = e.target.value;
+  });
+  const toggleBtn = createElement("button", "drawer-form__password-toggle");
+  toggleBtn.type = "button";
+  toggleBtn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
+  toggleBtn.addEventListener("click", () => {
+    const isPassword = input.type === "password";
+    input.type = isPassword ? "text" : "password";
+    toggleBtn.innerHTML = isPassword
+      ? '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>'
+      : '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
+  });
+  wrapper.append(input, toggleBtn);
+  return wrapper;
+}
+
 export function createAppShell() {
   const state = getInitialState();
   const shell = createElement("main", "workspace-shell");
@@ -3388,7 +4341,7 @@ export function createAppShell() {
 
         const nameCell = createElement("td", null, record.name);
 
-        const codeCell = createElement("td", null, record.code);
+        const codeCell = createElement("td", null, record.assetNumber);
 
         const categoryCell = createElement("td", null, record.category);
 
@@ -3456,6 +4409,11 @@ export function createAppShell() {
           kebabDropdown.classList.remove("is-open");
         });
 
+        document.addEventListener("click", () => {
+          isKebabOpen = false;
+          kebabDropdown.classList.remove("is-open");
+        });
+
         menuItems.forEach((item) => {
           const menuBtn = createElement(
             "button",
@@ -3515,7 +4473,7 @@ export function createAppShell() {
       records = records.filter(
         (r) =>
           r.name.toLowerCase().includes(searchLower) ||
-          r.code.toLowerCase().includes(searchLower) ||
+          r.assetNumber.toLowerCase().includes(searchLower) ||
           r.category.toLowerCase().includes(searchLower),
       );
     }
@@ -3541,7 +4499,7 @@ export function createAppShell() {
     ];
     const rows = records.map((r) => [
       `"${r.name}"`,
-      `"${r.code}"`,
+      `"${r.assetNumber}"`,
       `"${r.category}"`,
       `"${r.location}"`,
       `"${r.status}"`,
@@ -3578,17 +4536,19 @@ export function createAppShell() {
         const cleanValues = values.map((v) => v.replace(/"/g, "").trim());
 
         if (cleanValues.length >= 4) {
-          const newId = `asset-${Date.now()}-${i}`;
+          const manualCode = cleanValues[1] || `FA${String(activeApp.records.length + 1).padStart(3, "0")}`;
+          const category = cleanValues[2] || "Elektronik";
+          const location = cleanValues[3] || "BSD";
+          const assetNumber = generateAssetNumber(manualCode, category, location);
+
           const newRecord = {
-            id: newId,
-            code:
-              cleanValues[1] ||
-              `AST-${String(activeApp.records.length + 1).padStart(3, "0")}`,
+            id: assetNumber,
+            assetNumber: assetNumber,
             name: cleanValues[0] || "New Asset",
-            category: cleanValues[2] || "Uncategorized",
-            location: cleanValues[3] || "Unassigned",
-            status: cleanValues[4] || "Available",
-            statusTone: getAssetStatusTone(cleanValues[4] || "Available"),
+            category: category,
+            location: location,
+            status: cleanValues[4] || "Active",
+            statusTone: getAssetStatusTone(cleanValues[4] || "Active"),
             assignedTo: cleanValues[5] || "-",
             department: cleanValues[6] || "-",
             condition: cleanValues[7] || "Ready to deploy",
@@ -3757,6 +4717,16 @@ export function createAppShell() {
   function createUsersWorkspace(activeApp) {
     const wrapper = createElement("section", "users-workspace");
     const meta = USER_PAGE_META["All Users"];
+    
+    const allKebabMenus = [];
+    
+    function closeAllKebabMenus(except = null) {
+      allKebabMenus.forEach(({ dropdown }) => {
+        if (dropdown !== except) {
+          dropdown.classList.remove("is-open");
+        }
+      });
+    }
 
     // ===== HEADER TOOLBAR (sticky) =====
     const headerToolbar = createElement("div", "users-workspace__header-toolbar");
@@ -3940,6 +4910,7 @@ export function createAppShell() {
       emptyRow.append(emptyCell);
       tbody.append(emptyRow);
     } else {
+      allKebabMenus.length = 0;
       filteredRecords.forEach((record) => {
         const row = createElement("tr");
         row.dataset.userId = record.id;
@@ -3967,68 +4938,83 @@ export function createAppShell() {
         const joinDateCell = createElement("td", "col-4", formatDate(record.joinDate));
 
         // Action cell with kebab
-        const actionCell = createElement("td", "col-5");
-        actionCell.classList.add("users-workspace__action-cell");
+        const actionCell = createElement("td", "col-5 users-workspace__action-cell");
         const kebabBtn = createElement("button", "users-workspace__kebab-btn");
         kebabBtn.type = "button";
         kebabBtn.setAttribute("aria-label", "User actions");
-        kebabBtn.style.cssText = "display:flex;align-items:center;justify-content:center;width:28px;height:28px;background:transparent;border:none;cursor:pointer;";
         kebabBtn.innerHTML = '<span style="font-size:16px;color:#666;">⋮</span>';
 
         const kebabDropdown = createElement("div", "users-workspace__kebab-dropdown");
-        kebabDropdown.style.cssText = "display:none;position:absolute;right:16px;top:50%;transform:translateY(-50%);background:white;border:1px solid #ccc;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,0.15);min-width:120px;z-index:1000;";
         kebabDropdown.setAttribute("role", "menu");
 
         const menuItems = [
           {
             label: "View",
             icon: "eye",
-            action: () => openUserDetailDrawer(record),
+            action: () => viewUser(record),
           },
           {
             label: "Edit",
             icon: "edit",
-            action: () => openUserEditDrawer(record),
+            action: () => editUser(record),
           },
           {
             label: "Delete",
             icon: "trash",
-            action: () => confirmDeleteUser(record, activeApp),
+            action: () => removeUser(record, activeApp),
             danger: true,
           },
         ];
+
+        const iconSvgs = {
+          eye: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>',
+          edit: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>',
+          trash: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>',
+        };
+
+        menuItems.forEach((item) => {
+          const menuBtn = createElement(
+            "button",
+            `users-workspace__kebab-option${item.danger ? " is-danger" : ""}`,
+          );
+          menuBtn.type = "button";
+          menuBtn.setAttribute("role", "menuitem");
+          menuBtn.innerHTML = `${iconSvgs[item.icon]}<span>${item.label}</span>`;
+          menuBtn.addEventListener("click", () => {
+            item.action();
+            isKebabOpen = false;
+            kebabDropdown.classList.remove("is-open");
+          });
+          kebabDropdown.appendChild(menuBtn);
+        });
+
+        allKebabMenus.push({ btn: kebabBtn, dropdown: kebabDropdown });
 
         let isKebabOpen = false;
 
         kebabBtn.addEventListener("click", (e) => {
           e.stopPropagation();
+          const rect = kebabBtn.getBoundingClientRect();
+          const dropdownHeight = 120;
+          const spaceBelow = window.innerHeight - rect.bottom;
+          
+          kebabDropdown.style.right = "auto";
+          kebabDropdown.style.left = rect.right - 150 + "px";
+          
+          if (spaceBelow < dropdownHeight) {
+            kebabDropdown.style.top = rect.top - dropdownHeight - 4 + "px";
+          } else {
+            kebabDropdown.style.top = rect.bottom + 4 + "px";
+          }
+          
+          closeAllKebabMenus(kebabDropdown);
           isKebabOpen = !isKebabOpen;
-          kebabDropdown.style.display = isKebabOpen ? "block" : "none";
+          kebabDropdown.classList.toggle("is-open", isKebabOpen);
         });
 
         document.addEventListener("click", () => {
           isKebabOpen = false;
-          kebabDropdown.style.display = "none";
-        });
-
-        menuItems.forEach((item) => {
-          const menuBtn = createElement(
-            "button",
-            `users-workspace__kebab-option${item.danger ? " users-workspace__kebab-option--danger" : ""}`,
-          );
-          menuBtn.type = "button";
-          menuBtn.setAttribute("role", "menuitem");
-          menuBtn.style.cssText = "display:flex;align-items:center;gap:8px;width:100%;padding:10px 14px;border:none;background:none;text-align:left;cursor:pointer;";
-          menuBtn.append(
-            createIcon(item.icon),
-            createElement("span", null, item.label),
-          );
-          menuBtn.addEventListener("click", () => {
-            item.action();
-            isKebabOpen = false;
-            kebabDropdown.style.display = "none";
-          });
-          kebabDropdown.append(menuBtn);
+          kebabDropdown.classList.remove("is-open");
         });
 
         actionCell.append(kebabBtn, kebabDropdown);
@@ -4047,24 +5033,89 @@ export function createAppShell() {
     return wrapper;
   }
 
-  function openUserDetailDrawer(record) {
-    // TODO: Implement user detail drawer
-    alert(`View user: ${record.name}`);
+  function viewUser(user) {
+    state.lastAction = "view-user";
+    state.currentUserId = user.id;
+    state.userDetailMode = "view";
+    state.userDraft = {
+      name: user.name,
+      email: user.email,
+      phone: user.phone || "",
+      department: user.department,
+      position: user.position,
+      joinDate: user.joinDate,
+      id: user.id,
+    };
+    state.isUserDetailDrawerOpen = true;
+    render();
   }
 
-  function openUserEditDrawer(record) {
-    // TODO: Implement user edit drawer
-    alert(`Edit user: ${record.name}`);
+  function editUser(user) {
+    state.lastAction = "edit-user";
+    state.currentUserId = user.id;
+    state.userDetailMode = "edit";
+    state.userDraft = {
+      name: user.name,
+      email: user.email,
+      phone: user.phone || "",
+      department: user.department,
+      position: user.position,
+      joinDate: user.joinDate,
+      id: user.id,
+    };
+    state.isUserDetailDrawerOpen = true;
+    render();
   }
 
-  function confirmDeleteUser(record, activeApp) {
+  function removeUser(user, activeApp) {
     const confirmed = window.confirm(
-      `Are you sure you want to delete "${record.name}"?`,
+      `Are you sure you want to delete "${user.name}"?`,
     );
     if (confirmed) {
-      activeApp.users = activeApp.users.filter((u) => u.id !== record.id);
+      activeApp.users = activeApp.users.filter((u) => u.id !== user.id);
       render();
     }
+  }
+
+  function closeUserDetailDrawer() {
+    const overlay = shell.querySelector(".user-detail-drawer-overlay");
+
+    if (overlay) {
+      overlay.classList.remove("is-open");
+
+      setTimeout(() => {
+        state.isUserDetailDrawerOpen = false;
+        state.userDetailMode = "view";
+        state.currentUserId = null;
+        state.userDraft = getInitialUserDraft();
+
+        if (overlay.isConnected) {
+          overlay.remove();
+        }
+
+        render();
+      }, 360);
+    } else {
+      state.isUserDetailDrawerOpen = false;
+      state.userDetailMode = "view";
+      state.currentUserId = null;
+      state.userDraft = getInitialUserDraft();
+      render();
+    }
+  }
+
+  function saveUserDetailDrawer() {
+    const userManagementApp = workspaceApps.find(app => app.id === "user-management");
+    if (userManagementApp) {
+      userManagementApp.users = userManagementApp.users || [];
+      const existingIndex = userManagementApp.users.findIndex(u => u.id === state.userDraft.id);
+      if (existingIndex >= 0) {
+        userManagementApp.users[existingIndex] = { ...state.userDraft };
+      } else {
+        userManagementApp.users.push({ ...state.userDraft });
+      }
+    }
+    closeUserDetailDrawer();
   }
 
   function openAssetDetailDrawer(record, activeApp) {
@@ -4135,6 +5186,228 @@ export function createAppShell() {
     state.isUserDrawerOpen = false;
     state.userDraft = getInitialUserDraft();
     render();
+  }
+
+  function closeSiteDrawer() {
+    state.isSiteDrawerOpen = false;
+    state.siteDraft = getInitialSiteDraft();
+    render();
+  }
+
+  function closeSiteDrawer() {
+    const overlay = shell.querySelector(".site-drawer-overlay");
+
+    if (overlay) {
+      overlay.classList.remove("is-open");
+
+      setTimeout(() => {
+        state.isSiteDrawerOpen = false;
+        state.siteDraft = getInitialSiteDraft();
+
+        if (overlay.isConnected) {
+          overlay.remove();
+        }
+
+        render();
+      }, 360);
+    } else {
+      state.isSiteDrawerOpen = false;
+      state.siteDraft = getInitialSiteDraft();
+      render();
+    }
+  }
+
+  function closeDeptDrawer() {
+    const overlay = shell.querySelector(".dept-drawer-overlay");
+
+    if (overlay) {
+      overlay.classList.remove("is-open");
+
+      setTimeout(() => {
+        state.isDeptDrawerOpen = false;
+        state.deptDraft = getInitialDeptDraft();
+
+        if (overlay.isConnected) {
+          overlay.remove();
+        }
+
+        render();
+      }, 360);
+    } else {
+      state.isDeptDrawerOpen = false;
+      state.deptDraft = getInitialDeptDraft();
+      render();
+    }
+  }
+
+  function openSiteDrawer() {
+    state.lastAction = "new-site";
+    state.siteDraft = getInitialSiteDraft();
+    state.isSiteDrawerOpen = true;
+    render();
+  }
+
+  function openDeptDrawer() {
+    state.lastAction = "new-dept";
+    state.deptDraft = getInitialDeptDraft();
+    state.isDeptDrawerOpen = true;
+    render();
+  }
+
+  function viewSite(site) {
+    state.lastAction = "view-site";
+    state.currentSiteId = site.id;
+    state.siteDetailMode = "view";
+    state.siteDraft = {
+      name: site.name,
+      code: site.code,
+      address: site.address,
+      id: site.id,
+    };
+    state.isSiteDetailDrawerOpen = true;
+    render();
+  }
+
+  function editSite(site) {
+    state.lastAction = "edit-site";
+    state.currentSiteId = site.id;
+    state.siteDetailMode = "edit";
+    state.siteDraft = {
+      name: site.name,
+      code: site.code,
+      address: site.address,
+      id: site.id,
+    };
+    state.isSiteDetailDrawerOpen = true;
+    render();
+  }
+
+  function removeSite(site) {
+    const userManagementApp = workspaceApps.find(app => app.id === "user-management");
+    if (userManagementApp && userManagementApp.sites) {
+      userManagementApp.sites = userManagementApp.sites.filter(s => s.id !== site.id);
+    }
+    render();
+  }
+
+  function viewDept(dept) {
+    state.lastAction = "view-dept";
+    state.currentDeptId = dept.id;
+    state.deptDetailMode = "view";
+    state.deptDraft = {
+      name: dept.name,
+      code: dept.code,
+      site: dept.site,
+      head: dept.head,
+      id: dept.id,
+    };
+    state.isDeptDetailDrawerOpen = true;
+    render();
+  }
+
+  function editDept(dept) {
+    state.lastAction = "edit-dept";
+    state.currentDeptId = dept.id;
+    state.deptDetailMode = "edit";
+    state.deptDraft = {
+      name: dept.name,
+      code: dept.code,
+      site: dept.site,
+      head: dept.head,
+      id: dept.id,
+    };
+    state.isDeptDetailDrawerOpen = true;
+    render();
+  }
+
+  function removeDept(dept) {
+    const userManagementApp = workspaceApps.find(app => app.id === "user-management");
+    if (userManagementApp && userManagementApp.departments) {
+      userManagementApp.departments = userManagementApp.departments.filter(d => d.id !== dept.id);
+    }
+    render();
+  }
+
+  function closeSiteDetailDrawer() {
+    const overlay = shell.querySelector(".site-detail-drawer-overlay");
+
+    if (overlay) {
+      overlay.classList.remove("is-open");
+
+      setTimeout(() => {
+        state.isSiteDetailDrawerOpen = false;
+        state.siteDetailMode = "view";
+        state.currentSiteId = null;
+        state.siteDraft = getInitialSiteDraft();
+
+        if (overlay.isConnected) {
+          overlay.remove();
+        }
+
+        render();
+      }, 360);
+    } else {
+      state.isSiteDetailDrawerOpen = false;
+      state.siteDetailMode = "view";
+      state.currentSiteId = null;
+      state.siteDraft = getInitialSiteDraft();
+      render();
+    }
+  }
+
+  function closeDeptDetailDrawer() {
+    const overlay = shell.querySelector(".dept-detail-drawer-overlay");
+
+    if (overlay) {
+      overlay.classList.remove("is-open");
+
+      setTimeout(() => {
+        state.isDeptDetailDrawerOpen = false;
+        state.deptDetailMode = "view";
+        state.currentDeptId = null;
+        state.deptDraft = getInitialDeptDraft();
+
+        if (overlay.isConnected) {
+          overlay.remove();
+        }
+
+        render();
+      }, 360);
+    } else {
+      state.isDeptDetailDrawerOpen = false;
+      state.deptDetailMode = "view";
+      state.currentDeptId = null;
+      state.deptDraft = getInitialDeptDraft();
+      render();
+    }
+  }
+
+  function saveSiteDetailDrawer() {
+    const userManagementApp = workspaceApps.find(app => app.id === "user-management");
+    if (userManagementApp) {
+      userManagementApp.sites = userManagementApp.sites || [];
+      const existingIndex = userManagementApp.sites.findIndex(s => s.id === state.siteDraft.id);
+      if (existingIndex >= 0) {
+        userManagementApp.sites[existingIndex] = { ...state.siteDraft };
+      } else {
+        userManagementApp.sites.push({ ...state.siteDraft });
+      }
+    }
+    closeSiteDetailDrawer();
+  }
+
+  function saveDeptDetailDrawer() {
+    const userManagementApp = workspaceApps.find(app => app.id === "user-management");
+    if (userManagementApp) {
+      userManagementApp.departments = userManagementApp.departments || [];
+      const existingIndex = userManagementApp.departments.findIndex(d => d.id === state.deptDraft.id);
+      if (existingIndex >= 0) {
+        userManagementApp.departments[existingIndex] = { ...state.deptDraft };
+      } else {
+        userManagementApp.departments.push({ ...state.deptDraft });
+      }
+    }
+    closeDeptDetailDrawer();
   }
 
   function openAttachmentViewer(attachment) {
@@ -4419,12 +5692,12 @@ export function createAppShell() {
     defaultOption.disabled = true;
     defaultOption.selected = !state.userDraft.department;
     departmentSelect.append(defaultOption);
-    const departments = ["HRGA", "Finance", "IT", "Operations", "Marketing", "Creative Studio", "Asset Ops", "Other"];
-    departments.forEach((dept) => {
+    const allDepartments = getDepartments();
+    allDepartments.forEach((dept) => {
       const option = document.createElement("option");
-      option.value = dept;
-      option.textContent = dept;
-      if (dept === state.userDraft.department) option.selected = true;
+      option.value = dept.name;
+      option.textContent = dept.name;
+      if (dept.name === state.userDraft.department) option.selected = true;
       departmentSelect.append(option);
     });
     departmentSelect.addEventListener("change", (event) => {
@@ -4702,6 +5975,466 @@ export function createAppShell() {
     state.isUserDrawerOpen = false;
     state.userDraft = getInitialUserDraft();
     render();
+  }
+
+  // ===== ASSET DRAWER FUNCTIONS =====
+
+  function isAssetDraftValid(draft) {
+    return draft.name?.trim() &&
+           draft.manualCode?.trim() &&
+           draft.category &&
+           draft.site &&
+           draft.status;
+  }
+
+  function createAssetDrawer(state, closeDrawer, onSave, isOpen = false) {
+    const overlay = createElement(
+      "div",
+      `asset-drawer-overlay${isOpen ? " is-open" : ""}`,
+    );
+    const backdrop = createElement("button", "asset-drawer-overlay__backdrop");
+    const drawer = createElement("aside", "asset-drawer");
+    const header = createElement("div", "asset-drawer__header");
+    const headerLeft = createElement("div", "asset-drawer__header-left");
+    const backButton = createElement("button", "asset-drawer__back");
+    const title = createElement("h2", "asset-drawer__title", "New Asset");
+    const closeButton = createElement("button", "asset-drawer__close");
+    const body = createElement("div", "asset-drawer__body");
+
+    overlay.setAttribute("aria-hidden", String(!state.isAssetDrawerOpen));
+    drawer.setAttribute("aria-label", "New asset drawer");
+    backdrop.type = "button";
+    backButton.type = "button";
+    closeButton.type = "button";
+    backButton.append(createIcon("chevron-left"));
+    closeButton.append(createIcon("close"));
+    backdrop.addEventListener("click", closeDrawer);
+    backButton.addEventListener("click", closeDrawer);
+    closeButton.addEventListener("click", closeDrawer);
+
+    // ===== ASSET IMAGE SECTION =====
+    const imageSection = createElement("div", "drawer-form__section");
+    imageSection.append(createSectionLabel("image", "Asset Image"));
+
+    const imageGroup = createElement("div", "drawer-form__group");
+    const imagePreview = createElement("div", "asset-drawer__image-preview");
+
+    if (state.assetDraft.assetImage) {
+      const img = document.createElement("img");
+      img.src = state.assetDraft.assetImage;
+      img.alt = "Asset preview";
+      imagePreview.append(img);
+    } else {
+      imagePreview.append(createElement("div", "asset-drawer__image-placeholder", "+ Add Image"));
+    }
+
+    const imageInput = document.createElement("input");
+    imageInput.type = "file";
+    imageInput.accept = "image/*";
+    imageInput.style.display = "none";
+
+    // Function to update image preview without re-rendering
+    const updateImagePreview = (imageData) => {
+      imagePreview.innerHTML = "";
+      if (imageData) {
+        const img = document.createElement("img");
+        img.src = imageData;
+        img.alt = "Asset preview";
+        imagePreview.append(img);
+      } else {
+        imagePreview.append(createElement("div", "asset-drawer__image-placeholder", "+ Add Image"));
+      }
+    };
+
+    imageInput.addEventListener("change", (event) => {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          state.assetDraft.assetImage = e.target.result;
+          updateImagePreview(e.target.result);
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    imagePreview.style.cursor = "pointer";
+    imagePreview.addEventListener("click", () => imageInput.click());
+
+    imageGroup.append(imageInput, imagePreview);
+    imageSection.append(imageGroup);
+
+    // ===== BASIC INFORMATION SECTION =====
+    const basicSection = createElement("div", "drawer-form__section");
+    basicSection.append(createSectionLabel("package", "Basic Information"));
+
+    // Asset Name (required)
+    const nameGroup = createElement("div", "drawer-form__group");
+    const nameLabel = createElement("label", "drawer-form__label");
+    nameLabel.append(createElement("span", "", "Asset Name"), createElement("span", "drawer-form__required", " *"));
+    const nameInput = createElement("input", "drawer-form__title-input");
+    nameInput.type = "text";
+    nameInput.value = state.assetDraft.name;
+    nameInput.placeholder = "e.g. MacBook Pro 16";
+    nameInput.addEventListener("input", (event) => {
+      state.assetDraft.name = event.target.value;
+    });
+    nameGroup.append(nameLabel, nameInput);
+    basicSection.append(nameGroup);
+
+    // No Asset and Status in 2 columns
+    const assetStatusRow = createElement("div", "drawer-form__row-2col");
+
+    // No Asset (required)
+    const noAssetGroup = createElement("div", "drawer-form__group");
+    const noAssetLabel = createElement("label", "drawer-form__label");
+    noAssetLabel.append(createElement("span", "", "No Asset"), createElement("span", "drawer-form__required", " *"));
+    const noAssetInput = createElement("input", "drawer-form__title-input");
+    noAssetInput.type = "text";
+    noAssetInput.value = state.assetDraft.manualCode;
+    noAssetInput.placeholder = "FA001 atau FA010.1, FA010.20";
+    noAssetInput.addEventListener("input", (event) => {
+      state.assetDraft.manualCode = event.target.value;
+    });
+    noAssetGroup.append(noAssetLabel, noAssetInput);
+
+    // Status (required)
+    const statusGroup = createElement("div", "drawer-form__group");
+    const statusLabel = createElement("label", "drawer-form__label");
+    statusLabel.append(createElement("span", "", "Status"), createElement("span", "drawer-form__required", " *"));
+    const statusSelect = createElement("select", "drawer-form__title-input");
+    ASSET_STATUS_OPTIONS.forEach((statusOption) => {
+      const option = document.createElement("option");
+      option.value = statusOption;
+      option.textContent = statusOption;
+      if (statusOption === state.assetDraft.status) option.selected = true;
+      statusSelect.append(option);
+    });
+    statusSelect.addEventListener("change", (event) => {
+      state.assetDraft.status = event.target.value;
+    });
+    statusGroup.append(statusLabel, statusSelect);
+
+    assetStatusRow.append(noAssetGroup, statusGroup);
+    basicSection.append(assetStatusRow);
+
+    // Cost and Purchase Date in 2 columns
+    const costDateRow = createElement("div", "drawer-form__row-2col");
+
+    // Cost (Rp)
+    const costGroup = createElement("div", "drawer-form__group");
+    const costLabel = createElement("label", "drawer-form__label", "Cost (Rp)");
+    const costInput = createElement("input", "drawer-form__title-input");
+    costInput.type = "text";
+    costInput.value = state.assetDraft.cost;
+    costInput.placeholder = "0";
+    costInput.style.fontFamily = "inherit";
+
+    // Format currency with thousand separator
+    const formatCurrency = (value) => {
+      // Remove non-digit characters
+      const digitsOnly = value.replace(/\D/g, '');
+      if (!digitsOnly) return '';
+      // Add thousand separator (dot)
+      return digitsOnly.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    };
+
+    costInput.addEventListener("input", (event) => {
+      const formatted = formatCurrency(event.target.value);
+      costInput.value = formatted;
+      state.assetDraft.cost = formatted;
+    });
+    costGroup.append(costLabel, costInput);
+
+    // Purchase Date
+    const purchaseGroup = createElement("div", "drawer-form__group");
+    const purchaseLabel = createElement("label", "drawer-form__label", "Purchase Date");
+    const purchaseInput = createElement("input", "drawer-form__date-input");
+    purchaseInput.type = "date";
+    purchaseInput.value = state.assetDraft.purchaseDate;
+    purchaseInput.addEventListener("change", (event) => {
+      state.assetDraft.purchaseDate = event.target.value;
+    });
+    purchaseGroup.append(purchaseLabel, purchaseInput);
+
+    costDateRow.append(costGroup, purchaseGroup);
+    basicSection.append(costDateRow);
+
+    // ===== LOCATION & ASSIGNMENT SECTION =====
+    const locationSection = createElement("div", "drawer-form__section");
+    locationSection.append(createSectionLabel("map-pin", "Location & Assignment"));
+
+    // Category and Site in 2 columns
+    const categorySiteRow = createElement("div", "drawer-form__row-2col");
+
+    // Category (required)
+    const categoryGroup = createElement("div", "drawer-form__group");
+    const categoryLabel = createElement("label", "drawer-form__label");
+    categoryLabel.append(createElement("span", "", "Category"), createElement("span", "drawer-form__required", " *"));
+    const categorySelect = createElement("select", "drawer-form__title-input");
+    Object.keys(ASSET_CATEGORY_TO_ROMAWI).forEach((cat) => {
+      const option = document.createElement("option");
+      option.value = cat;
+      option.textContent = cat;
+      if (cat === state.assetDraft.category) option.selected = true;
+      categorySelect.append(option);
+    });
+    categorySelect.addEventListener("change", (event) => {
+      state.assetDraft.category = event.target.value;
+    });
+    categoryGroup.append(categoryLabel, categorySelect);
+
+    // Site (required)
+    const siteGroup = createElement("div", "drawer-form__group");
+    const siteLabel = createElement("label", "drawer-form__label");
+    siteLabel.append(createElement("span", "", "Site"), createElement("span", "drawer-form__required", " *"));
+    const siteSelect = createElement("select", "drawer-form__title-input");
+    const allSites = getSites();
+    allSites.forEach((site) => {
+      const option = document.createElement("option");
+      option.value = site.name;
+      option.textContent = site.name;
+      if (site.name === state.assetDraft.site) option.selected = true;
+      siteSelect.append(option);
+    });
+    siteSelect.addEventListener("change", (event) => {
+      state.assetDraft.site = event.target.value;
+    });
+    siteGroup.append(siteLabel, siteSelect);
+
+    categorySiteRow.append(categoryGroup, siteGroup);
+    locationSection.append(categorySiteRow);
+
+    // Department and Person in Charge in 2 columns
+    const deptPicRow = createElement("div", "drawer-form__row-2col");
+
+    // Department
+    const deptGroup = createElement("div", "drawer-form__group");
+    const deptLabel = createElement("label", "drawer-form__label", "Department");
+    const deptSelect = createElement("select", "drawer-form__title-input");
+    const emptyDeptOption = document.createElement("option");
+    emptyDeptOption.value = "";
+    emptyDeptOption.textContent = "Select department";
+    emptyDeptOption.selected = !state.assetDraft.department;
+    deptSelect.append(emptyDeptOption);
+    const allDepartments = getDepartments();
+    allDepartments.forEach((dept) => {
+      const option = document.createElement("option");
+      option.value = dept.name;
+      option.textContent = dept.name;
+      if (dept.name === state.assetDraft.department) option.selected = true;
+      deptSelect.append(option);
+    });
+    deptSelect.addEventListener("change", (event) => {
+      state.assetDraft.department = event.target.value;
+    });
+    deptGroup.append(deptLabel, deptSelect);
+
+    // Person in Charge
+    const picGroup = createElement("div", "drawer-form__group");
+    const picLabel = createElement("label", "drawer-form__label", "Person in Charge");
+    const picSelect = createElement("select", "drawer-form__title-input");
+    const emptyPicOption = document.createElement("option");
+    emptyPicOption.value = "";
+    emptyPicOption.textContent = "Select person";
+    emptyPicOption.selected = !state.assetDraft.personInCharge;
+    picSelect.append(emptyPicOption);
+    const userApp = getUserManagementApp();
+    const allUsers = userApp?.users || [];
+    allUsers.forEach((user) => {
+      const option = document.createElement("option");
+      option.value = user.name;
+      option.textContent = user.name;
+      if (user.name === state.assetDraft.personInCharge) option.selected = true;
+      picSelect.append(option);
+    });
+    picSelect.addEventListener("change", (event) => {
+      state.assetDraft.personInCharge = event.target.value;
+    });
+    picGroup.append(picLabel, picSelect);
+
+    deptPicRow.append(deptGroup, picGroup);
+    locationSection.append(deptPicRow);
+
+    // ===== TECHNICAL DETAILS SECTION =====
+    const techSection = createElement("div", "drawer-form__section");
+    techSection.append(createSectionLabel("settings", "Technical Details"));
+
+    // Brand and Model in 2 columns
+    const brandModelRow = createElement("div", "drawer-form__row-2col");
+
+    // Brand
+    const brandGroup = createElement("div", "drawer-form__group");
+    const brandLabel = createElement("label", "drawer-form__label", "Brand");
+    const brandInput = createElement("input", "drawer-form__title-input");
+    brandInput.type = "text";
+    brandInput.value = state.assetDraft.brand;
+    brandInput.placeholder = "e.g. Apple, Dell, HP";
+    brandInput.addEventListener("input", (event) => {
+      state.assetDraft.brand = event.target.value;
+    });
+    brandGroup.append(brandLabel, brandInput);
+
+    // Model
+    const modelGroup = createElement("div", "drawer-form__group");
+    const modelLabel = createElement("label", "drawer-form__label", "Model");
+    const modelInput = createElement("input", "drawer-form__title-input");
+    modelInput.type = "text";
+    modelInput.value = state.assetDraft.model;
+    modelInput.placeholder = "e.g. MacBook Pro 16, M4";
+    modelInput.addEventListener("input", (event) => {
+      state.assetDraft.model = event.target.value;
+    });
+    modelGroup.append(modelLabel, modelInput);
+
+    brandModelRow.append(brandGroup, modelGroup);
+    techSection.append(brandModelRow);
+
+    // Serial Number
+    const serialGroup = createElement("div", "drawer-form__group");
+    const serialLabel = createElement("label", "drawer-form__label", "Serial Number");
+    const serialInput = createElement("input", "drawer-form__title-input");
+    serialInput.type = "text";
+    serialInput.value = state.assetDraft.serialNumber;
+    serialInput.placeholder = "e.g. MBP-16-M4-0321";
+    serialInput.addEventListener("input", (event) => {
+      state.assetDraft.serialNumber = event.target.value;
+    });
+    serialGroup.append(serialLabel, serialInput);
+    techSection.append(serialGroup);
+
+    // ===== FOOTER =====
+    const footer = createElement("div", "asset-drawer__footer");
+    const footerLeft = createElement("div", "asset-drawer__footer-actions");
+    const cancelButton = createElement(
+      "button",
+      "asset-drawer__button asset-drawer__button--ghost",
+      "Cancel",
+    );
+    const saveButton = createElement(
+      "button",
+      "asset-drawer__button asset-drawer__button--primary",
+      "Save",
+    );
+
+    const saveEnabled = isAssetDraftValid(state.assetDraft);
+    cancelButton.type = "button";
+    saveButton.type = "button";
+    saveButton.disabled = !saveEnabled;
+    cancelButton.addEventListener("click", closeDrawer);
+    saveButton.addEventListener("click", () => {
+      if (!isAssetDraftValid(state.assetDraft)) {
+        return;
+      }
+      onSave();
+    });
+    footerLeft.append(saveButton, cancelButton);
+    footer.append(footerLeft);
+
+    // Update save button on input changes WITHOUT re-rendering
+    const updateSaveButton = () => {
+      saveButton.disabled = !isAssetDraftValid(state.assetDraft);
+    };
+    nameInput.addEventListener("input", (e) => {
+      state.assetDraft.name = e.target.value;
+      updateSaveButton();
+    });
+    noAssetInput.addEventListener("input", (e) => {
+      state.assetDraft.manualCode = e.target.value;
+      updateSaveButton();
+    });
+    categorySelect.addEventListener("change", (e) => {
+      state.assetDraft.category = e.target.value;
+      updateSaveButton();
+    });
+    siteSelect.addEventListener("change", (e) => {
+      state.assetDraft.site = e.target.value;
+      updateSaveButton();
+    });
+    statusSelect.addEventListener("change", (e) => {
+      state.assetDraft.status = e.target.value;
+      updateSaveButton();
+    });
+
+    headerLeft.append(backButton, title);
+    header.append(headerLeft, closeButton);
+    body.append(imageSection, basicSection, locationSection, techSection);
+    drawer.append(header, body, footer);
+    overlay.append(backdrop, drawer);
+
+    return overlay;
+  }
+
+  function saveAssetDraft() {
+    const assetsApp = getAssetsApp();
+    const assetNumber = generateAssetNumber(
+      state.assetDraft.manualCode,
+      state.assetDraft.category,
+      state.assetDraft.site
+    );
+
+    const newAsset = {
+      id: assetNumber,
+      assetNumber: assetNumber,
+      name: state.assetDraft.name,
+      category: state.assetDraft.category,
+      location: state.assetDraft.site,
+      status: state.assetDraft.status,
+      statusTone: getAssetStatusTone(state.assetDraft.status),
+      assignedTo: state.assetDraft.personInCharge || "-",
+      department: state.assetDraft.department || "-",
+      condition: "Ready",
+      serialNumber: state.assetDraft.serialNumber || "-",
+      purchaseDate: formatAssetDateLabel(new Date(state.assetDraft.purchaseDate)),
+      valueLabel: state.assetDraft.cost ? `Rp ${state.assetDraft.cost}` : "Rp 0",
+      notes: state.assetDraft.notes || "",
+      dueLabel: "-",
+    };
+
+    assetsApp.records.push(newAsset);
+    state.activeItem = "Assets";
+    state.lastAction = "asset-created";
+    state.isAssetDrawerOpen = false;
+    state.assetDraft = getInitialAssetDraft();
+    render();
+  }
+
+  function openAssetDrawer() {
+    state.assetDraft = getInitialAssetDraft();
+    state.isAssetDrawerOpen = true;
+    render();
+  }
+
+  function animateCloseAssetDrawer(onClosed) {
+    const overlay = shell.querySelector(".asset-drawer-overlay");
+
+    if (!overlay) {
+      onClosed();
+      return;
+    }
+
+    if (overlay.dataset.closing === "true") {
+      return;
+    }
+
+    overlay.dataset.closing = "true";
+    overlay.classList.remove("is-open");
+
+    window.setTimeout(() => {
+      if (overlay.isConnected) {
+        overlay.remove();
+      }
+
+      onClosed();
+    }, 360);
+  }
+
+  function closeAssetDrawer() {
+    animateCloseAssetDrawer(() => {
+      state.isAssetDrawerOpen = false;
+      state.assetDraft = getInitialAssetDraft();
+      render();
+    });
   }
 
   function updateActiveMarker() {
@@ -5441,13 +7174,7 @@ export function createAppShell() {
 
     newAssetButton.type = "button";
     newAssetButton.addEventListener("click", () => {
-      state.lastAction = "new-asset";
-      state.activeItem = "New asset";
-      state.assetMenuId = null;
-      state.assets.draft = getInitialAssetDraft();
-      state.assets.draftErrors = {};
-      state.assets.editingAssetId = null;
-      render();
+      openAssetDrawer();
     });
 
     wrapper.append(newAssetButton, createDefaultSubnav(activeApp));
@@ -5518,8 +7245,17 @@ export function createAppShell() {
       contentPlaceholder.classList.add("content-stage__content");
       if (state.activeItem === "All Users" || state.activeItem === "New User") {
         contentPlaceholder.append(createUsersWorkspace(activeApp));
-      } else {
-        contentPlaceholder.append(createUserManagementView(activeApp));
+      } else if (state.activeItem === "Organization Settings") {
+        contentPlaceholder.append(createOrganizationSettingsView(state, activeApp, {
+          onAddSite: openSiteDrawer,
+          onAddDept: openDeptDrawer,
+          onViewSite: viewSite,
+          onEditSite: editSite,
+          onRemoveSite: removeSite,
+          onViewDept: viewDept,
+          onEditDept: editDept,
+          onRemoveDept: removeDept,
+        }));
       }
       content.append(contentPlaceholder);
       return;
@@ -5547,21 +7283,40 @@ export function createAppShell() {
       workspaceApps[0];
     const currentOverlay = shell.querySelector(".event-drawer-overlay");
     const currentUserDrawerOverlay = shell.querySelector(".user-drawer-overlay");
+    const currentSiteDrawerOverlay = shell.querySelector(".site-drawer-overlay");
+    const currentDeptDrawerOverlay = shell.querySelector(".dept-drawer-overlay");
+    const currentSiteDetailDrawerOverlay = shell.querySelector(".site-detail-drawer-overlay");
+    const currentDeptDetailDrawerOverlay = shell.querySelector(".dept-detail-drawer-overlay");
+    const currentUserDetailDrawerOverlay = shell.querySelector(".user-detail-drawer-overlay");
     const currentAttachmentViewer = shell.querySelector(
       ".attachment-viewer-overlay",
     );
     const currentEventsPopup = shell.querySelector(
       ".calendar-events-modal-overlay",
     );
+    const currentAssetDrawerOverlay = shell.querySelector(
+      ".asset-drawer-overlay",
+    );
 
     currentOverlay?.__cleanupOutsideHandler?.();
     currentUserDrawerOverlay?.__cleanupOutsideHandler?.();
+    currentSiteDrawerOverlay?.__cleanupOutsideHandler?.();
+    currentDeptDrawerOverlay?.__cleanupOutsideHandler?.();
+    currentSiteDetailDrawerOverlay?.__cleanupOutsideHandler?.();
+    currentDeptDetailDrawerOverlay?.__cleanupOutsideHandler?.();
+    currentUserDetailDrawerOverlay?.__cleanupOutsideHandler?.();
     currentAttachmentViewer?.__cleanupViewerHandlers?.();
     currentEventsPopup?.__cleanupEscapeHandler?.();
     currentOverlay?.remove();
     currentUserDrawerOverlay?.remove();
+    currentSiteDrawerOverlay?.remove();
+    currentDeptDrawerOverlay?.remove();
+    currentSiteDetailDrawerOverlay?.remove();
+    currentDeptDetailDrawerOverlay?.remove();
+    currentUserDetailDrawerOverlay?.remove();
     currentAttachmentViewer?.remove();
     currentEventsPopup?.remove();
+    currentAssetDrawerOverlay?.remove();
     renderRail();
     renderPanel(activeApp);
     renderContent(activeApp);
@@ -5598,6 +7353,108 @@ export function createAppShell() {
         requestAnimationFrame(() => {
           if (userDrawerOverlay.isConnected) {
             userDrawerOverlay.classList.add("is-open");
+          }
+        });
+      });
+    }
+
+    if (state.isSiteDrawerOpen) {
+      const siteDrawerOverlay = createSiteDrawer(state, closeSiteDrawer, false);
+      shell.append(siteDrawerOverlay);
+
+      requestAnimationFrame(() => {
+        void siteDrawerOverlay.offsetWidth;
+        requestAnimationFrame(() => {
+          if (siteDrawerOverlay.isConnected) {
+            siteDrawerOverlay.classList.add("is-open");
+          }
+        });
+      });
+    }
+
+    if (state.isDeptDrawerOpen) {
+      const deptDrawerOverlay = createDeptDrawer(state, closeDeptDrawer, false);
+      shell.append(deptDrawerOverlay);
+
+      requestAnimationFrame(() => {
+        void deptDrawerOverlay.offsetWidth;
+        requestAnimationFrame(() => {
+          if (deptDrawerOverlay.isConnected) {
+            deptDrawerOverlay.classList.add("is-open");
+          }
+        });
+      });
+    }
+
+    if (state.isAssetDrawerOpen) {
+      const assetDrawerOverlay = createAssetDrawer(state, closeAssetDrawer, saveAssetDraft, false);
+      shell.append(assetDrawerOverlay);
+
+      requestAnimationFrame(() => {
+        void assetDrawerOverlay.offsetWidth;
+        requestAnimationFrame(() => {
+          if (assetDrawerOverlay.isConnected) {
+            assetDrawerOverlay.classList.add("is-open");
+          }
+        });
+      });
+    }
+
+    if (state.isSiteDetailDrawerOpen) {
+      const siteDetailDrawerOverlay = createSiteDetailDrawer(
+        state,
+        closeSiteDetailDrawer,
+        saveSiteDetailDrawer,
+        state.siteDetailMode,
+        false,
+      );
+      shell.append(siteDetailDrawerOverlay);
+
+      requestAnimationFrame(() => {
+        void siteDetailDrawerOverlay.offsetWidth;
+        requestAnimationFrame(() => {
+          if (siteDetailDrawerOverlay.isConnected) {
+            siteDetailDrawerOverlay.classList.add("is-open");
+          }
+        });
+      });
+    }
+
+    if (state.isDeptDetailDrawerOpen) {
+      const deptDetailDrawerOverlay = createDeptDetailDrawer(
+        state,
+        closeDeptDetailDrawer,
+        saveDeptDetailDrawer,
+        state.deptDetailMode,
+        false,
+      );
+      shell.append(deptDetailDrawerOverlay);
+
+      requestAnimationFrame(() => {
+        void deptDetailDrawerOverlay.offsetWidth;
+        requestAnimationFrame(() => {
+          if (deptDetailDrawerOverlay.isConnected) {
+            deptDetailDrawerOverlay.classList.add("is-open");
+          }
+        });
+      });
+    }
+
+    if (state.isUserDetailDrawerOpen) {
+      const userDetailDrawerOverlay = createUserDetailDrawer(
+        state,
+        closeUserDetailDrawer,
+        saveUserDetailDrawer,
+        state.userDetailMode,
+        false,
+      );
+      shell.append(userDetailDrawerOverlay);
+
+      requestAnimationFrame(() => {
+        void userDetailDrawerOverlay.offsetWidth;
+        requestAnimationFrame(() => {
+          if (userDetailDrawerOverlay.isConnected) {
+            userDetailDrawerOverlay.classList.add("is-open");
           }
         });
       });
