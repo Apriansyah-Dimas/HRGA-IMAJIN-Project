@@ -1,0 +1,12 @@
+/* Profile Feature Styles */
+/* These styles are loaded after main.css */
+/* Profile uses general drawer styles from main.css */
+
+.profile-view {}
+.profile-view__header {}
+.profile-view__avatar {}
+.profile-view__info {}
+.profile-view__name {}
+.profile-view__role {}
+.profile-view__details {}
+.profile-view__section {}

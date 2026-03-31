@@ -154,15 +154,7 @@ function createIcon(name, label = "") {
     swap: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h13"/><path d="M13 4l4 3-4 3"/><path d="M20 17H7"/><path d="M11 14l-4 3 4 3"/></svg>',
     alert:
       '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4l8 14H4z"/><path d="M12 9v4"/><circle cx="12" cy="16.5" r="0.8" fill="currentColor" stroke="none"/></svg>',
-    "home-app":
-      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10.5L12 4l8 6.5"/><path d="M6.5 9.5V20h11V9.5"/><path d="M10 20v-5h4v5"/></svg>',
     "calendar-app":
-      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M7 3.5v3"/><path d="M17 3.5v3"/><path d="M3.5 9.5h17"/><path d="M8 13h3"/><path d="M13 13h3"/><path d="M8 16.5h3"/></svg>',
-    "journey-app":
-      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="18" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="18" cy="6" r="1.5"/><path d="M7.5 16.8l3-3.6"/><path d="M13.5 10.8l3-3.6"/><path d="M5 6h4"/><path d="M5 6c0 6.5 2.5 9.5 7 9.5h1.5"/></svg>',
-    "assets-app":
-      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3.8v10.4L12 21 5 17.2V6.8z"/><path d="M12 3v18"/><path d="M5 6.8l7 4 7-4"/></svg>',
-    "users-app":
       '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 20v-1.2a3.8 3.8 0 00-3.8-3.8H7.8A3.8 3.8 0 004 18.8V20"/><circle cx="10" cy="8" r="3.2"/><path d="M20 20v-1.2a3.8 3.8 0 00-2.4-3.5"/><path d="M14.8 4.7a3.2 3.2 0 010 6.1"/></svg>',
     "profile-app":
       '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.5"/><path d="M5 20a7 7 0 0114 0"/><circle cx="12" cy="12" r="9"/></svg>',
@@ -208,10 +200,6 @@ function getUserManagementApp() {
   return workspaceApps.find((app) => app.id === "user-management");
 }
 
-function getAssetsApp() {
-  return workspaceApps.find((app) => app.id === "assets");
-}
-
 const ASSET_PAGE_META = {
   Dashboard: {
     eyebrow: "Asset intelligence",
@@ -230,30 +218,80 @@ const ASSET_PAGE_META = {
     title: "Maintenance requests that can be triaged fast",
     description:
       "Kelompokkan issue berdasarkan urgensi dan teruskan ke owner yang tepat tanpa meninggalkan context lokasi, requestor, dan SLA.",
+    requesterView: {
+      eyebrow: "My requests",
+      title: "Submit maintenance requests",
+      description: "Report issues with your assigned assets for maintenance.",
+    },
+    approverView: {
+      eyebrow: "Service queue",
+      title: "Manage maintenance requests",
+      description: "Review and assign maintenance tasks to resolve asset issues.",
+    },
   },
   "Asset Request": {
     eyebrow: "Demand intake",
     title: "Request approvals with clearer business context",
     description:
       "Lihat kebutuhan asset per tim, durasi pemakaian, dan alasan pengajuan sebelum menyetujui atau meminta revisi.",
+    requesterView: {
+      eyebrow: "My requests",
+      title: "Track your asset requests",
+      description: "View the status of your submitted asset requests and manage pending items.",
+    },
+    approverView: {
+      eyebrow: "Approval queue",
+      title: "Review and approve asset requests",
+      description: "Process incoming asset requests from your team with clear business context.",
+    },
   },
   "Asset Check Out": {
     eyebrow: "Handover",
     title: "Check out workflow that updates the inventory state",
     description:
       "Siapkan serah terima, konfirmasi pickup, lalu sinkronkan penempatan asset tanpa langkah manual tambahan.",
+    requesterView: {
+      eyebrow: "My checkouts",
+      title: "Track your asset checkouts",
+      description: "View your checked out assets and their return schedules.",
+    },
+    approverView: {
+      eyebrow: "Handover queue",
+      title: "Manage asset checkouts",
+      description: "Process checkout requests and manage asset handovers.",
+    },
   },
   "Asset Check In": {
     eyebrow: "Return desk",
     title: "Check in and inspection without lost context",
     description:
       "Pantau asset yang kembali, jalankan inspeksi, lalu kembalikan ke pool dengan status yang akurat.",
+    requesterView: {
+      eyebrow: "My check-ins",
+      title: "Return assets",
+      description: "Submit check-in requests for assets you've used.",
+    },
+    approverView: {
+      eyebrow: "Return processing",
+      title: "Process asset returns",
+      description: "Review returned assets and update inventory status.",
+    },
   },
   "Asset Mutation": {
     eyebrow: "Movement log",
     title: "Branch transfer tracking in one view",
     description:
       "Monitor perpindahan asset antar lokasi mulai dari antrean kirim sampai konfirmasi penerimaan di cabang tujuan.",
+    requesterView: {
+      eyebrow: "My mutations",
+      title: "Track asset transfers",
+      description: "View your asset transfer requests and their status.",
+    },
+    approverView: {
+      eyebrow: "Transfer queue",
+      title: "Manage asset mutations",
+      description: "Process and track asset transfers between locations.",
+    },
   },
   "Stock Opname": {
     eyebrow: "Audit rhythm",
@@ -323,9 +361,11 @@ const ASSET_REQUEST_FILTERS = {
   ],
   request: [
     ["all", "All"],
-    ["pending", "Pending"],
+    ["pending_team_leader", "Pending Team Leader"],
+    ["pending_hrga", "Pending HRGA"],
+    ["pending_finance", "Pending Finance"],
+    ["pending_purchasing", "Pending Purchasing"],
     ["approved", "Approved"],
-    ["warning", "Needs revision"],
     ["rejected", "Rejected"],
   ],
   checkout: [
@@ -379,6 +419,42 @@ const ASSET_STATUS_OPTIONS = [
   "In Repair",
   "Lost/Missing",
   "Sell",
+];
+
+// Approval Stages for Asset Requests
+const APPROVAL_STAGES = {
+  TEAM_LEADER: "team_leader",
+  HRGA: "hrga",
+  FINANCE: "finance",
+  PURCHASING: "purchasing",
+  APPROVED: "approved",
+  REJECTED: "rejected",
+};
+
+const APPROVAL_STAGE_LABELS = {
+  team_leader: "Pending Team Leader Approval",
+  hrga: "Pending HRGA Approval",
+  finance: "Pending Finance Approval",
+  purchasing: "Pending Purchasing Approval",
+  approved: "Approved",
+  rejected: "Rejected",
+};
+
+const APPROVAL_STAGE_TONES = {
+  team_leader: "pending",
+  hrga: "pending",
+  finance: "pending",
+  purchasing: "pending",
+  approved: "approved",
+  rejected: "rejected",
+};
+
+const APPROVAL_STAGE_ORDER = [
+  APPROVAL_STAGES.TEAM_LEADER,
+  APPROVAL_STAGES.HRGA,
+  APPROVAL_STAGES.FINANCE,
+  APPROVAL_STAGES.PURCHASING,
+  APPROVAL_STAGES.APPROVED,
 ];
 
 function formatAssetDateLabel(date) {
@@ -469,7 +545,7 @@ function getInitialAssetDraft() {
 }
 
 function getInitialAssetsState() {
-  const assetsApp = getAssetsApp();
+  const assetsApp = null;
 
   return {
     notice: null,
@@ -504,6 +580,53 @@ function getInitialAssetsState() {
     draft: getInitialAssetDraft(),
     draftErrors: {},
     editingAssetId: null,
+    requestViewMode: "approver",
+    checkoutViewMode: "approver",
+    checkinViewMode: "approver",
+    mutationViewMode: "approver",
+    maintenanceViewMode: "approver",
+    selectedRequestDetailId: null,
+    selectedCheckoutDetailId: null,
+    selectedCheckinDetailId: null,
+    selectedMutationDetailId: null,
+    selectedMaintenanceDetailId: null,
+    newRequestDraft: {
+      selectedUserId: "",
+      requestedAsset: "",
+      assetCategory: "",
+      siteAsset: "",
+      purchaseLink: "",
+      assetPrice: "",
+      purpose: "",
+      estimatedTime: "",
+      deadlineDate: "",
+    },
+    newCheckoutDraft: {
+      selectedAssetId: "",
+      selectedUserId: "",
+      pickupDate: "",
+      returnPlan: "",
+      notes: "",
+    },
+    newCheckinDraft: {
+      selectedAssetId: "",
+      selectedUserId: "",
+      condition: "",
+      notes: "",
+    },
+    newMutationDraft: {
+      selectedAssetId: "",
+      fromLocation: "",
+      toLocation: "",
+      scheduledDate: "",
+      notes: "",
+    },
+    newMaintenanceDraft: {
+      selectedAssetId: "",
+      issue: "",
+      priority: "",
+      description: "",
+    },
   };
 }
 
@@ -556,11 +679,8 @@ function getInitialState() {
     activeAppId: activeApp.id,
     activeItem,
     calendar: getInitialCalendarState(),
-    assets: getInitialAssetsState(),
     users: getInitialUsersState(),
     lastAction: "",
-    assetSearchQuery: "",
-    assetMenuId: null,
     isEventDrawerOpen: false,
     attachmentViewer: {
       isOpen: false,
@@ -575,8 +695,6 @@ function getInitialState() {
     siteDraft: getInitialSiteDraft(),
     isDeptDrawerOpen: false,
     deptDraft: getInitialDeptDraft(),
-    isAssetDrawerOpen: false,
-    assetDraft: getInitialAssetDraft(),
     isSiteDetailDrawerOpen: false,
     siteDetailMode: "view",
     currentSiteId: null,
@@ -4090,6 +4208,50 @@ export function createAppShell() {
   const panel = createElement("section", "sidebar__panel");
   const content = createElement("section", "content-stage");
 
+  function getCurrentUser() {
+    if (!state.currentUserId) return null;
+    const userApp = workspaceApps.find((app) => app.id === "user-management");
+    return userApp?.users?.find((u) => u.id === state.currentUserId);
+  }
+
+  function getCurrentUserPermissions() {
+    const user = getCurrentUser();
+    if (!user) return [];
+    return user.permissions || [];
+  }
+
+  function canApproveStage(stage) {
+    const permissions = getCurrentUserPermissions();
+    const permissionMap = {
+      [APPROVAL_STAGES.TEAM_LEADER]: "approve_team_leader",
+      [APPROVAL_STAGES.HRGA]: "approve_hrga",
+      [APPROVAL_STAGES.FINANCE]: "approve_finance",
+      [APPROVAL_STAGES.PURCHASING]: "approve_purchasing",
+    };
+    const requiredPermission = permissionMap[stage];
+    return permissions.includes(requiredPermission);
+  }
+
+  function createDetailField(label, value, isLink = false) {
+    const field = createElement("div", "detail-field");
+    const labelEl = createElement("div", "detail-field__label", label);
+    const valueEl = createElement("div", "detail-field__value");
+    
+    if (isLink && value && value !== "-") {
+      const link = document.createElement("a");
+      link.href = value;
+      link.textContent = value;
+      link.target = "_blank";
+      link.className = "detail-field__link";
+      valueEl.append(link);
+    } else {
+      valueEl.textContent = value || "-";
+    }
+    
+    field.append(labelEl, valueEl);
+    return field;
+  }
+
   const marker = createElement("span", "sidebar__active-marker");
   rail.append(marker);
 
@@ -4460,6 +4622,3070 @@ export function createAppShell() {
     return wrapper;
   }
 
+  function getRequestStatusTone(status) {
+    if (status === APPROVAL_STAGE_LABELS.team_leader) return "pending";
+    if (status === APPROVAL_STAGE_LABELS.hrga) return "pending";
+    if (status === APPROVAL_STAGE_LABELS.finance) return "pending";
+    if (status === APPROVAL_STAGE_LABELS.purchasing) return "pending";
+    if (status === APPROVAL_STAGE_LABELS.approved) return "approved";
+    if (status === APPROVAL_STAGE_LABELS.rejected) return "rejected";
+    return "pending";
+  }
+
+  function getFilteredAssetRequests(activeApp, search, filter) {
+    if (!activeApp) {
+      return [];
+    }
+    
+    const allRequests = activeApp.assetRequests || [];
+    let records = [...allRequests];
+
+    // Apply search filter
+    if (search) {
+      const searchLower = search.toLowerCase();
+      records = records.filter(
+        (r) =>
+          (r.employee && r.employee.toLowerCase().includes(searchLower)) ||
+          (r.requestedAsset && r.requestedAsset.toLowerCase().includes(searchLower)) ||
+          (r.team && r.team.toLowerCase().includes(searchLower)),
+      );
+    }
+
+    // Apply status filter if not "all"
+    if (filter && filter !== "all") {
+      const filterMap = {
+        pending_team_leader: APPROVAL_STAGE_LABELS.team_leader,
+        pending_hrga: APPROVAL_STAGE_LABELS.hrga,
+        pending_finance: APPROVAL_STAGE_LABELS.finance,
+        pending_purchasing: APPROVAL_STAGE_LABELS.purchasing,
+        approved: APPROVAL_STAGE_LABELS.approved,
+        rejected: APPROVAL_STAGE_LABELS.rejected,
+      };
+      
+      const targetStatus = filterMap[filter];
+      if (targetStatus) {
+        records = records.filter((r) => r.status === targetStatus);
+      }
+    }
+
+    return records;
+  }
+
+  function getFilteredCheckOuts(activeApp, search, filter) {
+    if (!activeApp) {
+      return [];
+    }
+    
+    const allCheckOuts = activeApp.checkOuts || [];
+    let records = [...allCheckOuts];
+
+    if (search) {
+      const searchLower = search.toLowerCase();
+      records = records.filter(
+        (r) =>
+          (r.assetName && r.assetName.toLowerCase().includes(searchLower)) ||
+          (r.requester && r.requester.toLowerCase().includes(searchLower)) ||
+          (r.location && r.location.toLowerCase().includes(searchLower)),
+      );
+    }
+
+    if (filter && filter !== "all") {
+      const filterMap = {
+        scheduled: "Ready for Handover",
+        approved: "Checked Out",
+        pending: "Waiting Confirmation",
+      };
+      
+      const targetStatus = filterMap[filter];
+      if (targetStatus) {
+        records = records.filter((r) => r.status === targetStatus);
+      }
+    }
+
+    return records;
+  }
+
+  function getFilteredCheckIns(activeApp, search, filter) {
+    if (!activeApp) {
+      return [];
+    }
+    
+    const allCheckIns = activeApp.checkIns || [];
+    let records = [...allCheckIns];
+
+    if (search) {
+      const searchLower = search.toLowerCase();
+      records = records.filter(
+        (r) =>
+          (r.assetName && r.assetName.toLowerCase().includes(searchLower)) ||
+          (r.returnedBy && r.returnedBy.toLowerCase().includes(searchLower)) ||
+          (r.condition && r.condition.toLowerCase().includes(searchLower)),
+      );
+    }
+
+    if (filter && filter !== "all") {
+      const filterMap = {
+        inspection: "Inspection Needed",
+        completed: "Closed",
+      };
+      
+      const targetStatus = filterMap[filter];
+      if (targetStatus) {
+        records = records.filter((r) => r.status === targetStatus);
+      }
+    }
+
+    return records;
+  }
+
+  function getFilteredMutations(activeApp, search, filter) {
+    if (!activeApp) {
+      return [];
+    }
+    
+    const allMutations = activeApp.mutations || [];
+    let records = [...allMutations];
+
+    if (search) {
+      const searchLower = search.toLowerCase();
+      records = records.filter(
+        (r) =>
+          (r.assetName && r.assetName.toLowerCase().includes(searchLower)) ||
+          (r.fromLocation && r.fromLocation.toLowerCase().includes(searchLower)) ||
+          (r.toLocation && r.toLocation.toLowerCase().includes(searchLower)) ||
+          (r.initiatedBy && r.initiatedBy.toLowerCase().includes(searchLower)),
+      );
+    }
+
+    if (filter && filter !== "all") {
+      const filterMap = {
+        pending: "Queued",
+        in_progress: "In Transit",
+        completed: "Completed",
+      };
+      
+      const targetStatus = filterMap[filter];
+      if (targetStatus) {
+        records = records.filter((r) => r.status === targetStatus);
+      }
+    }
+
+    return records;
+  }
+
+  function getFilteredMaintenanceRequests(activeApp, search, filter) {
+    if (!activeApp) {
+      return [];
+    }
+    
+    const allRequests = activeApp.maintenanceRequests || [];
+    let records = [...allRequests];
+
+    if (search) {
+      const searchLower = search.toLowerCase();
+      records = records.filter(
+        (r) =>
+          (r.assetName && r.assetName.toLowerCase().includes(searchLower)) ||
+          (r.requester && r.requester.toLowerCase().includes(searchLower)) ||
+          (r.issue && r.issue.toLowerCase().includes(searchLower)) ||
+          (r.location && r.location.toLowerCase().includes(searchLower)),
+      );
+    }
+
+    if (filter && filter !== "all") {
+      const filterMap = {
+        pending: "Pending Review",
+        in_progress: "In Progress",
+        scheduled: "Scheduled",
+      };
+      
+      const targetStatus = filterMap[filter];
+      if (targetStatus) {
+        records = records.filter((r) => r.status === targetStatus);
+      }
+    }
+
+    return records;
+  }
+
+  function openRequestDetailDrawer(request) {
+    state.assets.selectedRequestDetailId = request.id;
+    state.isRequestDetailDrawerOpen = true;
+    render();
+  }
+
+  function closeNewRequestDrawer() {
+    const overlay = shell.querySelector(".new-request-drawer-overlay");
+    if (overlay) {
+      overlay.classList.remove("is-open");
+      setTimeout(() => {
+        state.isNewRequestDrawerOpen = false;
+        state.assets.newRequestDraft = {
+          selectedUserId: "",
+          requestedAsset: "",
+          assetCategory: "",
+          siteAsset: "",
+          purchaseLink: "",
+          assetPrice: "",
+          purpose: "",
+          estimatedTime: "",
+          deadlineDate: "",
+        };
+        if (overlay.isConnected) {
+          overlay.remove();
+        }
+        render();
+      }, 360);
+    } else {
+      state.isNewRequestDrawerOpen = false;
+      state.assets.newRequestDraft = {
+        selectedUserId: "",
+        requestedAsset: "",
+        assetCategory: "",
+        siteAsset: "",
+        purchaseLink: "",
+        assetPrice: "",
+        purpose: "",
+        estimatedTime: "",
+        deadlineDate: "",
+      };
+      render();
+    }
+  }
+
+  function createNewRequestDrawer(isOpen = false) {
+    const overlay = createElement(
+      "div",
+      `new-request-drawer-overlay${isOpen ? " is-open" : ""}`,
+    );
+    const backdrop = createElement("button", "new-request-drawer-overlay__backdrop");
+    const drawer = createElement("aside", "new-request-drawer");
+    const header = createElement("div", "new-request-drawer__header");
+    const headerLeft = createElement("div", "new-request-drawer__header-left");
+    const backButton = createElement("button", "new-request-drawer__back");
+    const title = createElement("h2", "new-request-drawer__title", "New Asset Request");
+    const closeButton = createElement("button", "new-request-drawer__close");
+    const body = createElement("div", "new-request-drawer__body");
+    const footer = createElement("div", "new-request-drawer__footer");
+
+    overlay.setAttribute("aria-hidden", String(!state.isNewRequestDrawerOpen));
+    drawer.setAttribute("aria-label", "New request drawer");
+    backdrop.type = "button";
+    backButton.type = "button";
+    closeButton.type = "button";
+
+    backdrop.append(createIcon("close"));
+    backButton.append(createIcon("chevron-left"));
+    closeButton.append(createIcon("close"));
+
+    backdrop.addEventListener("click", closeNewRequestDrawer);
+    backButton.addEventListener("click", closeNewRequestDrawer);
+    closeButton.addEventListener("click", closeNewRequestDrawer);
+
+    const userManagementApp = workspaceApps.find((app) => app.id === "user-management");
+    const users = userManagementApp?.users || [];
+
+    const identitySection = createElement("div", "drawer-form__section");
+    identitySection.append(createSectionLabel("user", "Identity"));
+
+    const userGroup = createElement("div", "drawer-form__group");
+    const userLabel = createElement("label", "drawer-form__label");
+    userLabel.append(createElement("span", "", "Requester Name"), createElement("span", "drawer-form__required", " *"));
+    const userSelect = createElement("select", "drawer-form__native-select");
+    userSelect.value = state.assets.newRequestDraft.selectedUserId;
+    
+    const defaultOption = document.createElement("option");
+    defaultOption.value = "";
+    defaultOption.textContent = "Select requester...";
+    userSelect.append(defaultOption);
+    
+    users.forEach((user) => {
+      const option = document.createElement("option");
+      option.value = user.id;
+      option.textContent = user.name;
+      userSelect.append(option);
+    });
+    
+    const emailGroup = createElement("div", "drawer-form__group");
+    const emailLabel = createElement("label", "drawer-form__label");
+    emailLabel.textContent = "Email";
+    const emailValue = createElement("div", "new-request-drawer__info-value");
+    emailGroup.append(emailLabel, emailValue);
+
+    const deptGroup = createElement("div", "drawer-form__group");
+    const deptLabel = createElement("label", "drawer-form__label");
+    deptLabel.textContent = "Department";
+    const deptValue = createElement("div", "new-request-drawer__info-value");
+    deptGroup.append(deptLabel, deptValue);
+
+    const positionGroup = createElement("div", "drawer-form__group");
+    const positionLabel = createElement("label", "drawer-form__label");
+    positionLabel.textContent = "Position";
+    const positionValue = createElement("div", "new-request-drawer__info-value");
+    positionGroup.append(positionLabel, positionValue);
+
+    function updateUserInfo(userId) {
+      const selectedUser = users.find((u) => u.id === userId);
+      if (selectedUser) {
+        emailValue.textContent = selectedUser.email || "-";
+        deptValue.textContent = selectedUser.department || "-";
+        positionValue.textContent = selectedUser.position || "-";
+        identitySection.append(emailGroup, deptGroup, positionGroup);
+      } else {
+        emailValue.textContent = "-";
+        deptValue.textContent = "-";
+        positionValue.textContent = "-";
+        emailGroup.remove();
+        deptGroup.remove();
+        positionGroup.remove();
+      }
+    }
+
+    updateUserInfo(state.assets.newRequestDraft.selectedUserId);
+
+    userSelect.addEventListener("change", (event) => {
+      state.assets.newRequestDraft.selectedUserId = event.target.value;
+      updateUserInfo(event.target.value);
+    });
+    userGroup.append(userLabel, userSelect);
+    identitySection.append(userGroup);
+
+    body.append(identitySection);
+
+    const assetCategoryOptions = Object.keys(ASSET_CATEGORY_TO_ROMAWI);
+    const siteOptions = getSites().map(s => s.name);
+
+    const itemSection = createElement("div", "drawer-form__section");
+    itemSection.append(createSectionLabel("package", "Requested Item"));
+
+    const itemNameGroup = createElement("div", "drawer-form__group");
+    const itemNameLabel = createElement("label", "drawer-form__label");
+    itemNameLabel.append(createElement("span", "", "Item Name"), createElement("span", "drawer-form__required", " *"));
+    const itemNameInput = createElement("input", "drawer-form__title-input");
+    itemNameInput.type = "text";
+    itemNameInput.value = state.assets.newRequestDraft.requestedAsset;
+    itemNameInput.placeholder = "MacBook Pro, Dell Monitor, dll";
+    itemNameInput.addEventListener("input", (event) => {
+      state.assets.newRequestDraft.requestedAsset = event.target.value;
+    });
+    itemNameGroup.append(itemNameLabel, itemNameInput);
+    itemSection.append(itemNameGroup);
+
+    const itemRow = createElement("div", "drawer-form__row-2col");
+
+    const categoryGroup = createElement("div", "drawer-form__group");
+    const categoryLabel = createElement("label", "drawer-form__label");
+    categoryLabel.append(createElement("span", "", "Asset Category"), createElement("span", "drawer-form__required", " *"));
+    const categorySelect = createElement("select", "drawer-form__native-select");
+    categorySelect.value = state.assets.newRequestDraft.assetCategory;
+    
+    const defaultCategoryOption = document.createElement("option");
+    defaultCategoryOption.value = "";
+    defaultCategoryOption.textContent = "Select category...";
+    categorySelect.append(defaultCategoryOption);
+    
+    assetCategoryOptions.forEach((cat) => {
+      const option = document.createElement("option");
+      option.value = cat;
+      option.textContent = cat;
+      categorySelect.append(option);
+    });
+    
+    categorySelect.addEventListener("change", (event) => {
+      state.assets.newRequestDraft.assetCategory = event.target.value;
+    });
+    categoryGroup.append(categoryLabel, categorySelect);
+    itemRow.append(categoryGroup);
+
+    const siteGroup = createElement("div", "drawer-form__group");
+    const siteLabel = createElement("label", "drawer-form__label");
+    siteLabel.append(createElement("span", "", "Site Asset"), createElement("span", "drawer-form__required", " *"));
+    const siteSelect = createElement("select", "drawer-form__native-select");
+    siteSelect.value = state.assets.newRequestDraft.siteAsset;
+    
+    const defaultSiteOption = document.createElement("option");
+    defaultSiteOption.value = "";
+    defaultSiteOption.textContent = "Select site...";
+    siteSelect.append(defaultSiteOption);
+    
+    siteOptions.forEach((site) => {
+      const option = document.createElement("option");
+      option.value = site;
+      option.textContent = site;
+      siteSelect.append(option);
+    });
+    
+    siteSelect.addEventListener("change", (event) => {
+      state.assets.newRequestDraft.siteAsset = event.target.value;
+    });
+    siteGroup.append(siteLabel, siteSelect);
+    itemRow.append(siteGroup);
+
+    itemSection.append(itemRow);
+
+    const linkRow = createElement("div", "drawer-form__row-2col");
+
+    const linkGroup = createElement("div", "drawer-form__group");
+    const linkLabel = createElement("label", "drawer-form__label");
+    linkLabel.textContent = "Purchase Link";
+    const linkInput = createElement("input", "drawer-form__title-input");
+    linkInput.type = "url";
+    linkInput.value = state.assets.newRequestDraft.purchaseLink;
+    linkInput.placeholder = "https://...";
+    linkInput.addEventListener("input", (event) => {
+      state.assets.newRequestDraft.purchaseLink = event.target.value;
+    });
+    linkGroup.append(linkLabel, linkInput);
+    linkRow.append(linkGroup);
+
+    const priceGroup = createElement("div", "drawer-form__group");
+    const priceLabel = createElement("label", "drawer-form__label");
+    priceLabel.append(createElement("span", "", "Asset Price (IDR)"), createElement("span", "drawer-form__required", " *"));
+    const priceInput = createElement("input", "drawer-form__title-input");
+    priceInput.type = "text";
+    priceInput.value = state.assets.newRequestDraft.assetPrice;
+    priceInput.placeholder = "15.000.000";
+    priceInput.addEventListener("input", (event) => {
+      let value = event.target.value.replace(/[^0-9]/g, "");
+      if (value) {
+        value = Number(value).toLocaleString("id-ID");
+      }
+      state.assets.newRequestDraft.assetPrice = value;
+      event.target.value = value;
+    });
+    priceGroup.append(priceLabel, priceInput);
+    linkRow.append(priceGroup);
+
+    itemSection.append(linkRow);
+
+    const purposeGroup = createElement("div", "drawer-form__group");
+    const purposeLabel = createElement("label", "drawer-form__label");
+    purposeLabel.append(createElement("span", "", "Purpose"), createElement("span", "drawer-form__required", " *"));
+    const purposeInput = createElement("textarea", "drawer-form__textarea");
+    purposeInput.value = state.assets.newRequestDraft.purpose;
+    purposeInput.placeholder = "Jelaskan mengapa Anda membutuhkan aset ini...";
+    purposeInput.rows = 3;
+    purposeInput.addEventListener("input", (event) => {
+      state.assets.newRequestDraft.purpose = event.target.value;
+    });
+    purposeGroup.append(purposeLabel, purposeInput);
+    itemSection.append(purposeGroup);
+
+    const deadlineRow = createElement("div", "drawer-form__row-2col");
+
+    const deadlineGroup = createElement("div", "drawer-form__group");
+    const deadlineLabel = createElement("label", "drawer-form__label");
+    deadlineLabel.append(createElement("span", "", "Deadline Date"), createElement("span", "drawer-form__required", " *"));
+    const deadlineInput = createElement("input", "drawer-form__date-input");
+    deadlineInput.type = "date";
+    deadlineInput.value = state.assets.newRequestDraft.deadlineDate;
+    deadlineInput.addEventListener("change", (event) => {
+      state.assets.newRequestDraft.deadlineDate = event.target.value;
+    });
+    deadlineGroup.append(deadlineLabel, deadlineInput);
+    deadlineRow.append(deadlineGroup);
+
+    itemSection.append(deadlineRow);
+
+    body.append(itemSection);
+
+    const footerActions = createElement("div", "new-request-drawer__footer-actions");
+
+    const draft = state.assets.newRequestDraft;
+    const isDraftValid = draft.selectedUserId !== "" &&
+                         draft.requestedAsset?.trim() !== "" &&
+                         draft.assetCategory !== "" &&
+                         draft.siteAsset !== "" &&
+                         draft.assetPrice?.trim() !== "" &&
+                         draft.purpose?.trim() !== "" &&
+                         draft.deadlineDate?.trim() !== "";
+
+    const cancelButton = createElement(
+      "button",
+      "new-request-drawer__button new-request-drawer__button--ghost",
+      "Cancel",
+    );
+    cancelButton.type = "button";
+    cancelButton.addEventListener("click", closeNewRequestDrawer);
+
+    const submitButton = createElement(
+      "button",
+      "new-request-drawer__button new-request-drawer__button--primary",
+      "Submit Request",
+    );
+    submitButton.type = "button";
+    submitButton.disabled = !isDraftValid;
+    submitButton.addEventListener("click", () => {
+      if (isDraftValid && selectedUser) {
+        const assetsApp = null;
+        const initialApprovalStage = APPROVAL_STAGES.TEAM_LEADER;
+        const newRequest = {
+          id: `req-${Date.now()}`,
+          employee: selectedUser.name,
+          team: selectedUser.department,
+          requestedAsset: draft.requestedAsset,
+          assetCategory: draft.assetCategory,
+          siteAsset: draft.siteAsset,
+          purchaseLink: draft.purchaseLink,
+          assetPrice: draft.assetPrice,
+          purpose: draft.purpose,
+          estimatedTime: draft.estimatedTime,
+          deadlineDate: draft.deadlineDate,
+          duration: draft.estimatedTime,
+          approvalStage: initialApprovalStage,
+          status: APPROVAL_STAGE_LABELS[initialApprovalStage],
+          statusTone: APPROVAL_STAGE_TONES[initialApprovalStage],
+          submittedAt: new Date().toLocaleDateString("en-GB", {
+            day: "2-digit",
+            month: "short",
+            year: "numeric",
+          }) + " | " + new Date().toLocaleTimeString("en-GB", {
+            hour: "2-digit",
+            minute: "2-digit",
+          }),
+          approvalHistory: [],
+        };
+        assetsApp.assetRequests.unshift(newRequest);
+        closeNewRequestDrawer();
+      }
+    });
+
+    footerActions.append(cancelButton, submitButton);
+    footer.append(footerActions);
+
+    headerLeft.append(backButton, title);
+    header.append(headerLeft, closeButton);
+    drawer.append(header, body, footer);
+    overlay.append(backdrop, drawer);
+
+    return overlay;
+  }
+
+  function closeRequestDetailDrawer() {
+    const overlay = shell.querySelector(".request-detail-drawer-overlay");
+    if (overlay) {
+      overlay.classList.remove("is-open");
+      setTimeout(() => {
+        state.isRequestDetailDrawerOpen = false;
+        state.assets.selectedRequestDetailId = null;
+        if (overlay.isConnected) {
+          overlay.remove();
+        }
+        render();
+      }, 360);
+    } else {
+      state.isRequestDetailDrawerOpen = false;
+      state.assets.selectedRequestDetailId = null;
+      render();
+    }
+  }
+
+  function createRequestDetailDrawer(request, viewMode, isOpen = false) {
+    const overlay = createElement(
+      "div",
+      `request-detail-drawer-overlay${isOpen ? " is-open" : ""}`,
+    );
+    const backdrop = createElement("button", "request-detail-drawer-overlay__backdrop");
+    const drawer = createElement("aside", "request-detail-drawer");
+    const header = createElement("div", "request-detail-drawer__header");
+    const headerLeft = createElement("div", "request-detail-drawer__header-left");
+    const backButton = createElement("button", "request-detail-drawer__back");
+    const title = createElement("h2", "request-detail-drawer__title", "Request Details");
+    const closeButton = createElement("button", "request-detail-drawer__close");
+    const body = createElement("div", "request-detail-drawer__body");
+    const footer = createElement("div", "request-detail-drawer__footer");
+
+    const stageLabelMap = {
+      [APPROVAL_STAGES.TEAM_LEADER]: "Team Leader",
+      [APPROVAL_STAGES.HRGA]: "HRGA",
+      [APPROVAL_STAGES.FINANCE]: "Finance",
+      [APPROVAL_STAGES.PURCHASING]: "Purchasing",
+    };
+
+    overlay.setAttribute("aria-hidden", String(!state.isRequestDetailDrawerOpen));
+    drawer.setAttribute("aria-label", "Request detail drawer");
+    backdrop.type = "button";
+    backButton.type = "button";
+    closeButton.type = "button";
+
+    backdrop.append(createIcon("close"));
+    backButton.append(createIcon("chevron-left"));
+    closeButton.append(createIcon("close"));
+
+    const currentStage = request.approvalStage || APPROVAL_STAGES.TEAM_LEADER;
+    const isPending = currentStage !== APPROVAL_STAGES.APPROVED && request.status !== APPROVAL_STAGE_LABELS.rejected;
+    const canApprove = isPending && canApproveStage(currentStage);
+    const currentUser = getCurrentUser();
+
+    const requesterSection = createElement("div", "drawer-form__section");
+    requesterSection.append(createSectionLabel("user", "Identity"));
+    
+    const nameField = createDetailField("Requester Name", request.employee);
+    const deptField = createDetailField("Department", request.team);
+    
+    requesterSection.append(nameField, deptField);
+    body.append(requesterSection);
+
+    const assetSection = createElement("div", "drawer-form__section");
+    assetSection.append(createSectionLabel("package", "Requested Item"));
+    
+    const itemNameField = createDetailField("Item Name", request.requestedAsset);
+    const categoryField = createDetailField("Asset Category", request.assetCategory || "-");
+    const siteField = createDetailField("Site Asset", request.siteAsset || "-");
+    const linkField = createDetailField("Purchase Link", request.purchaseLink || "-", true);
+    const priceField = createDetailField("Asset Price (IDR)", request.assetPrice || "-");
+    const purposeField = createDetailField("Purpose", request.purpose);
+    const deadlineField = createDetailField("Deadline Date", request.deadlineDate || "-");
+    
+    assetSection.append(itemNameField, categoryField, siteField, linkField, priceField, purposeField, deadlineField);
+    
+    body.append(assetSection);
+
+    const statusSection = createElement("div", "drawer-form__section");
+    statusSection.append(createSectionLabel("clock", "Request Status"));
+
+    const currentStageLabel = stageLabelMap[currentStage] || "Pending";
+    const statusField = createDetailField("Status", request.status);
+    const submittedField = createDetailField("Submitted", request.submittedAt);
+    const stageField = createDetailField("Current Stage", currentStageLabel);
+    
+    statusSection.append(statusField, submittedField, stageField);
+    body.append(statusSection);
+
+    const approvalProgressSection = createElement("div", "drawer-form__section");
+    approvalProgressSection.append(createSectionLabel("git-branch", "Approval Progress"));
+
+    const progressSteps = [
+      { stage: APPROVAL_STAGES.TEAM_LEADER, label: "Team Leader" },
+      { stage: APPROVAL_STAGES.HRGA, label: "HRGA" },
+      { stage: APPROVAL_STAGES.FINANCE, label: "Finance" },
+      { stage: APPROVAL_STAGES.PURCHASING, label: "Purchasing" },
+    ];
+
+    const progressContainer = createElement("div", "approval-progress");
+    progressSteps.forEach((step, index) => {
+      const stepEl = createElement("div", "approval-progress__step");
+      const currentIndex = APPROVAL_STAGE_ORDER.indexOf(currentStage);
+      const stepIndex = APPROVAL_STAGE_ORDER.indexOf(step.stage);
+      
+      if (request.status === APPROVAL_STAGE_LABELS.rejected) {
+        if (stepIndex < currentIndex) {
+          stepEl.classList.add("approval-progress__step--completed");
+        } else if (stepIndex === currentIndex) {
+          stepEl.classList.add("approval-progress__step--rejected");
+        }
+      } else if (stepIndex < currentIndex || request.status === APPROVAL_STAGE_LABELS.approved) {
+        stepEl.classList.add("approval-progress__step--completed");
+      } else if (stepIndex === currentIndex) {
+        stepEl.classList.add("approval-progress__step--current");
+      }
+      
+      const stepLabel = createElement("span", "approval-progress__label", step.label);
+      stepEl.append(stepLabel);
+      progressContainer.append(stepEl);
+      
+      if (index < progressSteps.length - 1) {
+        const connector = createElement("div", "approval-progress__connector");
+        progressContainer.append(connector);
+      }
+    });
+
+    approvalProgressSection.append(progressContainer);
+    body.append(approvalProgressSection);
+
+    backdrop.addEventListener("click", closeRequestDetailDrawer);
+    backButton.addEventListener("click", closeRequestDetailDrawer);
+    closeButton.addEventListener("click", closeRequestDetailDrawer);
+
+    const footerActions = createElement("div", "request-detail-drawer__footer-actions");
+
+    if (viewMode === "requester") {
+      if (isPending) {
+        const cancelButton = createElement(
+          "button",
+          "request-detail-drawer__button request-detail-drawer__button--danger",
+          "Cancel Request",
+        );
+        cancelButton.type = "button";
+        cancelButton.addEventListener("click", () => {
+          if (confirm("Are you sure you want to cancel this request?")) {
+            const assetsApp = null;
+            const index = assetsApp.assetRequests.findIndex((r) => r.id === request.id);
+            if (index > -1) {
+              assetsApp.assetRequests.splice(index, 1);
+            }
+            closeRequestDetailDrawer();
+          }
+        });
+        footerActions.append(cancelButton);
+      }
+    } else {
+      if (canApprove) {
+        const rejectButton = createElement(
+          "button",
+          "request-detail-drawer__button request-detail-drawer__button--ghost",
+          "Reject",
+        );
+        rejectButton.type = "button";
+        rejectButton.addEventListener("click", () => {
+          request.approvalStage = APPROVAL_STAGES.REJECTED || "rejected";
+          request.status = APPROVAL_STAGE_LABELS.rejected;
+          request.statusTone = APPROVAL_STAGE_TONES.rejected;
+          request.approvalHistory = request.approvalHistory || [];
+          request.approvalHistory.push({
+            stage: currentStage,
+            action: "rejected",
+            by: currentUser?.name || "Unknown",
+            at: new Date().toLocaleString("id-ID"),
+          });
+          closeRequestDetailDrawer();
+        });
+
+        const stageLabel = stageLabelMap[currentStage] || "Approve";
+        const approveButton = createElement(
+          "button",
+          "request-detail-drawer__button request-detail-drawer__button--primary",
+          `Approve (${stageLabel})`,
+        );
+        approveButton.type = "button";
+        approveButton.addEventListener("click", () => {
+          const currentIndex = APPROVAL_STAGE_ORDER.indexOf(currentStage);
+          const nextStage = APPROVAL_STAGE_ORDER[currentIndex + 1];
+          
+          request.approvalHistory = request.approvalHistory || [];
+          request.approvalHistory.push({
+            stage: currentStage,
+            action: "approved",
+            by: currentUser?.name || "Unknown",
+            at: new Date().toLocaleString("id-ID"),
+          });
+          
+          if (nextStage) {
+            request.approvalStage = nextStage;
+            request.status = APPROVAL_STAGE_LABELS[nextStage];
+            request.statusTone = APPROVAL_STAGE_TONES[nextStage];
+          } else {
+            request.approvalStage = APPROVAL_STAGES.APPROVED;
+            request.status = APPROVAL_STAGE_LABELS.approved;
+            request.statusTone = APPROVAL_STAGE_TONES.approved;
+          }
+          closeRequestDetailDrawer();
+        });
+
+        footerActions.append(rejectButton, approveButton);
+      } else if (isPending) {
+        const waitingLabel = createElement(
+          "span",
+          "request-detail-drawer__waiting-message",
+          `Waiting for ${stageLabelMap[currentStage]} approval`,
+        );
+        footerActions.append(waitingLabel);
+      }
+    }
+
+    footer.append(footerActions);
+    headerLeft.append(backButton, title);
+    header.append(headerLeft, closeButton);
+    drawer.append(header, body, footer);
+    overlay.append(backdrop, drawer);
+
+    return overlay;
+  }
+
+  function createAssetRequestWorkspace(activeApp) {
+    const wrapper = createElement("section", "asset-request-workspace");
+    const viewMode = state.assets.requestViewMode;
+    const meta = ASSET_PAGE_META["Asset Request"];
+    const viewMeta = viewMode === "requester" ? meta.requesterView : meta.approverView;
+
+    // Debug: make sure we have the assetRequests
+    const assetRequests = activeApp?.assetRequests || [];
+    
+    const requests = getFilteredAssetRequests(
+      activeApp,
+      state.assets.searches.request,
+      state.assets.filters.request,
+    );
+
+    const userPermissions = getCurrentUserPermissions();
+    const isApprover = userPermissions.some(p => 
+      ["approve_team_leader", "approve_hrga", "approve_finance", "approve_purchasing"].includes(p)
+    );
+    const pendingCount = isApprover ? activeApp.assetRequests?.filter((r) => {
+      if (r.status === APPROVAL_STAGE_LABELS.rejected || r.status === APPROVAL_STAGE_LABELS.approved) {
+        return false;
+      }
+      const stage = r.approvalStage;
+      if (!stage) return r.status === APPROVAL_STAGE_LABELS.team_leader;
+      
+      if (stage === APPROVAL_STAGES.TEAM_LEADER) return userPermissions.includes("approve_team_leader");
+      if (stage === APPROVAL_STAGES.HRGA) return userPermissions.includes("approve_hrga");
+      if (stage === APPROVAL_STAGES.FINANCE) return userPermissions.includes("approve_finance");
+      if (stage === APPROVAL_STAGES.PURCHASING) return userPermissions.includes("approve_purchasing");
+      return false;
+    }).length || 0 : 0;
+
+    const header = createElement("div", "asset-request-workspace__header");
+    const titleBlock = createElement("div", "asset-request-workspace__title-block");
+    const eyebrow = createElement(
+      "p",
+      "asset-request-workspace__eyebrow",
+      viewMeta.eyebrow,
+    );
+    const title = createElement(
+      "h2",
+      "asset-request-workspace__title",
+      viewMeta.title,
+    );
+
+    titleBlock.append(eyebrow, title);
+
+    const viewToggle = createElement("div", "asset-request-workspace__view-toggle");
+    const requesterBtn = createElement(
+      "button",
+      `asset-request-workspace__toggle-btn${viewMode === "requester" ? " is-active" : ""}`,
+    );
+    const approverBtn = createElement(
+      "button",
+      `asset-request-workspace__toggle-btn${viewMode === "approver" ? " is-active" : ""}`,
+    );
+
+    requesterBtn.type = "button";
+    approverBtn.type = "button";
+
+    const myRequestsLabel = createElement("span", null, "My Requests");
+    const myRequestsCount = createElement(
+      "span",
+      "asset-request-workspace__toggle-badge",
+      "0",
+    );
+    requesterBtn.append(myRequestsLabel, myRequestsCount);
+
+    const approvalQueueLabel = createElement("span", null, "Approval Queue");
+    const approvalQueueCount = createElement(
+      "span",
+      "asset-request-workspace__toggle-badge",
+      String(pendingCount),
+    );
+    approverBtn.append(approvalQueueLabel, approvalQueueCount);
+
+    requesterBtn.addEventListener("click", () => {
+      state.assets.requestViewMode = "requester";
+      render();
+    });
+
+    approverBtn.addEventListener("click", () => {
+      state.assets.requestViewMode = "approver";
+      render();
+    });
+
+    viewToggle.append(requesterBtn, approverBtn);
+
+    const actions = createElement("div", "asset-request-workspace__actions");
+    const newRequestBtn = createElement("button", "asset-request-workspace__btn");
+    newRequestBtn.type = "button";
+    newRequestBtn.append(
+      createIcon("plus"),
+      createElement("span", null, "New Request"),
+    );
+    newRequestBtn.addEventListener("click", () => {
+      state.isNewRequestDrawerOpen = true;
+      render();
+    });
+    actions.append(newRequestBtn);
+
+    header.append(titleBlock, viewToggle, actions);
+
+    const toolbar = createElement("div", "asset-request-workspace__toolbar");
+    const searchWrap = createElement("div", "asset-request-workspace__search");
+    const searchInput = createElement(
+      "input",
+      "asset-request-workspace__search-input",
+    );
+    const searchIcon = createElement("span", "asset-request-workspace__search-icon");
+    const filterWrap = createElement("div", "asset-request-workspace__filter");
+    const filterBtn = createElement("button", "asset-request-workspace__filter-btn");
+    const filterIcon = createElement("span", "asset-request-workspace__filter-icon");
+    const filterDropdown = createElement(
+      "div",
+      "asset-request-workspace__filter-dropdown",
+    );
+
+    searchInput.type = "text";
+    searchInput.placeholder = "Search requests...";
+    searchInput.setAttribute("aria-label", "Search requests");
+    searchInput.value = state.assets.searches.request;
+    searchInput.addEventListener("input", (e) => {
+      state.assets.searches.request = e.target.value;
+      render();
+    });
+
+    searchIcon.append(createIcon("search"));
+
+    const currentFilters = ASSET_REQUEST_FILTERS.request;
+    currentFilters.forEach(([value, label]) => {
+      const filterOption = createElement(
+        "button",
+        `asset-request-workspace__filter-option${state.assets.filters.request === value ? " is-active" : ""}`,
+      );
+      filterOption.type = "button";
+      filterOption.textContent = label;
+      filterOption.addEventListener("click", () => {
+        state.assets.filters.request = value;
+        filterDropdown.classList.remove("is-open");
+        filterBtn.setAttribute("aria-expanded", "false");
+        render();
+      });
+      filterDropdown.append(filterOption);
+    });
+
+    filterBtn.type = "button";
+    filterBtn.setAttribute("aria-label", "Filter requests");
+    filterBtn.setAttribute("aria-haspopup", "listbox");
+    filterBtn.setAttribute("aria-expanded", "false");
+    filterIcon.append(createIcon("filter"));
+    const filterLabel = createElement(
+      "span",
+      null,
+      currentFilters.find(([v]) => v === state.assets.filters.request)?.[1] || "All",
+    );
+    filterBtn.append(filterIcon, filterLabel);
+
+    let filterTimeout;
+    const toggleFilterDropdown = () => {
+      clearTimeout(filterTimeout);
+      filterTimeout = setTimeout(() => {
+        const isOpen = filterDropdown.classList.toggle("is-open");
+        filterBtn.setAttribute("aria-expanded", String(isOpen));
+      }, 0);
+    };
+
+    filterBtn.addEventListener("click", toggleFilterDropdown);
+
+    document.addEventListener("click", (e) => {
+      if (!filterWrap.contains(e.target)) {
+        filterDropdown.classList.remove("is-open");
+        filterBtn.setAttribute("aria-expanded", "false");
+      }
+    });
+
+    searchWrap.append(searchIcon, searchInput);
+    filterWrap.append(filterBtn, filterDropdown);
+    toolbar.append(searchWrap, filterWrap);
+
+    const tableWrapper = createElement("div", "asset-request-workspace__table-wrapper");
+    const table = createElement("table", "asset-request-workspace__table");
+    const thead = createElement("thead");
+    const tbody = createElement("tbody");
+
+    const headerRow = createElement("tr");
+
+    const columns = viewMode === "requester"
+      ? [
+          { label: "ASSET", width: "20%" },
+          { label: "PURPOSE", width: "25%" },
+          { label: "DURATION", width: "10%" },
+          { label: "STATUS", width: "15%" },
+          { label: "SUBMITTED", width: "15%" },
+          { label: "ACTION", width: "15%" },
+        ]
+      : [
+          { label: "EMPLOYEE", width: "18%" },
+          { label: "TEAM", width: "12%" },
+          { label: "ASSET", width: "18%" },
+          { label: "PURPOSE", width: "22%" },
+          { label: "STATUS", width: "13%" },
+          { label: "ACTION", width: "17%" },
+        ];
+
+    columns.forEach((col) => {
+      const th = createElement("th", null, col.label);
+      th.style.width = col.width;
+      headerRow.append(th);
+    });
+
+    thead.append(headerRow);
+
+    if (requests.length === 0) {
+      const emptyRow = createElement("tr", "asset-request-workspace__empty-row");
+      const emptyCell = createElement("td", null, "No requests found");
+      emptyCell.colSpan = columns.length;
+      emptyRow.append(emptyCell);
+      tbody.append(emptyRow);
+    } else {
+      requests.forEach((req) => {
+        const row = createElement("tr");
+        row.dataset.requestId = req.id;
+
+        if (viewMode === "requester") {
+          const assetCell = createElement("td", null, req.requestedAsset);
+          const purposeCell = createElement("td", null, req.purpose);
+          const durationCell = createElement("td", null, req.duration);
+          const statusCell = createElement("td");
+          const statusBadge = createElement(
+            "span",
+            `asset-request-workspace__status asset-request-workspace__status--${req.statusTone}`,
+            req.status,
+          );
+          statusCell.append(statusBadge);
+          const submittedCell = createElement("td", null, req.submittedAt);
+
+          const actionCell = createElement("td");
+          const kebabBtn = createElement("button", "asset-request-workspace__kebab-btn");
+          kebabBtn.type = "button";
+          kebabBtn.setAttribute("aria-label", "Request actions");
+          kebabBtn.append(createIcon("more-vertical"));
+
+          const kebabDropdown = createElement("div", "asset-request-workspace__kebab-dropdown");
+          kebabDropdown.setAttribute("role", "menu");
+
+          const viewOption = createElement(
+            "button",
+            "asset-request-workspace__kebab-option",
+          );
+          viewOption.type = "button";
+          viewOption.setAttribute("role", "menuitem");
+          viewOption.append(
+            createIcon("eye"),
+            createElement("span", null, "View Details"),
+          );
+          viewOption.addEventListener("click", () => {
+            openRequestDetailDrawer(req);
+          });
+
+          kebabDropdown.append(viewOption);
+
+          const isPendingForRequester = req.status !== APPROVAL_STAGE_LABELS.approved && 
+                                          req.status !== APPROVAL_STAGE_LABELS.rejected;
+          if (isPendingForRequester) {
+            const cancelOption = createElement(
+              "button",
+              "asset-request-workspace__kebab-option asset-request-workspace__kebab-option--danger",
+            );
+            cancelOption.type = "button";
+            cancelOption.setAttribute("role", "menuitem");
+            cancelOption.append(
+              createIcon("trash"),
+              createElement("span", null, "Cancel Request"),
+            );
+            cancelOption.addEventListener("click", () => {
+              if (confirm("Are you sure you want to cancel this request?")) {
+                const index = activeApp.assetRequests.findIndex((r) => r.id === req.id);
+                if (index > -1) {
+                  activeApp.assetRequests.splice(index, 1);
+                }
+                render();
+              }
+            });
+            kebabDropdown.append(cancelOption);
+          }
+
+          let isKebabOpen = false;
+          kebabBtn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            isKebabOpen = !isKebabOpen;
+            kebabDropdown.classList.toggle("is-open", isKebabOpen);
+          });
+
+          document.addEventListener("click", () => {
+            isKebabOpen = false;
+            kebabDropdown.classList.remove("is-open");
+          });
+
+          actionCell.append(kebabBtn, kebabDropdown);
+
+          row.append(assetCell, purposeCell, durationCell, statusCell, submittedCell, actionCell);
+        } else {
+          const employeeCell = createElement("td", null, req.employee);
+          const teamCell = createElement("td", null, req.team);
+          const assetCell = createElement("td", null, req.requestedAsset);
+          const purposeCell = createElement("td", null, req.purpose);
+          const statusCell = createElement("td");
+          const statusBadge = createElement(
+            "span",
+            `asset-request-workspace__status asset-request-workspace__status--${req.statusTone}`,
+            req.status,
+          );
+          statusCell.append(statusBadge);
+
+          const actionCell = createElement("td");
+          const kebabBtn = createElement("button", "asset-request-workspace__kebab-btn");
+          kebabBtn.type = "button";
+          kebabBtn.setAttribute("aria-label", "Request actions");
+          kebabBtn.append(createIcon("more-vertical"));
+
+          const kebabDropdown = createElement("div", "asset-request-workspace__kebab-dropdown");
+          kebabDropdown.setAttribute("role", "menu");
+
+          const viewOption = createElement(
+            "button",
+            "asset-request-workspace__kebab-option",
+          );
+          viewOption.type = "button";
+          viewOption.setAttribute("role", "menuitem");
+          viewOption.append(
+            createIcon("eye"),
+            createElement("span", null, "View Details"),
+          );
+          viewOption.addEventListener("click", () => {
+            openRequestDetailDrawer(req);
+          });
+          kebabDropdown.append(viewOption);
+
+          const reqStage = req.approvalStage || APPROVAL_STAGES.TEAM_LEADER;
+          const reqCanApprove = canApproveStage(reqStage);
+          const isReqPending = req.status !== APPROVAL_STAGE_LABELS.approved && 
+                              req.status !== APPROVAL_STAGE_LABELS.rejected;
+
+          if (isReqPending && reqCanApprove) {
+            const stageLabel = stageLabelMap[reqStage] || "Approve";
+            const approveOption = createElement(
+              "button",
+              "asset-request-workspace__kebab-option",
+            );
+            approveOption.type = "button";
+            approveOption.setAttribute("role", "menuitem");
+            approveOption.append(
+              createIcon("check"),
+              createElement("span", null, `Approve (${stageLabel})`),
+            );
+            approveOption.addEventListener("click", () => {
+              const currentUser = getCurrentUser();
+              req.approvalHistory = req.approvalHistory || [];
+              req.approvalHistory.push({
+                stage: reqStage,
+                action: "approved",
+                by: currentUser?.name || "Unknown",
+                at: new Date().toLocaleString("id-ID"),
+              });
+              
+              const currentIndex = APPROVAL_STAGE_ORDER.indexOf(reqStage);
+              const nextStage = APPROVAL_STAGE_ORDER[currentIndex + 1];
+              
+              if (nextStage) {
+                req.approvalStage = nextStage;
+                req.status = APPROVAL_STAGE_LABELS[nextStage];
+                req.statusTone = APPROVAL_STAGE_TONES[nextStage];
+              } else {
+                req.approvalStage = APPROVAL_STAGES.APPROVED;
+                req.status = APPROVAL_STAGE_LABELS.approved;
+                req.statusTone = APPROVAL_STAGE_TONES.approved;
+              }
+              render();
+            });
+            kebabDropdown.append(approveOption);
+
+            const rejectOption = createElement(
+              "button",
+              "asset-request-workspace__kebab-option asset-request-workspace__kebab-option--danger",
+            );
+            rejectOption.type = "button";
+            rejectOption.setAttribute("role", "menuitem");
+            rejectOption.append(
+              createIcon("close"),
+              createElement("span", null, "Reject"),
+            );
+            rejectOption.addEventListener("click", () => {
+              const currentUser = getCurrentUser();
+              req.approvalHistory = req.approvalHistory || [];
+              req.approvalHistory.push({
+                stage: reqStage,
+                action: "rejected",
+                by: currentUser?.name || "Unknown",
+                at: new Date().toLocaleString("id-ID"),
+              });
+              req.approvalStage = APPROVAL_STAGES.REJECTED;
+              req.status = APPROVAL_STAGE_LABELS.rejected;
+              req.statusTone = APPROVAL_STAGE_TONES.rejected;
+              req.statusTone = "rejected";
+              render();
+            });
+            kebabDropdown.append(rejectOption);
+
+            const reviseOption = createElement(
+              "button",
+              "asset-request-workspace__kebab-option",
+            );
+            reviseOption.type = "button";
+            reviseOption.setAttribute("role", "menuitem");
+            reviseOption.append(
+              createIcon("edit"),
+              createElement("span", null, "Request Revision"),
+            );
+            reviseOption.addEventListener("click", () => {
+              req.status = "Needs Revision";
+              req.statusTone = "warning";
+              render();
+            });
+            kebabDropdown.append(reviseOption);
+          }
+
+          let isKebabOpen = false;
+          kebabBtn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            isKebabOpen = !isKebabOpen;
+            kebabDropdown.classList.toggle("is-open", isKebabOpen);
+          });
+
+          document.addEventListener("click", () => {
+            isKebabOpen = false;
+            kebabDropdown.classList.remove("is-open");
+          });
+
+          actionCell.append(kebabBtn, kebabDropdown);
+
+          row.append(employeeCell, teamCell, assetCell, purposeCell, statusCell, actionCell);
+        }
+
+        tbody.append(row);
+      });
+    }
+
+    table.append(thead, tbody);
+    tableWrapper.append(table);
+
+    wrapper.append(header, toolbar, tableWrapper);
+
+    return wrapper;
+  }
+
+  function createCheckOutWorkspace(activeApp) {
+    const wrapper = createElement("section", "checkout-workspace");
+    const viewMode = state.assets.checkoutViewMode;
+    const meta = ASSET_PAGE_META["Asset Check Out"];
+    const viewMeta = viewMode === "requester" ? meta.requesterView : meta.approverView;
+
+    const checkOuts = getFilteredCheckOuts(
+      activeApp,
+      state.assets.searches.checkout,
+      state.assets.filters.checkout,
+    );
+
+    const pendingCount = checkOuts.filter((c) => c.status === "Waiting Confirmation").length;
+
+    const header = createElement("div", "checkout-workspace__header");
+    const titleBlock = createElement("div", "checkout-workspace__title-block");
+    const eyebrow = createElement("p", "checkout-workspace__eyebrow", viewMeta.eyebrow);
+    const title = createElement("h2", "checkout-workspace__title", viewMeta.title);
+
+    titleBlock.append(eyebrow, title);
+
+    const viewToggle = createElement("div", "checkout-workspace__view-toggle");
+    const requesterBtn = createElement("button", `checkout-workspace__toggle-btn${viewMode === "requester" ? " is-active" : ""}`);
+    const approverBtn = createElement("button", `checkout-workspace__toggle-btn${viewMode === "approver" ? " is-active" : ""}`);
+
+    requesterBtn.type = "button";
+    approverBtn.type = "button";
+    requesterBtn.textContent = "My Checkouts";
+    approverBtn.textContent = "Queue";
+
+    requesterBtn.addEventListener("click", () => {
+      state.assets.checkoutViewMode = "requester";
+      render();
+    });
+
+    approverBtn.addEventListener("click", () => {
+      state.assets.checkoutViewMode = "approver";
+      render();
+    });
+
+    viewToggle.append(requesterBtn, approverBtn);
+
+    const actions = createElement("div", "checkout-workspace__actions");
+    const newBtn = createElement("button", "checkout-workspace__btn");
+    newBtn.type = "button";
+    newBtn.append(createIcon("plus"), createElement("span", null, "New Check Out"));
+    newBtn.addEventListener("click", () => {
+      state.isNewCheckoutDrawerOpen = true;
+      render();
+    });
+    actions.append(newBtn);
+
+    header.append(titleBlock, viewToggle, actions);
+
+    const toolbar = createElement("div", "checkout-workspace__toolbar");
+    const searchWrap = createElement("div", "checkout-workspace__search");
+    const searchInput = createElement("input", "checkout-workspace__search-input");
+    const searchIcon = createElement("span", "checkout-workspace__search-icon");
+    const filterWrap = createElement("div", "checkout-workspace__filter");
+    const filterBtn = createElement("button", "checkout-workspace__filter-btn");
+    const filterIcon = createElement("span", "checkout-workspace__filter-icon");
+    const filterDropdown = createElement("div", "checkout-workspace__filter-dropdown");
+
+    searchInput.type = "text";
+    searchInput.placeholder = "Search checkouts...";
+    searchInput.setAttribute("aria-label", "Search checkouts");
+    searchInput.value = state.assets.searches.checkout;
+    searchInput.addEventListener("input", (e) => {
+      state.assets.searches.checkout = e.target.value;
+      render();
+    });
+
+    searchIcon.append(createIcon("search"));
+
+    const currentFilters = ASSET_REQUEST_FILTERS.checkout;
+    currentFilters.forEach(([value, label]) => {
+      const filterOption = createElement("button", `checkout-workspace__filter-option${state.assets.filters.checkout === value ? " is-active" : ""}`);
+      filterOption.type = "button";
+      filterOption.textContent = label;
+      filterOption.addEventListener("click", () => {
+        state.assets.filters.checkout = value;
+        filterDropdown.classList.remove("is-open");
+        filterBtn.setAttribute("aria-expanded", "false");
+        render();
+      });
+      filterDropdown.append(filterOption);
+    });
+
+    filterBtn.type = "button";
+    filterBtn.setAttribute("aria-label", "Filter checkouts");
+    filterBtn.setAttribute("aria-haspopup", "listbox");
+    filterBtn.setAttribute("aria-expanded", "false");
+    filterIcon.append(createIcon("filter"));
+    filterBtn.append(filterIcon);
+
+    filterBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const isOpen = filterDropdown.classList.contains("is-open");
+      filterDropdown.classList.toggle("is-open", !isOpen);
+      filterBtn.setAttribute("aria-expanded", String(!isOpen));
+    });
+
+    document.addEventListener("click", () => {
+      filterDropdown.classList.remove("is-open");
+      filterBtn.setAttribute("aria-expanded", "false");
+    });
+
+    filterWrap.append(filterBtn, filterDropdown);
+    searchWrap.append(searchIcon, searchInput);
+    toolbar.append(searchWrap, filterWrap);
+
+    const tableWrapper = createElement("div", "checkout-workspace__table-wrapper");
+    const table = createElement("table", "checkout-workspace__table");
+    const thead = createElement("thead");
+    const theadRow = createElement("tr");
+    theadRow.innerHTML = `
+      <th>Asset</th>
+      <th>Requester</th>
+      <th>Location</th>
+      <th>Pickup</th>
+      <th>Return Plan</th>
+      <th>Status</th>
+      <th></th>
+    `;
+    thead.append(theadRow);
+
+    const tbody = createElement("tbody");
+
+    if (checkOuts.length === 0) {
+      const emptyRow = createElement("tr");
+      emptyRow.innerHTML = `<td colspan="7" style="text-align: center; padding: 48px; color: var(--text-muted);">No checkouts found</td>`;
+      tbody.append(emptyRow);
+    } else {
+      checkOuts.forEach((checkout) => {
+        const row = createElement("tr");
+        
+        const assetCell = createElement("td");
+        assetCell.textContent = checkout.assetName;
+        
+        const requesterCell = createElement("td");
+        requesterCell.textContent = checkout.requester;
+        
+        const locationCell = createElement("td");
+        locationCell.textContent = checkout.location;
+        
+        const pickupCell = createElement("td");
+        pickupCell.textContent = checkout.pickupAt;
+        
+        const returnCell = createElement("td");
+        returnCell.textContent = checkout.returnPlan;
+        
+        const statusCell = createElement("td");
+        const statusBadge = createElement("span", `status-badge status-badge--${checkout.statusTone}`);
+        statusBadge.textContent = checkout.status;
+        statusCell.append(statusBadge);
+        
+        const actionCell = createElement("td");
+        const kebabBtn = createElement("button", "checkout-workspace__kebab");
+        kebabBtn.type = "button";
+        kebabBtn.append(createIcon("more-vertical"));
+        
+        const kebabDropdown = createElement("div", "checkout-workspace__kebab-dropdown");
+        const viewOption = createElement("button", "checkout-workspace__kebab-option");
+        viewOption.type = "button";
+        viewOption.textContent = "View Details";
+        viewOption.addEventListener("click", () => {
+          state.assets.selectedCheckoutDetailId = checkout.id;
+          state.isCheckoutDetailDrawerOpen = true;
+          render();
+        });
+        
+        kebabDropdown.append(viewOption);
+        
+        let isKebabOpen = false;
+        kebabBtn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          isKebabOpen = !isKebabOpen;
+          kebabDropdown.classList.toggle("is-open", isKebabOpen);
+        });
+        
+        document.addEventListener("click", () => {
+          isKebabOpen = false;
+          kebabDropdown.classList.remove("is-open");
+        });
+        
+        actionCell.append(kebabBtn, kebabDropdown);
+        
+        row.append(assetCell, requesterCell, locationCell, pickupCell, returnCell, statusCell, actionCell);
+        tbody.append(row);
+      });
+    }
+
+    table.append(thead, tbody);
+    tableWrapper.append(table);
+
+    wrapper.append(header, toolbar, tableWrapper);
+
+    return wrapper;
+  }
+
+  function createCheckInWorkspace(activeApp) {
+    const wrapper = createElement("section", "checkin-workspace");
+    const viewMode = state.assets.checkinViewMode;
+    const meta = ASSET_PAGE_META["Asset Check In"];
+    const viewMeta = viewMode === "requester" ? meta.requesterView : meta.approverView;
+
+    const checkIns = getFilteredCheckIns(
+      activeApp,
+      state.assets.searches.checkin,
+      state.assets.filters.checkin,
+    );
+
+    const pendingCount = checkIns.filter((c) => c.status === "Inspection Needed").length;
+
+    const header = createElement("div", "checkin-workspace__header");
+    const titleBlock = createElement("div", "checkin-workspace__title-block");
+    const eyebrow = createElement("p", "checkin-workspace__eyebrow", viewMeta.eyebrow);
+    const title = createElement("h2", "checkin-workspace__title", viewMeta.title);
+
+    titleBlock.append(eyebrow, title);
+
+    const viewToggle = createElement("div", "checkin-workspace__view-toggle");
+    const requesterBtn = createElement("button", `checkin-workspace__toggle-btn${viewMode === "requester" ? " is-active" : ""}`);
+    const approverBtn = createElement("button", `checkin-workspace__toggle-btn${viewMode === "approver" ? " is-active" : ""}`);
+
+    requesterBtn.type = "button";
+    approverBtn.type = "button";
+    requesterBtn.textContent = "My Check-ins";
+    approverBtn.textContent = "Processing";
+
+    requesterBtn.addEventListener("click", () => {
+      state.assets.checkinViewMode = "requester";
+      render();
+    });
+
+    approverBtn.addEventListener("click", () => {
+      state.assets.checkinViewMode = "approver";
+      render();
+    });
+
+    viewToggle.append(requesterBtn, approverBtn);
+
+    const actions = createElement("div", "checkin-workspace__actions");
+    const newBtn = createElement("button", "checkin-workspace__btn");
+    newBtn.type = "button";
+    newBtn.append(createIcon("plus"), createElement("span", null, "New Check In"));
+    newBtn.addEventListener("click", () => {
+      state.isNewCheckinDrawerOpen = true;
+      render();
+    });
+    actions.append(newBtn);
+
+    header.append(titleBlock, viewToggle, actions);
+
+    const toolbar = createElement("div", "checkin-workspace__toolbar");
+    const searchWrap = createElement("div", "checkin-workspace__search");
+    const searchInput = createElement("input", "checkin-workspace__search-input");
+    const searchIcon = createElement("span", "checkin-workspace__search-icon");
+    const filterWrap = createElement("div", "checkin-workspace__filter");
+    const filterBtn = createElement("button", "checkin-workspace__filter-btn");
+    const filterIcon = createElement("span", "checkin-workspace__filter-icon");
+    const filterDropdown = createElement("div", "checkin-workspace__filter-dropdown");
+
+    searchInput.type = "text";
+    searchInput.placeholder = "Search check-ins...";
+    searchInput.setAttribute("aria-label", "Search check-ins");
+    searchInput.value = state.assets.searches.checkin;
+    searchInput.addEventListener("input", (e) => {
+      state.assets.searches.checkin = e.target.value;
+      render();
+    });
+
+    searchIcon.append(createIcon("search"));
+
+    const currentFilters = ASSET_REQUEST_FILTERS.checkin;
+    currentFilters.forEach(([value, label]) => {
+      const filterOption = createElement("button", `checkin-workspace__filter-option${state.assets.filters.checkin === value ? " is-active" : ""}`);
+      filterOption.type = "button";
+      filterOption.textContent = label;
+      filterOption.addEventListener("click", () => {
+        state.assets.filters.checkin = value;
+        filterDropdown.classList.remove("is-open");
+        filterBtn.setAttribute("aria-expanded", "false");
+        render();
+      });
+      filterDropdown.append(filterOption);
+    });
+
+    filterBtn.type = "button";
+    filterBtn.setAttribute("aria-label", "Filter check-ins");
+    filterBtn.setAttribute("aria-haspopup", "listbox");
+    filterBtn.setAttribute("aria-expanded", "false");
+    filterIcon.append(createIcon("filter"));
+    filterBtn.append(filterIcon);
+
+    filterBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const isOpen = filterDropdown.classList.contains("is-open");
+      filterDropdown.classList.toggle("is-open", !isOpen);
+      filterBtn.setAttribute("aria-expanded", String(!isOpen));
+    });
+
+    document.addEventListener("click", () => {
+      filterDropdown.classList.remove("is-open");
+      filterBtn.setAttribute("aria-expanded", "false");
+    });
+
+    filterWrap.append(filterBtn, filterDropdown);
+    searchWrap.append(searchIcon, searchInput);
+    toolbar.append(searchWrap, filterWrap);
+
+    const tableWrapper = createElement("div", "checkin-workspace__table-wrapper");
+    const table = createElement("table", "checkin-workspace__table");
+    const thead = createElement("thead");
+    const theadRow = createElement("tr");
+    theadRow.innerHTML = `
+      <th>Asset</th>
+      <th>Returned By</th>
+      <th>Received At</th>
+      <th>Condition</th>
+      <th>Status</th>
+      <th></th>
+    `;
+    thead.append(theadRow);
+
+    const tbody = createElement("tbody");
+
+    if (checkIns.length === 0) {
+      const emptyRow = createElement("tr");
+      emptyRow.innerHTML = `<td colspan="6" style="text-align: center; padding: 48px; color: var(--text-muted);">No check-ins found</td>`;
+      tbody.append(emptyRow);
+    } else {
+      checkIns.forEach((checkin) => {
+        const row = createElement("tr");
+        
+        const assetCell = createElement("td");
+        assetCell.textContent = checkin.assetName;
+        
+        const returnedByCell = createElement("td");
+        returnedByCell.textContent = checkin.returnedBy;
+        
+        const receivedAtCell = createElement("td");
+        receivedAtCell.textContent = checkin.receivedAt;
+        
+        const conditionCell = createElement("td");
+        const conditionBadge = createElement("span", `status-badge status-badge--${checkin.conditionTone}`);
+        conditionBadge.textContent = checkin.condition;
+        conditionCell.append(conditionBadge);
+        
+        const statusCell = createElement("td");
+        const statusBadge = createElement("span", `status-badge status-badge--${checkin.statusTone}`);
+        statusBadge.textContent = checkin.status;
+        statusCell.append(statusBadge);
+        
+        const actionCell = createElement("td");
+        const kebabBtn = createElement("button", "checkin-workspace__kebab");
+        kebabBtn.type = "button";
+        kebabBtn.append(createIcon("more-vertical"));
+        
+        const kebabDropdown = createElement("div", "checkin-workspace__kebab-dropdown");
+        const viewOption = createElement("button", "checkin-workspace__kebab-option");
+        viewOption.type = "button";
+        viewOption.textContent = "View Details";
+        viewOption.addEventListener("click", () => {
+          state.assets.selectedCheckinDetailId = checkin.id;
+          state.isCheckinDetailDrawerOpen = true;
+          render();
+        });
+        
+        kebabDropdown.append(viewOption);
+        
+        let isKebabOpen = false;
+        kebabBtn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          isKebabOpen = !isKebabOpen;
+          kebabDropdown.classList.toggle("is-open", isKebabOpen);
+        });
+        
+        document.addEventListener("click", () => {
+          isKebabOpen = false;
+          kebabDropdown.classList.remove("is-open");
+        });
+        
+        actionCell.append(kebabBtn, kebabDropdown);
+        
+        row.append(assetCell, returnedByCell, receivedAtCell, conditionCell, statusCell, actionCell);
+        tbody.append(row);
+      });
+    }
+
+    table.append(thead, tbody);
+    tableWrapper.append(table);
+
+    wrapper.append(header, toolbar, tableWrapper);
+
+    return wrapper;
+  }
+
+  function createMutationWorkspace(activeApp) {
+    const wrapper = createElement("section", "mutation-workspace");
+    const viewMode = state.assets.mutationViewMode;
+    const meta = ASSET_PAGE_META["Asset Mutation"];
+    const viewMeta = viewMode === "requester" ? meta.requesterView : meta.approverView;
+
+    const mutations = getFilteredMutations(
+      activeApp,
+      state.assets.searches.mutation,
+      state.assets.filters.mutation,
+    );
+
+    const pendingCount = mutations.filter((m) => m.status === "Queued").length;
+
+    const header = createElement("div", "mutation-workspace__header");
+    const titleBlock = createElement("div", "mutation-workspace__title-block");
+    const eyebrow = createElement("p", "mutation-workspace__eyebrow", viewMeta.eyebrow);
+    const title = createElement("h2", "mutation-workspace__title", viewMeta.title);
+
+    titleBlock.append(eyebrow, title);
+
+    const viewToggle = createElement("div", "mutation-workspace__view-toggle");
+    const requesterBtn = createElement("button", `mutation-workspace__toggle-btn${viewMode === "requester" ? " is-active" : ""}`);
+    const approverBtn = createElement("button", `mutation-workspace__toggle-btn${viewMode === "approver" ? " is-active" : ""}`);
+
+    requesterBtn.type = "button";
+    approverBtn.type = "button";
+    requesterBtn.textContent = "My Mutations";
+    approverBtn.textContent = "Transfers";
+
+    requesterBtn.addEventListener("click", () => {
+      state.assets.mutationViewMode = "requester";
+      render();
+    });
+
+    approverBtn.addEventListener("click", () => {
+      state.assets.mutationViewMode = "approver";
+      render();
+    });
+
+    viewToggle.append(requesterBtn, approverBtn);
+
+    const actions = createElement("div", "mutation-workspace__actions");
+    const newBtn = createElement("button", "mutation-workspace__btn");
+    newBtn.type = "button";
+    newBtn.append(createIcon("plus"), createElement("span", null, "New Mutation"));
+    newBtn.addEventListener("click", () => {
+      state.isNewMutationDrawerOpen = true;
+      render();
+    });
+    actions.append(newBtn);
+
+    header.append(titleBlock, viewToggle, actions);
+
+    const toolbar = createElement("div", "mutation-workspace__toolbar");
+    const searchWrap = createElement("div", "mutation-workspace__search");
+    const searchInput = createElement("input", "mutation-workspace__search-input");
+    const searchIcon = createElement("span", "mutation-workspace__search-icon");
+    const filterWrap = createElement("div", "mutation-workspace__filter");
+    const filterBtn = createElement("button", "mutation-workspace__filter-btn");
+    const filterIcon = createElement("span", "mutation-workspace__filter-icon");
+    const filterDropdown = createElement("div", "mutation-workspace__filter-dropdown");
+
+    searchInput.type = "text";
+    searchInput.placeholder = "Search mutations...";
+    searchInput.setAttribute("aria-label", "Search mutations");
+    searchInput.value = state.assets.searches.mutation;
+    searchInput.addEventListener("input", (e) => {
+      state.assets.searches.mutation = e.target.value;
+      render();
+    });
+
+    searchIcon.append(createIcon("search"));
+
+    const currentFilters = ASSET_REQUEST_FILTERS.mutation;
+    currentFilters.forEach(([value, label]) => {
+      const filterOption = createElement("button", `mutation-workspace__filter-option${state.assets.filters.mutation === value ? " is-active" : ""}`);
+      filterOption.type = "button";
+      filterOption.textContent = label;
+      filterOption.addEventListener("click", () => {
+        state.assets.filters.mutation = value;
+        filterDropdown.classList.remove("is-open");
+        filterBtn.setAttribute("aria-expanded", "false");
+        render();
+      });
+      filterDropdown.append(filterOption);
+    });
+
+    filterBtn.type = "button";
+    filterBtn.setAttribute("aria-label", "Filter mutations");
+    filterBtn.setAttribute("aria-haspopup", "listbox");
+    filterBtn.setAttribute("aria-expanded", "false");
+    filterIcon.append(createIcon("filter"));
+    filterBtn.append(filterIcon);
+
+    filterBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const isOpen = filterDropdown.classList.contains("is-open");
+      filterDropdown.classList.toggle("is-open", !isOpen);
+      filterBtn.setAttribute("aria-expanded", String(!isOpen));
+    });
+
+    document.addEventListener("click", () => {
+      filterDropdown.classList.remove("is-open");
+      filterBtn.setAttribute("aria-expanded", "false");
+    });
+
+    filterWrap.append(filterBtn, filterDropdown);
+    searchWrap.append(searchIcon, searchInput);
+    toolbar.append(searchWrap, filterWrap);
+
+    const tableWrapper = createElement("div", "mutation-workspace__table-wrapper");
+    const table = createElement("table", "mutation-workspace__table");
+    const thead = createElement("thead");
+    const theadRow = createElement("tr");
+    theadRow.innerHTML = `
+      <th>Asset</th>
+      <th>From</th>
+      <th>To</th>
+      <th>Initiated By</th>
+      <th>Scheduled</th>
+      <th>Status</th>
+      <th></th>
+    `;
+    thead.append(theadRow);
+
+    const tbody = createElement("tbody");
+
+    if (mutations.length === 0) {
+      const emptyRow = createElement("tr");
+      emptyRow.innerHTML = `<td colspan="7" style="text-align: center; padding: 48px; color: var(--text-muted);">No mutations found</td>`;
+      tbody.append(emptyRow);
+    } else {
+      mutations.forEach((mutation) => {
+        const row = createElement("tr");
+        
+        const assetCell = createElement("td");
+        assetCell.textContent = mutation.assetName;
+        
+        const fromCell = createElement("td");
+        fromCell.textContent = mutation.fromLocation;
+        
+        const toCell = createElement("td");
+        toCell.textContent = mutation.toLocation;
+        
+        const initiatedCell = createElement("td");
+        initiatedCell.textContent = mutation.initiatedBy;
+        
+        const scheduledCell = createElement("td");
+        scheduledCell.textContent = mutation.scheduledAt;
+        
+        const statusCell = createElement("td");
+        const statusBadge = createElement("span", `status-badge status-badge--${mutation.statusTone}`);
+        statusBadge.textContent = mutation.status;
+        statusCell.append(statusBadge);
+        
+        const actionCell = createElement("td");
+        const kebabBtn = createElement("button", "mutation-workspace__kebab");
+        kebabBtn.type = "button";
+        kebabBtn.append(createIcon("more-vertical"));
+        
+        const kebabDropdown = createElement("div", "mutation-workspace__kebab-dropdown");
+        const viewOption = createElement("button", "mutation-workspace__kebab-option");
+        viewOption.type = "button";
+        viewOption.textContent = "View Details";
+        viewOption.addEventListener("click", () => {
+          state.assets.selectedMutationDetailId = mutation.id;
+          state.isMutationDetailDrawerOpen = true;
+          render();
+        });
+        
+        kebabDropdown.append(viewOption);
+        
+        let isKebabOpen = false;
+        kebabBtn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          isKebabOpen = !isKebabOpen;
+          kebabDropdown.classList.toggle("is-open", isKebabOpen);
+        });
+        
+        document.addEventListener("click", () => {
+          isKebabOpen = false;
+          kebabDropdown.classList.remove("is-open");
+        });
+        
+        actionCell.append(kebabBtn, kebabDropdown);
+        
+        row.append(assetCell, fromCell, toCell, initiatedCell, scheduledCell, statusCell, actionCell);
+        tbody.append(row);
+      });
+    }
+
+    table.append(thead, tbody);
+    tableWrapper.append(table);
+
+    wrapper.append(header, toolbar, tableWrapper);
+
+    return wrapper;
+  }
+
+  function createMaintenanceWorkspace(activeApp) {
+    const wrapper = createElement("section", "maintenance-workspace");
+    const viewMode = state.assets.maintenanceViewMode;
+    const meta = ASSET_PAGE_META["Maintenance Asset Request"];
+    const viewMeta = viewMode === "requester" ? meta.requesterView : meta.approverView;
+
+    const requests = getFilteredMaintenanceRequests(
+      activeApp,
+      state.assets.searches.maintenance,
+      state.assets.filters.maintenance,
+    );
+
+    const pendingCount = requests.filter((r) => r.status === "Pending Review").length;
+
+    const header = createElement("div", "maintenance-workspace__header");
+    const titleBlock = createElement("div", "maintenance-workspace__title-block");
+    const eyebrow = createElement("p", "maintenance-workspace__eyebrow", viewMeta.eyebrow);
+    const title = createElement("h2", "maintenance-workspace__title", viewMeta.title);
+
+    titleBlock.append(eyebrow, title);
+
+    const viewToggle = createElement("div", "maintenance-workspace__view-toggle");
+    const requesterBtn = createElement("button", `maintenance-workspace__toggle-btn${viewMode === "requester" ? " is-active" : ""}`);
+    const approverBtn = createElement("button", `maintenance-workspace__toggle-btn${viewMode === "approver" ? " is-active" : ""}`);
+
+    requesterBtn.type = "button";
+    approverBtn.type = "button";
+    requesterBtn.textContent = "My Requests";
+    approverBtn.textContent = "Queue";
+
+    requesterBtn.addEventListener("click", () => {
+      state.assets.maintenanceViewMode = "requester";
+      render();
+    });
+
+    approverBtn.addEventListener("click", () => {
+      state.assets.maintenanceViewMode = "approver";
+      render();
+    });
+
+    viewToggle.append(requesterBtn, approverBtn);
+
+    const actions = createElement("div", "maintenance-workspace__actions");
+    const newBtn = createElement("button", "maintenance-workspace__btn");
+    newBtn.type = "button";
+    newBtn.append(createIcon("plus"), createElement("span", null, "New Request"));
+    newBtn.addEventListener("click", () => {
+      state.isNewMaintenanceDrawerOpen = true;
+      render();
+    });
+    actions.append(newBtn);
+
+    header.append(titleBlock, viewToggle, actions);
+
+    const toolbar = createElement("div", "maintenance-workspace__toolbar");
+    const searchWrap = createElement("div", "maintenance-workspace__search");
+    const searchInput = createElement("input", "maintenance-workspace__search-input");
+    const searchIcon = createElement("span", "maintenance-workspace__search-icon");
+    const filterWrap = createElement("div", "maintenance-workspace__filter");
+    const filterBtn = createElement("button", "maintenance-workspace__filter-btn");
+    const filterIcon = createElement("span", "maintenance-workspace__filter-icon");
+    const filterDropdown = createElement("div", "maintenance-workspace__filter-dropdown");
+
+    searchInput.type = "text";
+    searchInput.placeholder = "Search maintenance...";
+    searchInput.setAttribute("aria-label", "Search maintenance requests");
+    searchInput.value = state.assets.searches.maintenance;
+    searchInput.addEventListener("input", (e) => {
+      state.assets.searches.maintenance = e.target.value;
+      render();
+    });
+
+    searchIcon.append(createIcon("search"));
+
+    const currentFilters = ASSET_REQUEST_FILTERS.maintenance;
+    currentFilters.forEach(([value, label]) => {
+      const filterOption = createElement("button", `maintenance-workspace__filter-option${state.assets.filters.maintenance === value ? " is-active" : ""}`);
+      filterOption.type = "button";
+      filterOption.textContent = label;
+      filterOption.addEventListener("click", () => {
+        state.assets.filters.maintenance = value;
+        filterDropdown.classList.remove("is-open");
+        filterBtn.setAttribute("aria-expanded", "false");
+        render();
+      });
+      filterDropdown.append(filterOption);
+    });
+
+    filterBtn.type = "button";
+    filterBtn.setAttribute("aria-label", "Filter maintenance requests");
+    filterBtn.setAttribute("aria-haspopup", "listbox");
+    filterBtn.setAttribute("aria-expanded", "false");
+    filterIcon.append(createIcon("filter"));
+    filterBtn.append(filterIcon);
+
+    filterBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const isOpen = filterDropdown.classList.contains("is-open");
+      filterDropdown.classList.toggle("is-open", !isOpen);
+      filterBtn.setAttribute("aria-expanded", String(!isOpen));
+    });
+
+    document.addEventListener("click", () => {
+      filterDropdown.classList.remove("is-open");
+      filterBtn.setAttribute("aria-expanded", "false");
+    });
+
+    filterWrap.append(filterBtn, filterDropdown);
+    searchWrap.append(searchIcon, searchInput);
+    toolbar.append(searchWrap, filterWrap);
+
+    const tableWrapper = createElement("div", "maintenance-workspace__table-wrapper");
+    const table = createElement("table", "maintenance-workspace__table");
+    const thead = createElement("thead");
+    const theadRow = createElement("tr");
+    theadRow.innerHTML = `
+      <th>Asset</th>
+      <th>Issue</th>
+      <th>Requester</th>
+      <th>Location</th>
+      <th>Priority</th>
+      <th>Status</th>
+      <th></th>
+    `;
+    thead.append(theadRow);
+
+    const tbody = createElement("tbody");
+
+    if (requests.length === 0) {
+      const emptyRow = createElement("tr");
+      emptyRow.innerHTML = `<td colspan="7" style="text-align: center; padding: 48px; color: var(--text-muted);">No maintenance requests found</td>`;
+      tbody.append(emptyRow);
+    } else {
+      requests.forEach((request) => {
+        const row = createElement("tr");
+        
+        const assetCell = createElement("td");
+        assetCell.textContent = request.assetName;
+        
+        const issueCell = createElement("td");
+        issueCell.textContent = request.issue;
+        
+        const requesterCell = createElement("td");
+        requesterCell.textContent = request.requester;
+        
+        const locationCell = createElement("td");
+        locationCell.textContent = request.location;
+        
+        const priorityCell = createElement("td");
+        const priorityBadge = createElement("span", `status-badge status-badge--${request.priorityTone}`);
+        priorityBadge.textContent = request.priority;
+        priorityCell.append(priorityBadge);
+        
+        const statusCell = createElement("td");
+        const statusBadge = createElement("span", `status-badge status-badge--${request.statusTone}`);
+        statusBadge.textContent = request.status;
+        statusCell.append(statusBadge);
+        
+        const actionCell = createElement("td");
+        const kebabBtn = createElement("button", "maintenance-workspace__kebab");
+        kebabBtn.type = "button";
+        kebabBtn.append(createIcon("more-vertical"));
+        
+        const kebabDropdown = createElement("div", "maintenance-workspace__kebab-dropdown");
+        const viewOption = createElement("button", "maintenance-workspace__kebab-option");
+        viewOption.type = "button";
+        viewOption.textContent = "View Details";
+        viewOption.addEventListener("click", () => {
+          state.assets.selectedMaintenanceDetailId = request.id;
+          state.isMaintenanceDetailDrawerOpen = true;
+          render();
+        });
+        
+        kebabDropdown.append(viewOption);
+        
+        let isKebabOpen = false;
+        kebabBtn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          isKebabOpen = !isKebabOpen;
+          kebabDropdown.classList.toggle("is-open", isKebabOpen);
+        });
+        
+        document.addEventListener("click", () => {
+          isKebabOpen = false;
+          kebabDropdown.classList.remove("is-open");
+        });
+        
+        actionCell.append(kebabBtn, kebabDropdown);
+        
+        row.append(assetCell, issueCell, requesterCell, locationCell, priorityCell, statusCell, actionCell);
+        tbody.append(row);
+      });
+    }
+
+    table.append(thead, tbody);
+    tableWrapper.append(table);
+
+    wrapper.append(header, toolbar, tableWrapper);
+
+    return wrapper;
+  }
+
+  function closeNewCheckOutDrawer() {
+    const overlay = shell.querySelector(".new-checkout-drawer-overlay");
+    if (overlay) {
+      overlay.classList.remove("is-open");
+      setTimeout(() => {
+        state.isNewCheckoutDrawerOpen = false;
+        state.assets.newCheckoutDraft = {
+          selectedAssetId: "",
+          selectedUserId: "",
+          pickupDate: "",
+          returnPlan: "",
+          notes: "",
+        };
+        if (overlay.isConnected) {
+          overlay.remove();
+        }
+        render();
+      }, 360);
+    } else {
+      state.isNewCheckoutDrawerOpen = false;
+      render();
+    }
+  }
+
+  function createNewCheckOutDrawer(isOpen = false) {
+    const overlay = createElement("div", `new-checkout-drawer-overlay${isOpen ? " is-open" : ""}`);
+    const backdrop = createElement("button", "new-checkout-drawer-overlay__backdrop");
+    const drawer = createElement("aside", "new-checkout-drawer");
+    const header = createElement("div", "new-checkout-drawer__header");
+    const headerLeft = createElement("div", "new-checkout-drawer__header-left");
+    const backButton = createElement("button", "new-checkout-drawer__back");
+    const title = createElement("h2", "new-checkout-drawer__title", "New Check Out");
+    const closeButton = createElement("button", "new-checkout-drawer__close");
+    const body = createElement("div", "new-checkout-drawer__body");
+    const footer = createElement("div", "new-checkout-drawer__footer");
+
+    overlay.setAttribute("aria-hidden", String(!state.isNewCheckoutDrawerOpen));
+    drawer.setAttribute("aria-label", "New check out drawer");
+    backdrop.type = "button";
+    backButton.type = "button";
+    closeButton.type = "button";
+
+    backdrop.append(createIcon("close"));
+    backButton.append(createIcon("chevron-left"));
+    closeButton.append(createIcon("close"));
+
+    const assetsApp = null;
+    const availableAssets = assetsApp?.records?.filter(r => r.status === "Active" || r.status === "Available") || [];
+    const usersApp = getUserManagementApp();
+    const users = usersApp?.users || [];
+
+    const assetSection = createElement("div", "drawer-form__section");
+    assetSection.append(createSectionLabel("package", "Asset Selection"));
+    
+    const assetField = createElement("div", "drawer-form__field");
+    const assetLabel = createElement("label", "drawer-form__label", "Select Asset");
+    const assetSelect = createElement("select", "drawer-form__select");
+    assetSelect.innerHTML = '<option value="">Choose an asset...</option>';
+    availableAssets.forEach(asset => {
+      const option = createElement("option");
+      option.value = asset.id;
+      option.textContent = `${asset.name} (${asset.assetNumber})`;
+      assetSelect.append(option);
+    });
+    assetSelect.value = state.assets.newCheckoutDraft.selectedAssetId;
+    assetSelect.addEventListener("change", (e) => {
+      state.assets.newCheckoutDraft.selectedAssetId = e.target.value;
+    });
+    assetField.append(assetLabel, assetSelect);
+    assetSection.append(assetField);
+    body.append(assetSection);
+
+    const identitySection = createElement("div", "drawer-form__section");
+    identitySection.append(createSectionLabel("user", "Requester"));
+    
+    const userField = createElement("div", "drawer-form__field");
+    const userLabel = createElement("label", "drawer-form__label", "Requester");
+    const userSelect = createElement("select", "drawer-form__select");
+    userSelect.innerHTML = '<option value="">Choose a requester...</option>';
+    users.forEach(user => {
+      const option = createElement("option");
+      option.value = user.id;
+      option.textContent = user.name;
+      userSelect.append(option);
+    });
+    userSelect.value = state.assets.newCheckoutDraft.selectedUserId;
+    userSelect.addEventListener("change", (e) => {
+      state.assets.newCheckoutDraft.selectedUserId = e.target.value;
+    });
+    userField.append(userLabel, userSelect);
+    identitySection.append(userField);
+    body.append(identitySection);
+
+    const scheduleSection = createElement("div", "drawer-form__section");
+    scheduleSection.append(createSectionLabel("calendar", "Schedule"));
+    
+    const pickupField = createElement("div", "drawer-form__field");
+    const pickupLabel = createElement("label", "drawer-form__label", "Pickup Date");
+    const pickupInput = createElement("input", "drawer-form__input");
+    pickupInput.type = "datetime-local";
+    pickupInput.value = state.assets.newCheckoutDraft.pickupDate;
+    pickupInput.addEventListener("change", (e) => {
+      state.assets.newCheckoutDraft.pickupDate = e.target.value;
+    });
+    pickupField.append(pickupLabel, pickupInput);
+    
+    const returnField = createElement("div", "drawer-form__field");
+    const returnLabel = createElement("label", "drawer-form__label", "Return Plan");
+    const returnInput = createElement("input", "drawer-form__input");
+    returnInput.type = "text";
+    returnInput.placeholder = "e.g., 30 Jun 2026";
+    returnInput.value = state.assets.newCheckoutDraft.returnPlan;
+    returnInput.addEventListener("input", (e) => {
+      state.assets.newCheckoutDraft.returnPlan = e.target.value;
+    });
+    returnField.append(returnLabel, returnInput);
+    
+    scheduleSection.append(pickupField, returnField);
+    body.append(scheduleSection);
+
+    const notesSection = createElement("div", "drawer-form__section");
+    notesSection.append(createSectionLabel("description", "Notes"));
+    
+    const notesField = createElement("div", "drawer-form__field");
+    const notesLabel = createElement("label", "drawer-form__label", "Notes");
+    const notesTextarea = createElement("textarea", "drawer-form__textarea");
+    notesTextarea.placeholder = "Add any additional notes...";
+    notesTextarea.value = state.assets.newCheckoutDraft.notes;
+    notesTextarea.addEventListener("input", (e) => {
+      state.assets.newCheckoutDraft.notes = e.target.value;
+    });
+    notesField.append(notesLabel, notesTextarea);
+    notesSection.append(notesField);
+    body.append(notesSection);
+
+    backdrop.addEventListener("click", closeNewCheckOutDrawer);
+    backButton.addEventListener("click", closeNewCheckOutDrawer);
+    closeButton.addEventListener("click", closeNewCheckOutDrawer);
+
+    const cancelBtn = createElement("button", "new-checkout-drawer__button new-checkout-drawer__button--ghost", "Cancel");
+    cancelBtn.type = "button";
+    cancelBtn.addEventListener("click", closeNewCheckOutDrawer);
+
+    const submitBtn = createElement("button", "new-checkout-drawer__button new-checkout-drawer__button--primary", "Create Check Out");
+    submitBtn.type = "button";
+    submitBtn.addEventListener("click", () => {
+      const draft = state.assets.newCheckoutDraft;
+      if (!draft.selectedAssetId || !draft.selectedUserId) {
+        alert("Please select an asset and requester");
+        return;
+      }
+      
+      const selectedAsset = availableAssets.find(a => a.id === draft.selectedAssetId);
+      const selectedUser = users.find(u => u.id === draft.selectedUserId);
+      
+      const newCheckOut = {
+        id: `checkout-${Date.now()}`,
+        assetId: draft.selectedAssetId,
+        assetName: selectedAsset?.name || "Unknown",
+        requester: selectedUser?.name || "Unknown",
+        location: selectedAsset?.location || "BSD",
+        pickupAt: draft.pickupDate ? new Date(draft.pickupDate).toLocaleString("id-ID") : new Date().toLocaleString("id-ID"),
+        returnPlan: draft.returnPlan || "Not specified",
+        status: "Waiting Confirmation",
+        statusTone: "pending",
+        notes: draft.notes || "",
+      };
+      
+      assetsApp.checkOuts.push(newCheckOut);
+      closeNewCheckOutDrawer();
+    });
+
+    headerLeft.append(backButton, title);
+    header.append(headerLeft, closeButton);
+    footer.append(cancelBtn, submitBtn);
+    drawer.append(header, body, footer);
+    overlay.append(backdrop, drawer);
+
+    return overlay;
+  }
+
+  function closeCheckOutDetailDrawer() {
+    const overlay = shell.querySelector(".checkout-detail-drawer-overlay");
+    if (overlay) {
+      overlay.classList.remove("is-open");
+      setTimeout(() => {
+        state.isCheckoutDetailDrawerOpen = false;
+        state.assets.selectedCheckoutDetailId = null;
+        if (overlay.isConnected) {
+          overlay.remove();
+        }
+        render();
+      }, 360);
+    } else {
+      state.isCheckoutDetailDrawerOpen = false;
+      state.assets.selectedCheckoutDetailId = null;
+      render();
+    }
+  }
+
+  function createCheckOutDetailDrawer(checkout, isOpen = false) {
+    const overlay = createElement("div", `checkout-detail-drawer-overlay${isOpen ? " is-open" : ""}`);
+    const backdrop = createElement("button", "checkout-detail-drawer-overlay__backdrop");
+    const drawer = createElement("aside", "checkout-detail-drawer");
+    const header = createElement("div", "checkout-detail-drawer__header");
+    const headerLeft = createElement("div", "checkout-detail-drawer__header-left");
+    const backButton = createElement("button", "checkout-detail-drawer__back");
+    const title = createElement("h2", "checkout-detail-drawer__title", "Check Out Details");
+    const closeButton = createElement("button", "checkout-detail-drawer__close");
+    const body = createElement("div", "checkout-detail-drawer__body");
+    const footer = createElement("div", "checkout-detail-drawer__footer");
+
+    overlay.setAttribute("aria-hidden", String(!state.isCheckoutDetailDrawerOpen));
+    drawer.setAttribute("aria-label", "Check out detail drawer");
+    backdrop.type = "button";
+    backButton.type = "button";
+    closeButton.type = "button";
+
+    backdrop.append(createIcon("close"));
+    backButton.append(createIcon("chevron-left"));
+    closeButton.append(createIcon("close"));
+
+    const assetSection = createElement("div", "drawer-form__section");
+    assetSection.append(createSectionLabel("package", "Asset"));
+    assetSection.append(createDetailField("Asset Name", checkout.assetName));
+    assetSection.append(createDetailField("Location", checkout.location));
+    body.append(assetSection);
+
+    const identitySection = createElement("div", "drawer-form__section");
+    identitySection.append(createSectionLabel("user", "Requester"));
+    identitySection.append(createDetailField("Requester Name", checkout.requester));
+    body.append(identitySection);
+
+    const scheduleSection = createElement("div", "drawer-form__section");
+    scheduleSection.append(createSectionLabel("calendar", "Schedule"));
+    scheduleSection.append(createDetailField("Pickup Time", checkout.pickupAt));
+    scheduleSection.append(createDetailField("Return Plan", checkout.returnPlan));
+    body.append(scheduleSection);
+
+    const statusSection = createElement("div", "drawer-form__section");
+    statusSection.append(createSectionLabel("clock", "Status"));
+    statusSection.append(createDetailField("Status", checkout.status));
+    body.append(statusSection);
+
+    if (checkout.notes) {
+      const notesSection = createElement("div", "drawer-form__section");
+      notesSection.append(createSectionLabel("description", "Notes"));
+      notesSection.append(createDetailField("Notes", checkout.notes));
+      body.append(notesSection);
+    }
+
+    backdrop.addEventListener("click", closeCheckOutDetailDrawer);
+    backButton.addEventListener("click", closeCheckOutDetailDrawer);
+    closeButton.addEventListener("click", closeCheckOutDetailDrawer);
+
+    headerLeft.append(backButton, title);
+    header.append(headerLeft, closeButton);
+    drawer.append(header, body, footer);
+    overlay.append(backdrop, drawer);
+
+    return overlay;
+  }
+
+  function closeNewCheckInDrawer() {
+    const overlay = shell.querySelector(".new-checkin-drawer-overlay");
+    if (overlay) {
+      overlay.classList.remove("is-open");
+      setTimeout(() => {
+        state.isNewCheckinDrawerOpen = false;
+        state.assets.newCheckinDraft = {
+          selectedAssetId: "",
+          selectedUserId: "",
+          condition: "",
+          notes: "",
+        };
+        if (overlay.isConnected) {
+          overlay.remove();
+        }
+        render();
+      }, 360);
+    } else {
+      state.isNewCheckinDrawerOpen = false;
+      render();
+    }
+  }
+
+  function createNewCheckInDrawer(isOpen = false) {
+    const overlay = createElement("div", `new-checkin-drawer-overlay${isOpen ? " is-open" : ""}`);
+    const backdrop = createElement("button", "new-checkin-drawer-overlay__backdrop");
+    const drawer = createElement("aside", "new-checkin-drawer");
+    const header = createElement("div", "new-checkin-drawer__header");
+    const headerLeft = createElement("div", "new-checkin-drawer__header-left");
+    const backButton = createElement("button", "new-checkin-drawer__back");
+    const title = createElement("h2", "new-checkin-drawer__title", "New Check In");
+    const closeButton = createElement("button", "new-checkin-drawer__close");
+    const body = createElement("div", "new-checkin-drawer__body");
+    const footer = createElement("div", "new-checkin-drawer__footer");
+
+    overlay.setAttribute("aria-hidden", String(!state.isNewCheckinDrawerOpen));
+    drawer.setAttribute("aria-label", "New check in drawer");
+    backdrop.type = "button";
+    backButton.type = "button";
+    closeButton.type = "button";
+
+    backdrop.append(createIcon("close"));
+    backButton.append(createIcon("chevron-left"));
+    closeButton.append(createIcon("close"));
+
+    const assetsApp = null;
+    const checkedOutAssets = assetsApp?.checkOuts?.filter(c => c.status === "Checked Out") || [];
+    const usersApp = getUserManagementApp();
+    const users = usersApp?.users || [];
+
+    const assetSection = createElement("div", "drawer-form__section");
+    assetSection.append(createSectionLabel("package", "Asset Selection"));
+    
+    const assetField = createElement("div", "drawer-form__field");
+    const assetLabel = createElement("label", "drawer-form__label", "Select Asset");
+    const assetSelect = createElement("select", "drawer-form__select");
+    assetSelect.innerHTML = '<option value="">Choose an asset to return...</option>';
+    checkedOutAssets.forEach(checkout => {
+      const option = createElement("option");
+      option.value = checkout.assetId;
+      option.textContent = `${checkout.assetName} (${checkout.requester})`;
+      assetSelect.append(option);
+    });
+    assetSelect.value = state.assets.newCheckinDraft.selectedAssetId;
+    assetSelect.addEventListener("change", (e) => {
+      state.assets.newCheckinDraft.selectedAssetId = e.target.value;
+    });
+    assetField.append(assetLabel, assetSelect);
+    assetSection.append(assetField);
+    body.append(assetSection);
+
+    const identitySection = createElement("div", "drawer-form__section");
+    identitySection.append(createSectionLabel("user", "Returner"));
+    
+    const userField = createElement("div", "drawer-form__field");
+    const userLabel = createElement("label", "drawer-form__label", "Returner");
+    const userSelect = createElement("select", "drawer-form__select");
+    userSelect.innerHTML = '<option value="">Choose the person returning...</option>';
+    users.forEach(user => {
+      const option = createElement("option");
+      option.value = user.id;
+      option.textContent = user.name;
+      userSelect.append(option);
+    });
+    userSelect.value = state.assets.newCheckinDraft.selectedUserId;
+    userSelect.addEventListener("change", (e) => {
+      state.assets.newCheckinDraft.selectedUserId = e.target.value;
+    });
+    userField.append(userLabel, userSelect);
+    identitySection.append(userField);
+    body.append(identitySection);
+
+    const conditionSection = createElement("div", "drawer-form__section");
+    conditionSection.append(createSectionLabel("tool", "Condition"));
+    
+    const conditionField = createElement("div", "drawer-form__field");
+    const conditionLabel = createElement("label", "drawer-form__label", "Asset Condition");
+    const conditionSelect = createElement("select", "drawer-form__select");
+    conditionSelect.innerHTML = `
+      <option value="">Select condition...</option>
+      <option value="Good">Good</option>
+      <option value="Needs minor repair">Needs minor repair</option>
+      <option value="Needs lens cleaning">Needs lens cleaning</option>
+      <option value="Damaged">Damaged</option>
+    `;
+    conditionSelect.value = state.assets.newCheckinDraft.condition;
+    conditionSelect.addEventListener("change", (e) => {
+      state.assets.newCheckinDraft.condition = e.target.value;
+    });
+    conditionField.append(conditionLabel, conditionSelect);
+    conditionSection.append(conditionField);
+    body.append(conditionSection);
+
+    const notesSection = createElement("div", "drawer-form__section");
+    notesSection.append(createSectionLabel("description", "Notes"));
+    
+    const notesField = createElement("div", "drawer-form__field");
+    const notesLabel = createElement("label", "drawer-form__label", "Notes");
+    const notesTextarea = createElement("textarea", "drawer-form__textarea");
+    notesTextarea.placeholder = "Add any notes about the return...";
+    notesTextarea.value = state.assets.newCheckinDraft.notes;
+    notesTextarea.addEventListener("input", (e) => {
+      state.assets.newCheckinDraft.notes = e.target.value;
+    });
+    notesField.append(notesLabel, notesTextarea);
+    notesSection.append(notesField);
+    body.append(notesSection);
+
+    backdrop.addEventListener("click", closeNewCheckInDrawer);
+    backButton.addEventListener("click", closeNewCheckInDrawer);
+    closeButton.addEventListener("click", closeNewCheckInDrawer);
+
+    const cancelBtn = createElement("button", "new-checkin-drawer__button new-checkin-drawer__button--ghost", "Cancel");
+    cancelBtn.type = "button";
+    cancelBtn.addEventListener("click", closeNewCheckInDrawer);
+
+    const submitBtn = createElement("button", "new-checkin-drawer__button new-checkin-drawer__button--primary", "Submit Check In");
+    submitBtn.type = "button";
+    submitBtn.addEventListener("click", () => {
+      const draft = state.assets.newCheckinDraft;
+      if (!draft.selectedAssetId || !draft.selectedUserId || !draft.condition) {
+        alert("Please fill in all required fields");
+        return;
+      }
+      
+      const selectedCheckout = checkedOutAssets.find(c => c.assetId === draft.selectedAssetId);
+      const selectedUser = users.find(u => u.id === draft.selectedUserId);
+      
+      const conditionTone = draft.condition === "Good" ? "success" : "warning";
+      
+      const newCheckIn = {
+        id: `checkin-${Date.now()}`,
+        assetId: draft.selectedAssetId,
+        assetName: selectedCheckout?.assetName || "Unknown",
+        returnedBy: selectedUser?.name || "Unknown",
+        receivedAt: new Date().toLocaleString("id-ID"),
+        condition: draft.condition,
+        conditionTone: conditionTone,
+        status: "Inspection Needed",
+        statusTone: "inspection",
+        notes: draft.notes || "",
+      };
+      
+      assetsApp.checkIns.push(newCheckIn);
+      closeNewCheckInDrawer();
+    });
+
+    headerLeft.append(backButton, title);
+    header.append(headerLeft, closeButton);
+    footer.append(cancelBtn, submitBtn);
+    drawer.append(header, body, footer);
+    overlay.append(backdrop, drawer);
+
+    return overlay;
+  }
+
+  function closeCheckInDetailDrawer() {
+    const overlay = shell.querySelector(".checkin-detail-drawer-overlay");
+    if (overlay) {
+      overlay.classList.remove("is-open");
+      setTimeout(() => {
+        state.isCheckinDetailDrawerOpen = false;
+        state.assets.selectedCheckinDetailId = null;
+        if (overlay.isConnected) {
+          overlay.remove();
+        }
+        render();
+      }, 360);
+    } else {
+      state.isCheckinDetailDrawerOpen = false;
+      state.assets.selectedCheckinDetailId = null;
+      render();
+    }
+  }
+
+  function createCheckInDetailDrawer(checkin, isOpen = false) {
+    const overlay = createElement("div", `checkin-detail-drawer-overlay${isOpen ? " is-open" : ""}`);
+    const backdrop = createElement("button", "checkin-detail-drawer-overlay__backdrop");
+    const drawer = createElement("aside", "checkin-detail-drawer");
+    const header = createElement("div", "checkin-detail-drawer__header");
+    const headerLeft = createElement("div", "checkin-detail-drawer__header-left");
+    const backButton = createElement("button", "checkin-detail-drawer__back");
+    const title = createElement("h2", "checkin-detail-drawer__title", "Check In Details");
+    const closeButton = createElement("button", "checkin-detail-drawer__close");
+    const body = createElement("div", "checkin-detail-drawer__body");
+    const footer = createElement("div", "checkin-detail-drawer__footer");
+
+    overlay.setAttribute("aria-hidden", String(!state.isCheckinDetailDrawerOpen));
+    drawer.setAttribute("aria-label", "Check in detail drawer");
+    backdrop.type = "button";
+    backButton.type = "button";
+    closeButton.type = "button";
+
+    backdrop.append(createIcon("close"));
+    backButton.append(createIcon("chevron-left"));
+    closeButton.append(createIcon("close"));
+
+    const assetSection = createElement("div", "drawer-form__section");
+    assetSection.append(createSectionLabel("package", "Asset"));
+    assetSection.append(createDetailField("Asset Name", checkin.assetName));
+    body.append(assetSection);
+
+    const returnSection = createElement("div", "drawer-form__section");
+    returnSection.append(createSectionLabel("user", "Return"));
+    returnSection.append(createDetailField("Returned By", checkin.returnedBy));
+    returnSection.append(createDetailField("Received At", checkin.receivedAt));
+    body.append(returnSection);
+
+    const conditionSection = createElement("div", "drawer-form__section");
+    conditionSection.append(createSectionLabel("tool", "Condition"));
+    conditionSection.append(createDetailField("Condition", checkin.condition));
+    body.append(conditionSection);
+
+    const statusSection = createElement("div", "drawer-form__section");
+    statusSection.append(createSectionLabel("clock", "Status"));
+    statusSection.append(createDetailField("Status", checkin.status));
+    body.append(statusSection);
+
+    if (checkin.notes) {
+      const notesSection = createElement("div", "drawer-form__section");
+      notesSection.append(createSectionLabel("description", "Notes"));
+      notesSection.append(createDetailField("Notes", checkin.notes));
+      body.append(notesSection);
+    }
+
+    backdrop.addEventListener("click", closeCheckInDetailDrawer);
+    backButton.addEventListener("click", closeCheckInDetailDrawer);
+    closeButton.addEventListener("click", closeCheckInDetailDrawer);
+
+    headerLeft.append(backButton, title);
+    header.append(headerLeft, closeButton);
+    drawer.append(header, body, footer);
+    overlay.append(backdrop, drawer);
+
+    return overlay;
+  }
+
+  function closeNewMutationDrawer() {
+    const overlay = shell.querySelector(".new-mutation-drawer-overlay");
+    if (overlay) {
+      overlay.classList.remove("is-open");
+      setTimeout(() => {
+        state.isNewMutationDrawerOpen = false;
+        state.assets.newMutationDraft = {
+          selectedAssetId: "",
+          fromLocation: "",
+          toLocation: "",
+          scheduledDate: "",
+          notes: "",
+        };
+        if (overlay.isConnected) {
+          overlay.remove();
+        }
+        render();
+      }, 360);
+    } else {
+      state.isNewMutationDrawerOpen = false;
+      render();
+    }
+  }
+
+  function createNewMutationDrawer(isOpen = false) {
+    const overlay = createElement("div", `new-mutation-drawer-overlay${isOpen ? " is-open" : ""}`);
+    const backdrop = createElement("button", "new-mutation-drawer-overlay__backdrop");
+    const drawer = createElement("aside", "new-mutation-drawer");
+    const header = createElement("div", "new-mutation-drawer__header");
+    const headerLeft = createElement("div", "new-mutation-drawer__header-left");
+    const backButton = createElement("button", "new-mutation-drawer__back");
+    const title = createElement("h2", "new-mutation-drawer__title", "New Asset Mutation");
+    const closeButton = createElement("button", "new-mutation-drawer__close");
+    const body = createElement("div", "new-mutation-drawer__body");
+    const footer = createElement("div", "new-mutation-drawer__footer");
+
+    overlay.setAttribute("aria-hidden", String(!state.isNewMutationDrawerOpen));
+    drawer.setAttribute("aria-label", "New mutation drawer");
+    backdrop.type = "button";
+    backButton.type = "button";
+    closeButton.type = "button";
+
+    backdrop.append(createIcon("close"));
+    backButton.append(createIcon("chevron-left"));
+    closeButton.append(createIcon("close"));
+
+    const assetsApp = null;
+    const sites = getSites();
+
+    const assetSection = createElement("div", "drawer-form__section");
+    assetSection.append(createSectionLabel("package", "Asset Selection"));
+    
+    const assetField = createElement("div", "drawer-form__field");
+    const assetLabel = createElement("label", "drawer-form__label", "Select Asset");
+    const assetSelect = createElement("select", "drawer-form__select");
+    assetSelect.innerHTML = '<option value="">Choose an asset to transfer...</option>';
+    assetsApp?.records?.forEach(asset => {
+      const option = createElement("option");
+      option.value = asset.id;
+      option.textContent = `${asset.name} (${asset.assetNumber})`;
+      assetSelect.append(option);
+    });
+    assetSelect.value = state.assets.newMutationDraft.selectedAssetId;
+    assetSelect.addEventListener("change", (e) => {
+      const selectedAsset = assetsApp?.records?.find(a => a.id === e.target.value);
+      state.assets.newMutationDraft.selectedAssetId = e.target.value;
+      state.assets.newMutationDraft.fromLocation = selectedAsset?.location || "";
+    });
+    assetField.append(assetLabel, assetSelect);
+    assetSection.append(assetField);
+    body.append(assetSection);
+
+    const locationSection = createElement("div", "drawer-form__section");
+    locationSection.append(createSectionLabel("location", "Transfer Details"));
+    
+    const fromField = createElement("div", "drawer-form__field");
+    const fromLabel = createElement("label", "drawer-form__label", "From Location");
+    const fromSelect = createElement("select", "drawer-form__select");
+    fromSelect.innerHTML = '<option value="">Select origin...</option>';
+    sites.forEach(site => {
+      const option = createElement("option");
+      option.value = site.name;
+      option.textContent = site.name;
+      fromSelect.append(option);
+    });
+    fromSelect.value = state.assets.newMutationDraft.fromLocation;
+    fromSelect.addEventListener("change", (e) => {
+      state.assets.newMutationDraft.fromLocation = e.target.value;
+    });
+    fromField.append(fromLabel, fromSelect);
+    
+    const toField = createElement("div", "drawer-form__field");
+    const toLabel = createElement("label", "drawer-form__label", "To Location");
+    const toSelect = createElement("select", "drawer-form__select");
+    toSelect.innerHTML = '<option value="">Select destination...</option>';
+    sites.forEach(site => {
+      const option = createElement("option");
+      option.value = site.name;
+      option.textContent = site.name;
+      toSelect.append(option);
+    });
+    toSelect.value = state.assets.newMutationDraft.toLocation;
+    toSelect.addEventListener("change", (e) => {
+      state.assets.newMutationDraft.toLocation = e.target.value;
+    });
+    toField.append(toLabel, toSelect);
+    
+    locationSection.append(fromField, toField);
+    body.append(locationSection);
+
+    const scheduleSection = createElement("div", "drawer-form__section");
+    scheduleSection.append(createSectionLabel("calendar", "Schedule"));
+    
+    const scheduledField = createElement("div", "drawer-form__field");
+    const scheduledLabel = createElement("label", "drawer-form__label", "Scheduled Date");
+    const scheduledInput = createElement("input", "drawer-form__input");
+    scheduledInput.type = "datetime-local";
+    scheduledInput.value = state.assets.newMutationDraft.scheduledDate;
+    scheduledInput.addEventListener("change", (e) => {
+      state.assets.newMutationDraft.scheduledDate = e.target.value;
+    });
+    scheduledField.append(scheduledLabel, scheduledInput);
+    scheduleSection.append(scheduledField);
+    body.append(scheduleSection);
+
+    const notesSection = createElement("div", "drawer-form__section");
+    notesSection.append(createSectionLabel("description", "Notes"));
+    
+    const notesField = createElement("div", "drawer-form__field");
+    const notesLabel = createElement("label", "drawer-form__label", "Notes");
+    const notesTextarea = createElement("textarea", "drawer-form__textarea");
+    notesTextarea.placeholder = "Add notes about this transfer...";
+    notesTextarea.value = state.assets.newMutationDraft.notes;
+    notesTextarea.addEventListener("input", (e) => {
+      state.assets.newMutationDraft.notes = e.target.value;
+    });
+    notesField.append(notesLabel, notesTextarea);
+    notesSection.append(notesField);
+    body.append(notesSection);
+
+    backdrop.addEventListener("click", closeNewMutationDrawer);
+    backButton.addEventListener("click", closeNewMutationDrawer);
+    closeButton.addEventListener("click", closeNewMutationDrawer);
+
+    const cancelBtn = createElement("button", "new-mutation-drawer__button new-mutation-drawer__button--ghost", "Cancel");
+    cancelBtn.type = "button";
+    cancelBtn.addEventListener("click", closeNewMutationDrawer);
+
+    const submitBtn = createElement("button", "new-mutation-drawer__button new-mutation-drawer__button--primary", "Create Mutation");
+    submitBtn.type = "button";
+    submitBtn.addEventListener("click", () => {
+      const draft = state.assets.newMutationDraft;
+      if (!draft.selectedAssetId || !draft.fromLocation || !draft.toLocation) {
+        alert("Please fill in all required fields");
+        return;
+      }
+      
+      const selectedAsset = assetsApp?.records?.find(a => a.id === draft.selectedAssetId);
+      
+      const newMutation = {
+        id: `mutation-${Date.now()}`,
+        assetId: draft.selectedAssetId,
+        assetName: selectedAsset?.name || "Unknown",
+        fromLocation: draft.fromLocation,
+        toLocation: draft.toLocation,
+        initiatedBy: "HRGA & Legal",
+        scheduledAt: draft.scheduledDate ? new Date(draft.scheduledDate).toLocaleString("id-ID") : new Date().toLocaleString("id-ID"),
+        status: "Queued",
+        statusTone: "pending",
+        note: draft.notes || "",
+      };
+      
+      assetsApp.mutations.push(newMutation);
+      closeNewMutationDrawer();
+    });
+
+    headerLeft.append(backButton, title);
+    header.append(headerLeft, closeButton);
+    footer.append(cancelBtn, submitBtn);
+    drawer.append(header, body, footer);
+    overlay.append(backdrop, drawer);
+
+    return overlay;
+  }
+
+  function closeMutationDetailDrawer() {
+    const overlay = shell.querySelector(".mutation-detail-drawer-overlay");
+    if (overlay) {
+      overlay.classList.remove("is-open");
+      setTimeout(() => {
+        state.isMutationDetailDrawerOpen = false;
+        state.assets.selectedMutationDetailId = null;
+        if (overlay.isConnected) {
+          overlay.remove();
+        }
+        render();
+      }, 360);
+    } else {
+      state.isMutationDetailDrawerOpen = false;
+      state.assets.selectedMutationDetailId = null;
+      render();
+    }
+  }
+
+  function createMutationDetailDrawer(mutation, isOpen = false) {
+    const overlay = createElement("div", `mutation-detail-drawer-overlay${isOpen ? " is-open" : ""}`);
+    const backdrop = createElement("button", "mutation-detail-drawer-overlay__backdrop");
+    const drawer = createElement("aside", "mutation-detail-drawer");
+    const header = createElement("div", "mutation-detail-drawer__header");
+    const headerLeft = createElement("div", "mutation-detail-drawer__header-left");
+    const backButton = createElement("button", "mutation-detail-drawer__back");
+    const title = createElement("h2", "mutation-detail-drawer__title", "Mutation Details");
+    const closeButton = createElement("button", "mutation-detail-drawer__close");
+    const body = createElement("div", "mutation-detail-drawer__body");
+    const footer = createElement("div", "mutation-detail-drawer__footer");
+
+    overlay.setAttribute("aria-hidden", String(!state.isMutationDetailDrawerOpen));
+    drawer.setAttribute("aria-label", "Mutation detail drawer");
+    backdrop.type = "button";
+    backButton.type = "button";
+    closeButton.type = "button";
+
+    backdrop.append(createIcon("close"));
+    backButton.append(createIcon("chevron-left"));
+    closeButton.append(createIcon("close"));
+
+    const assetSection = createElement("div", "drawer-form__section");
+    assetSection.append(createSectionLabel("package", "Asset"));
+    assetSection.append(createDetailField("Asset Name", mutation.assetName));
+    body.append(assetSection);
+
+    const transferSection = createElement("div", "drawer-form__section");
+    transferSection.append(createSectionLabel("arrow-left-right", "Transfer"));
+    transferSection.append(createDetailField("From", mutation.fromLocation));
+    transferSection.append(createDetailField("To", mutation.toLocation));
+    body.append(transferSection);
+
+    const scheduleSection = createElement("div", "drawer-form__section");
+    scheduleSection.append(createSectionLabel("calendar", "Schedule"));
+    scheduleSection.append(createDetailField("Initiated By", mutation.initiatedBy));
+    scheduleSection.append(createDetailField("Scheduled", mutation.scheduledAt));
+    body.append(scheduleSection);
+
+    const statusSection = createElement("div", "drawer-form__section");
+    statusSection.append(createSectionLabel("clock", "Status"));
+    statusSection.append(createDetailField("Status", mutation.status));
+    body.append(statusSection);
+
+    if (mutation.note) {
+      const notesSection = createElement("div", "drawer-form__section");
+      notesSection.append(createSectionLabel("description", "Notes"));
+      notesSection.append(createDetailField("Notes", mutation.note));
+      body.append(notesSection);
+    }
+
+    backdrop.addEventListener("click", closeMutationDetailDrawer);
+    backButton.addEventListener("click", closeMutationDetailDrawer);
+    closeButton.addEventListener("click", closeMutationDetailDrawer);
+
+    headerLeft.append(backButton, title);
+    header.append(headerLeft, closeButton);
+    drawer.append(header, body, footer);
+    overlay.append(backdrop, drawer);
+
+    return overlay;
+  }
+
+  function closeNewMaintenanceDrawer() {
+    const overlay = shell.querySelector(".new-maintenance-drawer-overlay");
+    if (overlay) {
+      overlay.classList.remove("is-open");
+      setTimeout(() => {
+        state.isNewMaintenanceDrawerOpen = false;
+        state.assets.newMaintenanceDraft = {
+          selectedAssetId: "",
+          issue: "",
+          priority: "",
+          description: "",
+        };
+        if (overlay.isConnected) {
+          overlay.remove();
+        }
+        render();
+      }, 360);
+    } else {
+      state.isNewMaintenanceDrawerOpen = false;
+      render();
+    }
+  }
+
+  function createNewMaintenanceDrawer(isOpen = false) {
+    const overlay = createElement("div", `new-maintenance-drawer-overlay${isOpen ? " is-open" : ""}`);
+    const backdrop = createElement("button", "new-maintenance-drawer-overlay__backdrop");
+    const drawer = createElement("aside", "new-maintenance-drawer");
+    const header = createElement("div", "new-maintenance-drawer__header");
+    const headerLeft = createElement("div", "new-maintenance-drawer__header-left");
+    const backButton = createElement("button", "new-maintenance-drawer__back");
+    const title = createElement("h2", "new-maintenance-drawer__title", "New Maintenance Request");
+    const closeButton = createElement("button", "new-maintenance-drawer__close");
+    const body = createElement("div", "new-maintenance-drawer__body");
+    const footer = createElement("div", "new-maintenance-drawer__footer");
+
+    overlay.setAttribute("aria-hidden", String(!state.isNewMaintenanceDrawerOpen));
+    drawer.setAttribute("aria-label", "New maintenance drawer");
+    backdrop.type = "button";
+    backButton.type = "button";
+    closeButton.type = "button";
+
+    backdrop.append(createIcon("close"));
+    backButton.append(createIcon("chevron-left"));
+    closeButton.append(createIcon("close"));
+
+    const assetsApp = null;
+    const assignedAssets = assetsApp?.records?.filter(r => r.assignedTo && r.assignedTo !== "-") || [];
+
+    const assetSection = createElement("div", "drawer-form__section");
+    assetSection.append(createSectionLabel("package", "Asset Selection"));
+    
+    const assetField = createElement("div", "drawer-form__field");
+    const assetLabel = createElement("label", "drawer-form__label", "Select Asset");
+    const assetSelect = createElement("select", "drawer-form__select");
+    assetSelect.innerHTML = '<option value="">Choose an asset...</option>';
+    assetsApp?.records?.forEach(asset => {
+      const option = createElement("option");
+      option.value = asset.id;
+      option.textContent = `${asset.name} - ${asset.assignedTo}`;
+      assetSelect.append(option);
+    });
+    assetSelect.value = state.assets.newMaintenanceDraft.selectedAssetId;
+    assetSelect.addEventListener("change", (e) => {
+      state.assets.newMaintenanceDraft.selectedAssetId = e.target.value;
+    });
+    assetField.append(assetLabel, assetSelect);
+    assetSection.append(assetField);
+    body.append(assetSection);
+
+    const issueSection = createElement("div", "drawer-form__section");
+    issueSection.append(createSectionLabel("alert", "Issue Details"));
+    
+    const issueField = createElement("div", "drawer-form__field");
+    const issueLabel = createElement("label", "drawer-form__label", "Issue Type");
+    const issueInput = createElement("input", "drawer-form__input");
+    issueInput.type = "text";
+    issueInput.placeholder = "e.g., Printer not working";
+    issueInput.value = state.assets.newMaintenanceDraft.issue;
+    issueInput.addEventListener("input", (e) => {
+      state.assets.newMaintenanceDraft.issue = e.target.value;
+    });
+    issueField.append(issueLabel, issueInput);
+    
+    const priorityField = createElement("div", "drawer-form__field");
+    const priorityLabel = createElement("label", "drawer-form__label", "Priority");
+    const prioritySelect = createElement("select", "drawer-form__select");
+    prioritySelect.innerHTML = `
+      <option value="">Select priority...</option>
+      <option value="Low">Low</option>
+      <option value="Medium">Medium</option>
+      <option value="High">High</option>
+      <option value="Urgent">Urgent</option>
+    `;
+    prioritySelect.value = state.assets.newMaintenanceDraft.priority;
+    prioritySelect.addEventListener("change", (e) => {
+      state.assets.newMaintenanceDraft.priority = e.target.value;
+    });
+    priorityField.append(priorityLabel, prioritySelect);
+    
+    issueSection.append(issueField, priorityField);
+    body.append(issueSection);
+
+    const descSection = createElement("div", "drawer-form__section");
+    descSection.append(createSectionLabel("description", "Description"));
+    
+    const descField = createElement("div", "drawer-form__field");
+    const descLabel = createElement("label", "drawer-form__label", "Detailed Description");
+    const descTextarea = createElement("textarea", "drawer-form__textarea");
+    descTextarea.placeholder = "Describe the issue in detail...";
+    descTextarea.value = state.assets.newMaintenanceDraft.description;
+    descTextarea.addEventListener("input", (e) => {
+      state.assets.newMaintenanceDraft.description = e.target.value;
+    });
+    descField.append(descLabel, descTextarea);
+    descSection.append(descField);
+    body.append(descSection);
+
+    backdrop.addEventListener("click", closeNewMaintenanceDrawer);
+    backButton.addEventListener("click", closeNewMaintenanceDrawer);
+    closeButton.addEventListener("click", closeNewMaintenanceDrawer);
+
+    const cancelBtn = createElement("button", "new-maintenance-drawer__button new-maintenance-drawer__button--ghost", "Cancel");
+    cancelBtn.type = "button";
+    cancelBtn.addEventListener("click", closeNewMaintenanceDrawer);
+
+    const submitBtn = createElement("button", "new-maintenance-drawer__button new-maintenance-drawer__button--primary", "Submit Request");
+    submitBtn.type = "button";
+    submitBtn.addEventListener("click", () => {
+      const draft = state.assets.newMaintenanceDraft;
+      if (!draft.selectedAssetId || !draft.issue || !draft.priority) {
+        alert("Please fill in all required fields");
+        return;
+      }
+      
+      const selectedAsset = assetsApp?.records?.find(a => a.id === draft.selectedAssetId);
+      
+      const priorityTone = {
+        "Low": "info",
+        "Medium": "info",
+        "High": "warning",
+        "Urgent": "danger",
+      }[draft.priority] || "info";
+      
+      const newMaintenance = {
+        id: `maint-${Date.now()}`,
+        assetId: draft.selectedAssetId,
+        assetName: selectedAsset?.name || "Unknown",
+        issue: draft.issue,
+        requester: "Current User",
+        location: selectedAsset?.location || "BSD",
+        priority: draft.priority,
+        priorityTone: priorityTone,
+        status: "Pending Review",
+        statusTone: "pending",
+        owner: "Unassigned",
+        eta: "Need review",
+        createdAt: new Date().toLocaleString("id-ID"),
+      };
+      
+      assetsApp.maintenanceRequests.push(newMaintenance);
+      closeNewMaintenanceDrawer();
+    });
+
+    headerLeft.append(backButton, title);
+    header.append(headerLeft, closeButton);
+    footer.append(cancelBtn, submitBtn);
+    drawer.append(header, body, footer);
+    overlay.append(backdrop, drawer);
+
+    return overlay;
+  }
+
+  function closeMaintenanceDetailDrawer() {
+    const overlay = shell.querySelector(".maintenance-detail-drawer-overlay");
+    if (overlay) {
+      overlay.classList.remove("is-open");
+      setTimeout(() => {
+        state.isMaintenanceDetailDrawerOpen = false;
+        state.assets.selectedMaintenanceDetailId = null;
+        if (overlay.isConnected) {
+          overlay.remove();
+        }
+        render();
+      }, 360);
+    } else {
+      state.isMaintenanceDetailDrawerOpen = false;
+      state.assets.selectedMaintenanceDetailId = null;
+      render();
+    }
+  }
+
+  function createMaintenanceDetailDrawer(maintenance, isOpen = false) {
+    const overlay = createElement("div", `maintenance-detail-drawer-overlay${isOpen ? " is-open" : ""}`);
+    const backdrop = createElement("button", "maintenance-detail-drawer-overlay__backdrop");
+    const drawer = createElement("aside", "maintenance-detail-drawer");
+    const header = createElement("div", "maintenance-detail-drawer__header");
+    const headerLeft = createElement("div", "maintenance-detail-drawer__header-left");
+    const backButton = createElement("button", "maintenance-detail-drawer__back");
+    const title = createElement("h2", "maintenance-detail-drawer__title", "Maintenance Details");
+    const closeButton = createElement("button", "maintenance-detail-drawer__close");
+    const body = createElement("div", "maintenance-detail-drawer__body");
+    const footer = createElement("div", "maintenance-detail-drawer__footer");
+
+    overlay.setAttribute("aria-hidden", String(!state.isMaintenanceDetailDrawerOpen));
+    drawer.setAttribute("aria-label", "Maintenance detail drawer");
+    backdrop.type = "button";
+    backButton.type = "button";
+    closeButton.type = "button";
+
+    backdrop.append(createIcon("close"));
+    backButton.append(createIcon("chevron-left"));
+    closeButton.append(createIcon("close"));
+
+    const assetSection = createElement("div", "drawer-form__section");
+    assetSection.append(createSectionLabel("package", "Asset"));
+    assetSection.append(createDetailField("Asset Name", maintenance.assetName));
+    assetSection.append(createDetailField("Location", maintenance.location));
+    body.append(assetSection);
+
+    const issueSection = createElement("div", "drawer-form__section");
+    issueSection.append(createSectionLabel("alert", "Issue"));
+    issueSection.append(createDetailField("Issue", maintenance.issue));
+    body.append(issueSection);
+
+    const requesterSection = createElement("div", "drawer-form__section");
+    requesterSection.append(createSectionLabel("user", "Requester"));
+    requesterSection.append(createDetailField("Requested By", maintenance.requester));
+    requesterSection.append(createDetailField("Created At", maintenance.createdAt));
+    body.append(requesterSection);
+
+    const statusSection = createElement("div", "drawer-form__section");
+    statusSection.append(createSectionLabel("clock", "Status"));
+    statusSection.append(createDetailField("Priority", maintenance.priority));
+    statusSection.append(createDetailField("Status", maintenance.status));
+    statusSection.append(createDetailField("Owner", maintenance.owner));
+    statusSection.append(createDetailField("ETA", maintenance.eta));
+    body.append(statusSection);
+
+    backdrop.addEventListener("click", closeMaintenanceDetailDrawer);
+    backButton.addEventListener("click", closeMaintenanceDetailDrawer);
+    closeButton.addEventListener("click", closeMaintenanceDetailDrawer);
+
+    headerLeft.append(backButton, title);
+    header.append(headerLeft, closeButton);
+    drawer.append(header, body, footer);
+    overlay.append(backdrop, drawer);
+
+    return overlay;
+  }
+
   function getFilterLabel(value) {
     const found = ASSET_INVENTORY_FILTERS.find(([v]) => v === value);
     return found ? found[1] : "All";
@@ -4676,7 +7902,7 @@ export function createAppShell() {
             joinDate: values[5]?.replace(/"/g, "") || new Date().toISOString().split("T")[0],
             role: values[6]?.replace(/"/g, "") || "custom",
             permissions: values[6]?.replace(/"/g, "") === "admin"
-              ? ["dashboard", "calendar", "employee-journey", "assets", "settings"]
+              ? ["dashboard", "calendar", "settings"]
               : ["dashboard"],
             sendInvitation: true,
             status: status,
@@ -5823,9 +9049,11 @@ export function createAppShell() {
     const availablePermissions = [
       { id: "dashboard", label: "Dashboard" },
       { id: "calendar", label: "Calendar" },
-      { id: "employee-journey", label: "Employee Journey" },
-      { id: "assets", label: "Assets" },
       { id: "settings", label: "Settings" },
+      { id: "approve_team_leader", label: "Approve - Team Leader" },
+      { id: "approve_hrga", label: "Approve - HRGA" },
+      { id: "approve_finance", label: "Approve - Finance" },
+      { id: "approve_purchasing", label: "Approve - Purchasing" },
     ];
 
     // Store permission checkbox and label references for role-based updates
@@ -6366,7 +9594,7 @@ export function createAppShell() {
   }
 
   function saveAssetDraft() {
-    const assetsApp = getAssetsApp();
+    const assetsApp = null;
     const assetNumber = generateAssetNumber(
       state.assetDraft.manualCode,
       state.assetDraft.category,
@@ -7266,6 +10494,51 @@ export function createAppShell() {
       return;
     }
 
+    if (activeApp.id === "assets" && state.activeItem === "Asset Request") {
+      contentPlaceholder.innerHTML = "";
+      contentPlaceholder.classList.remove("content-stage__empty");
+      contentPlaceholder.classList.add("content-stage__content");
+      contentPlaceholder.append(createAssetRequestWorkspace(activeApp));
+      content.append(contentPlaceholder);
+      return;
+    }
+
+    if (activeApp.id === "assets" && state.activeItem === "Asset Check Out") {
+      contentPlaceholder.innerHTML = "";
+      contentPlaceholder.classList.remove("content-stage__empty");
+      contentPlaceholder.classList.add("content-stage__content");
+      contentPlaceholder.append(createCheckOutWorkspace(activeApp));
+      content.append(contentPlaceholder);
+      return;
+    }
+
+    if (activeApp.id === "assets" && state.activeItem === "Asset Check In") {
+      contentPlaceholder.innerHTML = "";
+      contentPlaceholder.classList.remove("content-stage__empty");
+      contentPlaceholder.classList.add("content-stage__content");
+      contentPlaceholder.append(createCheckInWorkspace(activeApp));
+      content.append(contentPlaceholder);
+      return;
+    }
+
+    if (activeApp.id === "assets" && state.activeItem === "Asset Mutation") {
+      contentPlaceholder.innerHTML = "";
+      contentPlaceholder.classList.remove("content-stage__empty");
+      contentPlaceholder.classList.add("content-stage__content");
+      contentPlaceholder.append(createMutationWorkspace(activeApp));
+      content.append(contentPlaceholder);
+      return;
+    }
+
+    if (activeApp.id === "assets" && state.activeItem === "Maintenance Asset Request") {
+      contentPlaceholder.innerHTML = "";
+      contentPlaceholder.classList.remove("content-stage__empty");
+      contentPlaceholder.classList.add("content-stage__content");
+      contentPlaceholder.append(createMaintenanceWorkspace(activeApp));
+      content.append(contentPlaceholder);
+      return;
+    }
+
     contentPlaceholder.innerHTML = "";
     contentPlaceholder.classList.remove("content-stage__content");
     contentPlaceholder.classList.add("content-stage__empty");
@@ -7297,6 +10570,12 @@ export function createAppShell() {
     const currentAssetDrawerOverlay = shell.querySelector(
       ".asset-drawer-overlay",
     );
+    const currentRequestDetailDrawerOverlay = shell.querySelector(
+      ".request-detail-drawer-overlay",
+    );
+    const currentNewRequestDrawerOverlay = shell.querySelector(
+      ".new-request-drawer-overlay",
+    );
 
     currentOverlay?.__cleanupOutsideHandler?.();
     currentUserDrawerOverlay?.__cleanupOutsideHandler?.();
@@ -7317,6 +10596,8 @@ export function createAppShell() {
     currentAttachmentViewer?.remove();
     currentEventsPopup?.remove();
     currentAssetDrawerOverlay?.remove();
+    currentRequestDetailDrawerOverlay?.remove();
+    currentNewRequestDrawerOverlay?.remove();
     renderRail();
     renderPanel(activeApp);
     renderContent(activeApp);
@@ -7395,6 +10676,43 @@ export function createAppShell() {
         requestAnimationFrame(() => {
           if (assetDrawerOverlay.isConnected) {
             assetDrawerOverlay.classList.add("is-open");
+          }
+        });
+      });
+    }
+
+    if (state.isRequestDetailDrawerOpen && state.assets.selectedRequestDetailId) {
+      const selectedRequest = activeApp.assetRequests?.find(
+        (r) => r.id === state.assets.selectedRequestDetailId
+      );
+      if (selectedRequest) {
+        const requestDetailDrawerOverlay = createRequestDetailDrawer(
+          selectedRequest,
+          state.assets.requestViewMode,
+          false,
+        );
+        shell.append(requestDetailDrawerOverlay);
+
+        requestAnimationFrame(() => {
+          void requestDetailDrawerOverlay.offsetWidth;
+          requestAnimationFrame(() => {
+            if (requestDetailDrawerOverlay.isConnected) {
+              requestDetailDrawerOverlay.classList.add("is-open");
+            }
+          });
+        });
+      }
+    }
+
+    if (state.isNewRequestDrawerOpen) {
+      const newRequestDrawerOverlay = createNewRequestDrawer(false);
+      shell.append(newRequestDrawerOverlay);
+
+      requestAnimationFrame(() => {
+        void newRequestDrawerOverlay.offsetWidth;
+        requestAnimationFrame(() => {
+          if (newRequestDrawerOverlay.isConnected) {
+            newRequestDrawerOverlay.classList.add("is-open");
           }
         });
       });
@@ -7490,6 +10808,150 @@ export function createAppShell() {
           }
         });
       });
+    }
+
+    if (state.isNewCheckoutDrawerOpen) {
+      const newCheckoutDrawerOverlay = createNewCheckOutDrawer(false);
+      shell.append(newCheckoutDrawerOverlay);
+
+      requestAnimationFrame(() => {
+        void newCheckoutDrawerOverlay.offsetWidth;
+        requestAnimationFrame(() => {
+          if (newCheckoutDrawerOverlay.isConnected) {
+            newCheckoutDrawerOverlay.classList.add("is-open");
+          }
+        });
+      });
+    }
+
+    if (state.isCheckoutDetailDrawerOpen && state.assets.selectedCheckoutDetailId) {
+      const selectedCheckout = activeApp.checkOuts?.find(
+        (c) => c.id === state.assets.selectedCheckoutDetailId
+      );
+      if (selectedCheckout) {
+        const checkoutDetailDrawerOverlay = createCheckOutDetailDrawer(
+          selectedCheckout,
+          false,
+        );
+        shell.append(checkoutDetailDrawerOverlay);
+
+        requestAnimationFrame(() => {
+          void checkoutDetailDrawerOverlay.offsetWidth;
+          requestAnimationFrame(() => {
+            if (checkoutDetailDrawerOverlay.isConnected) {
+              checkoutDetailDrawerOverlay.classList.add("is-open");
+            }
+          });
+        });
+      }
+    }
+
+    if (state.isNewCheckinDrawerOpen) {
+      const newCheckinDrawerOverlay = createNewCheckInDrawer(false);
+      shell.append(newCheckinDrawerOverlay);
+
+      requestAnimationFrame(() => {
+        void newCheckinDrawerOverlay.offsetWidth;
+        requestAnimationFrame(() => {
+          if (newCheckinDrawerOverlay.isConnected) {
+            newCheckinDrawerOverlay.classList.add("is-open");
+          }
+        });
+      });
+    }
+
+    if (state.isCheckinDetailDrawerOpen && state.assets.selectedCheckinDetailId) {
+      const selectedCheckin = activeApp.checkIns?.find(
+        (c) => c.id === state.assets.selectedCheckinDetailId
+      );
+      if (selectedCheckin) {
+        const checkinDetailDrawerOverlay = createCheckInDetailDrawer(
+          selectedCheckin,
+          false,
+        );
+        shell.append(checkinDetailDrawerOverlay);
+
+        requestAnimationFrame(() => {
+          void checkinDetailDrawerOverlay.offsetWidth;
+          requestAnimationFrame(() => {
+            if (checkinDetailDrawerOverlay.isConnected) {
+              checkinDetailDrawerOverlay.classList.add("is-open");
+            }
+          });
+        });
+      }
+    }
+
+    if (state.isNewMutationDrawerOpen) {
+      const newMutationDrawerOverlay = createNewMutationDrawer(false);
+      shell.append(newMutationDrawerOverlay);
+
+      requestAnimationFrame(() => {
+        void newMutationDrawerOverlay.offsetWidth;
+        requestAnimationFrame(() => {
+          if (newMutationDrawerOverlay.isConnected) {
+            newMutationDrawerOverlay.classList.add("is-open");
+          }
+        });
+      });
+    }
+
+    if (state.isMutationDetailDrawerOpen && state.assets.selectedMutationDetailId) {
+      const selectedMutation = activeApp.mutations?.find(
+        (m) => m.id === state.assets.selectedMutationDetailId
+      );
+      if (selectedMutation) {
+        const mutationDetailDrawerOverlay = createMutationDetailDrawer(
+          selectedMutation,
+          false,
+        );
+        shell.append(mutationDetailDrawerOverlay);
+
+        requestAnimationFrame(() => {
+          void mutationDetailDrawerOverlay.offsetWidth;
+          requestAnimationFrame(() => {
+            if (mutationDetailDrawerOverlay.isConnected) {
+              mutationDetailDrawerOverlay.classList.add("is-open");
+            }
+          });
+        });
+      }
+    }
+
+    if (state.isNewMaintenanceDrawerOpen) {
+      const newMaintenanceDrawerOverlay = createNewMaintenanceDrawer(false);
+      shell.append(newMaintenanceDrawerOverlay);
+
+      requestAnimationFrame(() => {
+        void newMaintenanceDrawerOverlay.offsetWidth;
+        requestAnimationFrame(() => {
+          if (newMaintenanceDrawerOverlay.isConnected) {
+            newMaintenanceDrawerOverlay.classList.add("is-open");
+          }
+        });
+      });
+    }
+
+    if (state.isMaintenanceDetailDrawerOpen && state.assets.selectedMaintenanceDetailId) {
+      const selectedMaintenance = activeApp.maintenanceRequests?.find(
+        (m) => m.id === state.assets.selectedMaintenanceDetailId
+      );
+      if (selectedMaintenance) {
+        const maintenanceDetailDrawerOverlay = createMaintenanceDetailDrawer(
+          selectedMaintenance,
+          false,
+        );
+        shell.append(maintenanceDetailDrawerOverlay);
+
+        requestAnimationFrame(() => {
+          void maintenanceDetailDrawerOverlay.offsetWidth;
+          requestAnimationFrame(() => {
+            if (maintenanceDetailDrawerOverlay.isConnected) {
+              maintenanceDetailDrawerOverlay.classList.add("is-open");
+            }
+          });
+        });
+      }
     }
   }
 
